@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FavGrid Einstellungen</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+      background: #0d0d0f;
+      color: #fffffe;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #7f5af0 0%, #2cb67d 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo svg {
+      width: 48px;
+      height: 48px;
+      stroke: white;
+      fill: none;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    
+    p {
+      color: #94a1b2;
+      margin-bottom: 32px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: #7f5af0;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: #6b4bd4;
+      transform: translateY(-2px);
+    }
+    
+    .info {
+      margin-top: 40px;
+      padding: 20px;
+      background: #16161a;
+      border-radius: 12px;
+      max-width: 500px;
+    }
+    
+    .info h3 {
+      font-size: 14px;
+      color: #94a1b2;
+      margin-bottom: 12px;
+    }
+    
+    .shortcuts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+    
+    .shortcut {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #1e1e24;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    
+    .shortcut kbd {
+      background: #252530;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </div>
+    
+    <h1>FavGrid Einstellungen</h1>
+    <p>Öffne die Speed Dial Seite um alle Einstellungen zu konfigurieren.</p>
+    
+    <a href="chrome://newtab" class="btn" id="open-newtab">Speed Dial öffnen</a>
+    
+    <div class="info">
+      <h3>Tastenkürzel</h3>
+      <div class="shortcuts">
+        <div class="shortcut">
+          <span>Suchen</span>
+          <kbd>/</kbd>
+        </div>
+        <div class="shortcut">
+          <span>Nächste Seite</span>
+          <kbd>→</kbd> oder <kbd>↓</kbd>
+        </div>
+        <div class="shortcut">
+          <span>Vorherige Seite</span>
+          <kbd>←</kbd> oder <kbd>↑</kbd>
+        </div>
+        <div class="shortcut">
+          <span>Schließen</span>
+          <kbd>Esc</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('open-newtab').addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: chrome.runtime.getURL('src/newtab/newtab.html') });
+    });
+  </script>
+</body>
+</html>

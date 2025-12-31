@@ -1,0 +1,362 @@
+{
+  "extName": {
+    "message": "FavGrid - Premium Speed Dial",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "An elegant, highly customizable speed dial for Brave Browser. Organize your favorites like app icons.",
+    "description": "Extension description"
+  },
+  "addToFavGrid": {
+    "message": "Add to FavGrid",
+    "description": "Context menu item"
+  },
+  "favorites": {
+    "message": "Favorites",
+    "description": "Favorites group name"
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings title"
+  },
+  "appearance": {
+    "message": "Appearance",
+    "description": "Appearance settings section"
+  },
+  "gridLayout": {
+    "message": "Grid Layout",
+    "description": "Grid layout settings section"
+  },
+  "search": {
+    "message": "Search",
+    "description": "Search settings section"
+  },
+  "navigation": {
+    "message": "Navigation",
+    "description": "Navigation settings section"
+  },
+  "dataBackup": {
+    "message": "Data & Backup",
+    "description": "Data and backup settings section"
+  },
+  "theme": {
+    "message": "Theme",
+    "description": "Theme setting label"
+  },
+  "dark": {
+    "message": "Dark",
+    "description": "Dark theme option"
+  },
+  "light": {
+    "message": "Light",
+    "description": "Light theme option"
+  },
+  "system": {
+    "message": "System",
+    "description": "System theme option"
+  },
+  "background": {
+    "message": "Background",
+    "description": "Background setting label"
+  },
+  "gradient": {
+    "message": "Gradient",
+    "description": "Gradient background type"
+  },
+  "solidColor": {
+    "message": "Solid Color",
+    "description": "Solid color background type"
+  },
+  "image": {
+    "message": "Image",
+    "description": "Image background type"
+  },
+  "columns": {
+    "message": "Columns",
+    "description": "Grid columns setting"
+  },
+  "rows": {
+    "message": "Rows",
+    "description": "Grid rows setting"
+  },
+  "iconSize": {
+    "message": "Icon Size",
+    "description": "Icon size setting"
+  },
+  "spacing": {
+    "message": "Spacing",
+    "description": "Grid spacing setting"
+  },
+  "borderRadius": {
+    "message": "Border Radius",
+    "description": "Border radius setting"
+  },
+  "showShadow": {
+    "message": "Show Shadow",
+    "description": "Show shadow setting"
+  },
+  "showLabels": {
+    "message": "Show Labels",
+    "description": "Show labels setting"
+  },
+  "labelPosition": {
+    "message": "Label Position",
+    "description": "Label position setting"
+  },
+  "below": {
+    "message": "Below Icon",
+    "description": "Below icon position"
+  },
+  "above": {
+    "message": "Above Icon",
+    "description": "Above icon position"
+  },
+  "searchEngine": {
+    "message": "Search Engine",
+    "description": "Search engine setting"
+  },
+  "instantSearch": {
+    "message": "Instant Search",
+    "description": "Instant search setting"
+  },
+  "keyboardNav": {
+    "message": "Keyboard Navigation",
+    "description": "Keyboard navigation setting"
+  },
+  "mousewheelNav": {
+    "message": "Mousewheel Navigation",
+    "description": "Mousewheel navigation setting"
+  },
+  "swipeNav": {
+    "message": "Swipe/Trackpad",
+    "description": "Swipe navigation setting"
+  },
+  "showArrows": {
+    "message": "Show Navigation Arrows",
+    "description": "Show navigation arrows setting"
+  },
+  "browserSync": {
+    "message": "Sync with Browser Bookmarks",
+    "description": "Browser bookmark sync setting"
+  },
+  "syncNow": {
+    "message": "Sync Now",
+    "description": "Sync now button"
+  },
+  "export": {
+    "message": "Export",
+    "description": "Export section title"
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import section title"
+  },
+  "autoBackup": {
+    "message": "Auto Backup",
+    "description": "Auto backup setting"
+  },
+  "resetAll": {
+    "message": "Reset All Data",
+    "description": "Reset all data button"
+  },
+  "addFavorite": {
+    "message": "Add Favorite",
+    "description": "Add favorite button/title"
+  },
+  "editFavorite": {
+    "message": "Edit Favorite",
+    "description": "Edit favorite title"
+  },
+  "deleteFavorite": {
+    "message": "Delete Favorite",
+    "description": "Delete favorite button"
+  },
+  "newGroup": {
+    "message": "New Group",
+    "description": "New group title"
+  },
+  "editGroup": {
+    "message": "Edit Group",
+    "description": "Edit group title"
+  },
+  "deleteGroup": {
+    "message": "Delete Group",
+    "description": "Delete group button"
+  },
+  "url": {
+    "message": "URL",
+    "description": "URL label"
+  },
+  "name": {
+    "message": "Name",
+    "description": "Name label"
+  },
+  "description": {
+    "message": "Description",
+    "description": "Description label"
+  },
+  "tags": {
+    "message": "Tags",
+    "description": "Tags label"
+  },
+  "group": {
+    "message": "Group",
+    "description": "Group label"
+  },
+  "icon": {
+    "message": "Icon",
+    "description": "Icon label"
+  },
+  "color": {
+    "message": "Color",
+    "description": "Color label"
+  },
+  "save": {
+    "message": "Save",
+    "description": "Save button"
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "Cancel button"
+  },
+  "delete": {
+    "message": "Delete",
+    "description": "Delete button"
+  },
+  "close": {
+    "message": "Close",
+    "description": "Close button"
+  },
+  "open": {
+    "message": "Open",
+    "description": "Open action"
+  },
+  "openInBackground": {
+    "message": "Open in Background",
+    "description": "Open in background action"
+  },
+  "edit": {
+    "message": "Edit",
+    "description": "Edit action"
+  },
+  "pageInfo": {
+    "message": "Page Info",
+    "description": "Page info action"
+  },
+  "moveTo": {
+    "message": "Move to",
+    "description": "Move to action"
+  },
+  "duplicate": {
+    "message": "Duplicate",
+    "description": "Duplicate action"
+  },
+  "noFavorites": {
+    "message": "No Favorites",
+    "description": "Empty state title"
+  },
+  "noFavoritesDesc": {
+    "message": "Click + to add your first favorite.",
+    "description": "Empty state description"
+  },
+  "noResults": {
+    "message": "No Results",
+    "description": "No search results title"
+  },
+  "noResultsDesc": {
+    "message": "Try a different search term.",
+    "description": "No search results description"
+  },
+  "searchPlaceholder": {
+    "message": "Search or enter URL...",
+    "description": "Search input placeholder"
+  },
+  "favoriteAdded": {
+    "message": "Favorite added",
+    "description": "Toast message"
+  },
+  "favoriteUpdated": {
+    "message": "Favorite updated",
+    "description": "Toast message"
+  },
+  "favoriteDeleted": {
+    "message": "Favorite deleted",
+    "description": "Toast message"
+  },
+  "favoriteMoved": {
+    "message": "Favorite moved",
+    "description": "Toast message"
+  },
+  "favoriteDuplicated": {
+    "message": "Favorite duplicated",
+    "description": "Toast message"
+  },
+  "groupCreated": {
+    "message": "Group created",
+    "description": "Toast message"
+  },
+  "groupUpdated": {
+    "message": "Group updated",
+    "description": "Toast message"
+  },
+  "groupDeleted": {
+    "message": "Group deleted",
+    "description": "Toast message"
+  },
+  "exportSuccess": {
+    "message": "Export successful",
+    "description": "Toast message"
+  },
+  "importSuccess": {
+    "message": "Import successful",
+    "description": "Toast message"
+  },
+  "syncSuccess": {
+    "message": "Sync successful",
+    "description": "Toast message"
+  },
+  "errorInvalidUrl": {
+    "message": "Invalid URL",
+    "description": "Error message"
+  },
+  "errorNameRequired": {
+    "message": "Please enter a name",
+    "description": "Error message"
+  },
+  "errorUrlRequired": {
+    "message": "Please enter a URL",
+    "description": "Error message"
+  },
+  "confirmDelete": {
+    "message": "Are you sure you want to delete?",
+    "description": "Delete confirmation"
+  },
+  "confirmReset": {
+    "message": "Are you sure you want to delete all data? This action cannot be undone!",
+    "description": "Reset confirmation"
+  },
+  "source": {
+    "message": "Source",
+    "description": "Source label"
+  },
+  "manual": {
+    "message": "Manual",
+    "description": "Manual source"
+  },
+  "browserImport": {
+    "message": "Browser Import",
+    "description": "Browser import source"
+  },
+  "createdAt": {
+    "message": "Added",
+    "description": "Created at label"
+  },
+  "visits": {
+    "message": "Visits",
+    "description": "Visit count label"
+  },
+  "lastVisited": {
+    "message": "Last visited",
+    "description": "Last visited label"
+  }
+}

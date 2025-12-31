@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FavGrid</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="popup-header">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>FavGrid</span>
+      </div>
+    </header>
+
+    <main class="popup-content">
+      <button id="add-current" class="action-btn primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <div class="btn-text">
+          <span class="btn-title">Aktuelle Seite hinzufügen</span>
+          <span class="btn-subtitle" id="current-url">Lädt...</span>
+        </div>
+      </button>
+
+      <div class="divider"></div>
+
+      <div class="quick-stats">
+        <div class="stat">
+          <span class="stat-value" id="total-favorites">0</span>
+          <span class="stat-label">Favoriten</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="total-groups">0</span>
+          <span class="stat-label">Gruppen</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="group-select">
+        <label>Zur Gruppe hinzufügen:</label>
+        <select id="target-group"></select>
+      </div>
+    </main>
+
+    <footer class="popup-footer">
+      <button id="open-newtab" class="link-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M9 3v18M21 9H9"/>
+        </svg>
+        Speed Dial öffnen
+      </button>
+      <button id="open-settings" class="link-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        Einstellungen
+      </button>
+    </footer>
+
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

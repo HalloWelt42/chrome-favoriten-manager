@@ -1,0 +1,362 @@
+{
+  "extName": {
+    "message": "FavGrid - Premium Speed Dial",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Ein eleganter, hochgradig anpassbarer Speed Dial für Brave Browser. Organisiere deine Favoriten wie App-Icons.",
+    "description": "Extension description"
+  },
+  "addToFavGrid": {
+    "message": "Zu FavGrid hinzufügen",
+    "description": "Context menu item"
+  },
+  "favorites": {
+    "message": "Favoriten",
+    "description": "Favorites group name"
+  },
+  "settings": {
+    "message": "Einstellungen",
+    "description": "Settings title"
+  },
+  "appearance": {
+    "message": "Erscheinungsbild",
+    "description": "Appearance settings section"
+  },
+  "gridLayout": {
+    "message": "Grid Layout",
+    "description": "Grid layout settings section"
+  },
+  "search": {
+    "message": "Suche",
+    "description": "Search settings section"
+  },
+  "navigation": {
+    "message": "Navigation",
+    "description": "Navigation settings section"
+  },
+  "dataBackup": {
+    "message": "Daten & Backup",
+    "description": "Data and backup settings section"
+  },
+  "theme": {
+    "message": "Theme",
+    "description": "Theme setting label"
+  },
+  "dark": {
+    "message": "Dunkel",
+    "description": "Dark theme option"
+  },
+  "light": {
+    "message": "Hell",
+    "description": "Light theme option"
+  },
+  "system": {
+    "message": "System",
+    "description": "System theme option"
+  },
+  "background": {
+    "message": "Hintergrund",
+    "description": "Background setting label"
+  },
+  "gradient": {
+    "message": "Gradient",
+    "description": "Gradient background type"
+  },
+  "solidColor": {
+    "message": "Einfarbig",
+    "description": "Solid color background type"
+  },
+  "image": {
+    "message": "Bild",
+    "description": "Image background type"
+  },
+  "columns": {
+    "message": "Spalten",
+    "description": "Grid columns setting"
+  },
+  "rows": {
+    "message": "Zeilen",
+    "description": "Grid rows setting"
+  },
+  "iconSize": {
+    "message": "Icon-Größe",
+    "description": "Icon size setting"
+  },
+  "spacing": {
+    "message": "Abstand",
+    "description": "Grid spacing setting"
+  },
+  "borderRadius": {
+    "message": "Rundung",
+    "description": "Border radius setting"
+  },
+  "showShadow": {
+    "message": "Schatten anzeigen",
+    "description": "Show shadow setting"
+  },
+  "showLabels": {
+    "message": "Labels anzeigen",
+    "description": "Show labels setting"
+  },
+  "labelPosition": {
+    "message": "Label Position",
+    "description": "Label position setting"
+  },
+  "below": {
+    "message": "Unter dem Icon",
+    "description": "Below icon position"
+  },
+  "above": {
+    "message": "Über dem Icon",
+    "description": "Above icon position"
+  },
+  "searchEngine": {
+    "message": "Suchmaschine",
+    "description": "Search engine setting"
+  },
+  "instantSearch": {
+    "message": "Instant-Suche",
+    "description": "Instant search setting"
+  },
+  "keyboardNav": {
+    "message": "Tastatur-Navigation",
+    "description": "Keyboard navigation setting"
+  },
+  "mousewheelNav": {
+    "message": "Mausrad-Navigation",
+    "description": "Mousewheel navigation setting"
+  },
+  "swipeNav": {
+    "message": "Swipe/Trackpad",
+    "description": "Swipe navigation setting"
+  },
+  "showArrows": {
+    "message": "Navigations-Pfeile anzeigen",
+    "description": "Show navigation arrows setting"
+  },
+  "browserSync": {
+    "message": "Mit Browser-Lesezeichen synchronisieren",
+    "description": "Browser bookmark sync setting"
+  },
+  "syncNow": {
+    "message": "Jetzt synchronisieren",
+    "description": "Sync now button"
+  },
+  "export": {
+    "message": "Export",
+    "description": "Export section title"
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import section title"
+  },
+  "autoBackup": {
+    "message": "Auto-Backup",
+    "description": "Auto backup setting"
+  },
+  "resetAll": {
+    "message": "Alle Daten zurücksetzen",
+    "description": "Reset all data button"
+  },
+  "addFavorite": {
+    "message": "Favorit hinzufügen",
+    "description": "Add favorite button/title"
+  },
+  "editFavorite": {
+    "message": "Favorit bearbeiten",
+    "description": "Edit favorite title"
+  },
+  "deleteFavorite": {
+    "message": "Favorit löschen",
+    "description": "Delete favorite button"
+  },
+  "newGroup": {
+    "message": "Neue Gruppe",
+    "description": "New group title"
+  },
+  "editGroup": {
+    "message": "Gruppe bearbeiten",
+    "description": "Edit group title"
+  },
+  "deleteGroup": {
+    "message": "Gruppe löschen",
+    "description": "Delete group button"
+  },
+  "url": {
+    "message": "URL",
+    "description": "URL label"
+  },
+  "name": {
+    "message": "Name",
+    "description": "Name label"
+  },
+  "description": {
+    "message": "Beschreibung",
+    "description": "Description label"
+  },
+  "tags": {
+    "message": "Tags",
+    "description": "Tags label"
+  },
+  "group": {
+    "message": "Gruppe",
+    "description": "Group label"
+  },
+  "icon": {
+    "message": "Icon",
+    "description": "Icon label"
+  },
+  "color": {
+    "message": "Farbe",
+    "description": "Color label"
+  },
+  "save": {
+    "message": "Speichern",
+    "description": "Save button"
+  },
+  "cancel": {
+    "message": "Abbrechen",
+    "description": "Cancel button"
+  },
+  "delete": {
+    "message": "Löschen",
+    "description": "Delete button"
+  },
+  "close": {
+    "message": "Schließen",
+    "description": "Close button"
+  },
+  "open": {
+    "message": "Öffnen",
+    "description": "Open action"
+  },
+  "openInBackground": {
+    "message": "Im Hintergrund öffnen",
+    "description": "Open in background action"
+  },
+  "edit": {
+    "message": "Bearbeiten",
+    "description": "Edit action"
+  },
+  "pageInfo": {
+    "message": "Seiteninformationen",
+    "description": "Page info action"
+  },
+  "moveTo": {
+    "message": "Verschieben nach",
+    "description": "Move to action"
+  },
+  "duplicate": {
+    "message": "Duplizieren",
+    "description": "Duplicate action"
+  },
+  "noFavorites": {
+    "message": "Keine Favoriten",
+    "description": "Empty state title"
+  },
+  "noFavoritesDesc": {
+    "message": "Klicke auf + um deinen ersten Favoriten hinzuzufügen.",
+    "description": "Empty state description"
+  },
+  "noResults": {
+    "message": "Keine Ergebnisse",
+    "description": "No search results title"
+  },
+  "noResultsDesc": {
+    "message": "Versuche einen anderen Suchbegriff.",
+    "description": "No search results description"
+  },
+  "searchPlaceholder": {
+    "message": "Suchen oder URL eingeben...",
+    "description": "Search input placeholder"
+  },
+  "favoriteAdded": {
+    "message": "Favorit hinzugefügt",
+    "description": "Toast message"
+  },
+  "favoriteUpdated": {
+    "message": "Favorit aktualisiert",
+    "description": "Toast message"
+  },
+  "favoriteDeleted": {
+    "message": "Favorit gelöscht",
+    "description": "Toast message"
+  },
+  "favoriteMoved": {
+    "message": "Favorit verschoben",
+    "description": "Toast message"
+  },
+  "favoriteDuplicated": {
+    "message": "Favorit dupliziert",
+    "description": "Toast message"
+  },
+  "groupCreated": {
+    "message": "Gruppe erstellt",
+    "description": "Toast message"
+  },
+  "groupUpdated": {
+    "message": "Gruppe aktualisiert",
+    "description": "Toast message"
+  },
+  "groupDeleted": {
+    "message": "Gruppe gelöscht",
+    "description": "Toast message"
+  },
+  "exportSuccess": {
+    "message": "Export erfolgreich",
+    "description": "Toast message"
+  },
+  "importSuccess": {
+    "message": "Import erfolgreich",
+    "description": "Toast message"
+  },
+  "syncSuccess": {
+    "message": "Synchronisierung erfolgreich",
+    "description": "Toast message"
+  },
+  "errorInvalidUrl": {
+    "message": "Ungültige URL",
+    "description": "Error message"
+  },
+  "errorNameRequired": {
+    "message": "Bitte gib einen Namen ein",
+    "description": "Error message"
+  },
+  "errorUrlRequired": {
+    "message": "Bitte gib eine URL ein",
+    "description": "Error message"
+  },
+  "confirmDelete": {
+    "message": "Wirklich löschen?",
+    "description": "Delete confirmation"
+  },
+  "confirmReset": {
+    "message": "Alle Daten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!",
+    "description": "Reset confirmation"
+  },
+  "source": {
+    "message": "Quelle",
+    "description": "Source label"
+  },
+  "manual": {
+    "message": "Manuell",
+    "description": "Manual source"
+  },
+  "browserImport": {
+    "message": "Browser-Import",
+    "description": "Browser import source"
+  },
+  "createdAt": {
+    "message": "Hinzugefügt",
+    "description": "Created at label"
+  },
+  "visits": {
+    "message": "Besuche",
+    "description": "Visit count label"
+  },
+  "lastVisited": {
+    "message": "Zuletzt besucht",
+    "description": "Last visited label"
+  }
+}

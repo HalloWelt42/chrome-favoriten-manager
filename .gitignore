@@ -1,0 +1,54 @@
+# IDE - JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Operating System Files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# Editor Files
+# VSCode
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Browser Extension Build/Distribution
+dist/
+build/
+*.zip
+*.crx
+*.xpi
+web-ext-artifacts/
+
+# Logs and Temporary Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.env
+.env.local

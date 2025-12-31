@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FavGrid</title>
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- Background Layer -->
+    <div id="background" class="background"></div>
+    <div id="background-overlay" class="background-overlay"></div>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+      <!-- Header with Search -->
+      <header class="header">
+        <div class="search-container">
+          <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" class="search-input" placeholder="Suchen oder URL eingeben..." autocomplete="off">
+            <button id="search-clear" class="search-clear hidden">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <!-- Live Search Results Dropdown -->
+            <div id="search-dropdown" class="search-dropdown hidden">
+              <div class="search-section">
+                <div class="search-section-title">🔍 Web-Suche</div>
+                <div id="web-search-option" class="search-result-item web-search">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                  <span class="search-query-text">Suchen nach "<span id="search-query-display"></span>"</span>
+                </div>
+              </div>
+              <div id="favorites-results" class="search-section hidden">
+                <div class="search-section-title">⭐ Favoriten</div>
+                <div id="favorites-results-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Group Tabs -->
+        <div class="group-tabs-container">
+          <button id="group-scroll-left" class="group-scroll-btn hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <div id="group-tabs" class="group-tabs"></div>
+          <button id="group-scroll-right" class="group-scroll-btn hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <button id="add-group-btn" class="add-group-btn" title="Neue Gruppe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button id="manage-groups-btn" class="manage-groups-btn" title="Gruppen verwalten">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="4" y1="6" x2="20" y2="6"/>
+              <line x1="4" y1="12" x2="20" y2="12"/>
+              <line x1="4" y1="18" x2="20" y2="18"/>
+              <circle cx="8" cy="6" r="2" fill="currentColor"/>
+              <circle cx="16" cy="12" r="2" fill="currentColor"/>
+              <circle cx="10" cy="18" r="2" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Grid Container -->
+      <main class="grid-wrapper">
+        <!-- Navigation Arrow Left -->
+        <button id="nav-left" class="nav-arrow nav-left hidden">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <!-- Grid -->
+        <div id="grid-container" class="grid-container">
+          <div id="favorites-grid" class="favorites-grid"></div>
+        </div>
+
+        <!-- Navigation Arrow Right -->
+        <button id="nav-right" class="nav-arrow nav-right hidden">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </main>
+
+      <!-- Pagination Dots -->
+      <div id="pagination" class="pagination"></div>
+
+      <!-- Sort Dropdown -->
+      <div class="sort-dropdown-wrapper">
+        <button id="sort-btn" class="sort-btn" title="Sortieren">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="6" x2="16" y2="6"/>
+            <line x1="4" y1="12" x2="12" y2="12"/>
+            <line x1="4" y1="18" x2="8" y2="18"/>
+            <polyline points="15 15 18 18 21 15"/>
+            <line x1="18" y1="12" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <div id="sort-dropdown" class="sort-dropdown hidden">
+          <button data-sort="manual" class="active">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            Manuell
+          </button>
+          <button data-sort="name-asc">
+            <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 10l3-3 3 3M20 7v10"/></svg>
+            Name (A-Z)
+          </button>
+          <button data-sort="name-desc">
+            <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 17l3 3 3-3M20 7v13"/></svg>
+            Name (Z-A)
+          </button>
+          <button data-sort="date-desc">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Neueste zuerst
+          </button>
+          <button data-sort="date-asc">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Älteste zuerst
+          </button>
+          <button data-sort="visits-desc">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Meistbesucht
+          </button>
+        </div>
+      </div>
+
+      <!-- Refresh Icons Button -->
+      <button id="refresh-icons-btn" class="refresh-icons-btn" title="Alle Icons aktualisieren">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      </button>
+
+      <!-- Add Favorite Button -->
+      <button id="add-favorite-btn" class="add-favorite-btn" title="Favorit hinzufügen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+
+      <!-- Settings Button -->
+      <button id="settings-btn" class="settings-btn" title="Einstellungen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu hidden">
+      <button data-action="open">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Öffnen
+      </button>
+      <button data-action="open-new">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        In neuem Tab öffnen
+      </button>
+      <button data-action="open-bg">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M21 9H9"/></svg>
+        Im Hintergrund öffnen
+      </button>
+      <div class="context-divider"></div>
+      <button data-action="copy-url">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        URL kopieren
+      </button>
+      <button data-action="edit">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Bearbeiten
+      </button>
+      <button data-action="refresh-icon">
+        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Icon aktualisieren
+      </button>
+      <button data-action="info">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Seiteninformationen
+      </button>
+      <button data-action="move">
+        <svg viewBox="0 0 24 24"><path d="M5 9l7-7 7 7M12 2v13M5 15l7 7 7-7"/></svg>
+        Verschieben nach
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="context-divider"></div>
+      <button data-action="duplicate">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Duplizieren
+      </button>
+      <button data-action="delete" class="danger">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Löschen
+      </button>
+    </div>
+
+    <!-- Move Submenu -->
+    <div id="move-submenu" class="context-menu submenu hidden"></div>
+
+    <!-- Modals -->
+    <!-- Add/Edit Favorite Modal -->
+    <div id="favorite-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="favorite-modal-title">Favorit hinzufügen</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="fav-url">URL</label>
+            <input type="url" id="fav-url" placeholder="https://example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="fav-alias">Name (Alias)</label>
+            <input type="text" id="fav-alias" placeholder="Meine Website">
+          </div>
+          <div class="form-group">
+            <label for="fav-description">Beschreibung</label>
+            <textarea id="fav-description" rows="2" placeholder="Kurze Beschreibung..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="fav-tags">Tags (kommagetrennt)</label>
+            <input type="text" id="fav-tags" placeholder="arbeit, wichtig, tools">
+          </div>
+          <div class="form-group">
+            <label for="fav-group">Gruppe</label>
+            <select id="fav-group"></select>
+          </div>
+          <div class="form-group">
+            <label>Icon</label>
+            <div class="icon-options">
+              <button type="button" id="fetch-favicon" class="btn-secondary">Favicon laden</button>
+              <button type="button" id="upload-icon" class="btn-secondary">Eigenes Bild</button>
+              <input type="file" id="icon-upload" accept="image/*" hidden>
+            </div>
+            <div id="icon-preview" class="icon-preview"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-action="cancel">Abbrechen</button>
+          <button type="button" class="btn-primary" data-action="save">Speichern</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Group Modal -->
+    <div id="group-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="group-modal-title">Neue Gruppe</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="group-name">Name</label>
+            <input type="text" id="group-name" placeholder="Gruppenname" required>
+          </div>
+          <div class="form-group">
+            <label for="group-icon">Icon (Emoji)</label>
+            <input type="text" id="group-icon" placeholder="⭐" maxlength="2">
+            <div class="emoji-picker-container">
+              <div class="emoji-section">
+                <span class="emoji-section-title">★ Favoriten</span>
+                <div class="emoji-favorites">
+                  <button type="button" data-emoji="⭐">⭐</button>
+                  <button type="button" data-emoji="❤️">❤️</button>
+                  <button type="button" data-emoji="📁">📁</button>
+                  <button type="button" data-emoji="💼">💼</button>
+                  <button type="button" data-emoji="🏠">🏠</button>
+                  <button type="button" data-emoji="💻">💻</button>
+                  <button type="button" data-emoji="🎮">🎮</button>
+                  <button type="button" data-emoji="📚">📚</button>
+                </div>
+              </div>
+              <div class="emoji-divider"></div>
+              <div class="emoji-picker">
+                <!-- Symbole -->
+                ⭐❤️🔥✨💡🎯⚡💎🏆🎪🎨🎭🎬🎵🎧🎤🎸🎹🎺🎻🥁
+                📁📂💼📊📈📉💰💵💳🏦📋📌📍🗂️🗃️🗄️📦🏷️
+                💻🖥️📱⌨️🖱️💾💿📀🔌🔋🖨️📠📡🛰️🔧🔨⚙️🛠️🔩
+                🎮🕹️👾🎲♟️🎯🎳🎰🃏🀄🎴🎪🎢🎡🎠🏟️🎭🎨
+                📚📖📕📗📘📙📓📔📒📃📜📄📰🗞️📑🔖🏷️
+                🛒🛍️🏠🏡🏢🏣🏤🏥🏦🏨🏩🏪🏫🏬🏭🏯🏰
+                ✈️🚀🛸🚁🛩️🚂🚃🚄🚅🚆🚇🚈🚉🚊🚝🚞🚋🚌🚍🚎🚐🚑🚒🚓🚔🚕🚖🚗🚘🚙🚚🚛🚜
+                🍕🍔🍟🌭🍿🧂🥓🥚🍳🧇🥞🧈🍞🥐🥖🥨🧀🥗🥙🥪🌮🌯🫔🥫🍝🍜🍲🍛🍣🍱🥟🦪🍤🍙🍚🍘🍥🥠🥮🍢🍡🍧🍨🍦🥧🧁🍰🎂🍮🍭🍬🍫🍿🍩🍪🌰🥜
+                ☕🍵🧃🥛🍼🫖🧋🧉🍶🍺🍻🥂🍷🥃🍸🍹🧊
+                🌐📰💬💭🗯️📧📨📩📤📥📫📪📬📭📮🗳️📝📄📃📑🗒️🗓️📆📅🗑️📁📂🗂️📰
+                🔗🔒🔓🔏🔐🔑🗝️🔨🪓⛏️⚒️🛠️🗡️⚔️🔫🪃🏹🛡️🔧🪛🔩⚙️🗜️⚖️🔗⛓️🪝🧰🧲
+                🔴🟠🟡🟢🔵🟣⚫⚪🟤🔶🔷🔸🔹🔺🔻💠🔘
+                ⬛⬜◼️◻️◾◽▪️▫️🟥🟧🟨🟩🟦🟪⭕❌⭐✅❎➕➖➗✖️💯
+                🌍🌎🌏🌐🗺️🧭🏔️⛰️🌋🗻🏕️🏖️🏜️🏝️🏞️🏟️🏛️🏗️🧱🏘️🏚️🏠🏡
+                🌸🌹🥀🌺🌻🌼🌷💐🌱🪴🌲🌳🌴🌵🌾🌿☘️🍀🍁🍂🍃🍇🍈🍉🍊🍋🍌🍍🥭🍎🍏🍐🍑🍒🍓🫐🥝🍅🫒🥥
+                🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐽🐸🐵🙈🙉🙊🐒🐔🐧🐦🐤🐣🐥🦆🦅🦉🦇🐺🐗🐴🦄🐝🪲🐛🦋🐌🐞🐜🪳🪰🐢🐍🦎🦖🦕🐙🦑🦐🦞🦀🐡🐠🐟🐬🐳🐋🦈🐊🐅🐆🦓🦍🦧🦣🐘🦛🦏🐪🐫🦒🦘🦬🐃🐂🐄🐎🐖🐏🐑🦙🐐🦌🐕🐩🦮🐕‍🦺🐈🐈‍⬛🪶🐓🦃🦤🦚🦜🦢🦩🕊️🐇🦝🦨🦡🦫🦦🦥🐁🐀🐿️🦔
+                😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗☺️😚😙🥲😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯🤠🥳🥸😎🤓🧐😕😟🙁☹️😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬
+                👍👎👏🙌🤝👊✊🤛🤜🤞✌️🤟🤘👌🤌🤏👈👉👆👇☝️✋🤚🖐️🖖👋🤙💪🦾🖕✍️🙏🦶🦵🦿💄💋👄🦷👅👂🦻👃👣👁️👀🫀🫁🧠🗣️👤👥🫂
+                💼👔👕👖🧣🧤🧥🧦👗👘🥻🩱🩲🩳👙👚👛👜👝🛍️🎒🩴👞👟🥾🥿👠👡🩰👢👑👒🎩🎓🧢🪖⛑️📿💄💍💎
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="group-color">Farbe</label>
+            <div class="color-picker">
+              <input type="color" id="group-color" value="#7f5af0">
+              <div class="color-presets">
+                <!-- Lila/Violett -->
+                <button type="button" data-color="#7f5af0" style="background:#7f5af0"></button>
+                <button type="button" data-color="#5a3db5" style="background:#5a3db5"></button>
+                <!-- Grün -->
+                <button type="button" data-color="#2cb67d" style="background:#2cb67d"></button>
+                <button type="button" data-color="#1a8a5c" style="background:#1a8a5c"></button>
+                <!-- Orange -->
+                <button type="button" data-color="#ff8906" style="background:#ff8906"></button>
+                <button type="button" data-color="#cc6e05" style="background:#cc6e05"></button>
+                <!-- Pink/Magenta -->
+                <button type="button" data-color="#e53170" style="background:#e53170"></button>
+                <button type="button" data-color="#b02458" style="background:#b02458"></button>
+                <!-- Blau -->
+                <button type="button" data-color="#3da9fc" style="background:#3da9fc"></button>
+                <button type="button" data-color="#2563eb" style="background:#2563eb"></button>
+                <!-- Rot -->
+                <button type="button" data-color="#f25f4c" style="background:#f25f4c"></button>
+                <button type="button" data-color="#dc2626" style="background:#dc2626"></button>
+                <!-- Türkis -->
+                <button type="button" data-color="#06b6d4" style="background:#06b6d4"></button>
+                <button type="button" data-color="#0891b2" style="background:#0891b2"></button>
+                <!-- Gelb -->
+                <button type="button" data-color="#eab308" style="background:#eab308"></button>
+                <button type="button" data-color="#ca8a04" style="background:#ca8a04"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-danger" data-action="delete" id="delete-group-btn" style="margin-right:auto">Löschen</button>
+          <button type="button" class="btn-secondary" data-action="cancel">Abbrechen</button>
+          <button type="button" class="btn-primary" data-action="save">Speichern</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Info Modal -->
+    <div id="info-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Seiteninformationen</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="info-content" class="info-content">
+            <div class="info-loading">
+              <div class="spinner"></div>
+              <p>Lade Informationen...</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-action="close">Schließen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h2>Einstellungen</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-container">
+            <nav class="settings-nav">
+              <button class="settings-nav-item active" data-section="appearance">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                Erscheinungsbild
+              </button>
+              <button class="settings-nav-item" data-section="grid">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Grid Layout
+              </button>
+              <button class="settings-nav-item" data-section="search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Suche
+              </button>
+              <button class="settings-nav-item" data-section="navigation">
+                <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                Navigation
+              </button>
+              <button class="settings-nav-item" data-section="data">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                Daten & Backup
+              </button>
+            </nav>
+            
+            <div class="settings-content">
+              <!-- Appearance Section -->
+              <section id="settings-appearance" class="settings-section active">
+                <h3>Theme</h3>
+                <div class="setting-row">
+                  <label>Farbschema</label>
+                  <select id="setting-theme">
+                    <option value="dark">Dunkel</option>
+                    <option value="light">Hell</option>
+                    <option value="system">System</option>
+                  </select>
+                </div>
+                
+                <h3>Akzentfarbe</h3>
+                <div class="color-palette" id="accent-color-palette">
+                  <!-- Material Design Colors -->
+                  <button class="color-option" data-color="#f44336" style="background:#f44336" title="Red"></button>
+                  <button class="color-option" data-color="#e91e63" style="background:#e91e63" title="Pink"></button>
+                  <button class="color-option" data-color="#9c27b0" style="background:#9c27b0" title="Purple"></button>
+                  <button class="color-option" data-color="#673ab7" style="background:#673ab7" title="Deep Purple"></button>
+                  <button class="color-option" data-color="#7f5af0" style="background:#7f5af0" title="Violet"></button>
+                  <button class="color-option" data-color="#3f51b5" style="background:#3f51b5" title="Indigo"></button>
+                  <button class="color-option" data-color="#2196f3" style="background:#2196f3" title="Blue"></button>
+                  <button class="color-option" data-color="#03a9f4" style="background:#03a9f4" title="Light Blue"></button>
+                  <button class="color-option" data-color="#00bcd4" style="background:#00bcd4" title="Cyan"></button>
+                  <button class="color-option" data-color="#009688" style="background:#009688" title="Teal"></button>
+                  <button class="color-option" data-color="#4caf50" style="background:#4caf50" title="Green"></button>
+                  <button class="color-option" data-color="#8bc34a" style="background:#8bc34a" title="Light Green"></button>
+                  <button class="color-option" data-color="#cddc39" style="background:#cddc39" title="Lime"></button>
+                  <button class="color-option" data-color="#ffeb3b" style="background:#ffeb3b" title="Yellow"></button>
+                  <button class="color-option" data-color="#ffc107" style="background:#ffc107" title="Amber"></button>
+                  <button class="color-option" data-color="#ff9800" style="background:#ff9800" title="Orange"></button>
+                  <button class="color-option" data-color="#ff5722" style="background:#ff5722" title="Deep Orange"></button>
+                  <button class="color-option" data-color="#795548" style="background:#795548" title="Brown"></button>
+                  <button class="color-option" data-color="#607d8b" style="background:#607d8b" title="Blue Grey"></button>
+                  <button class="color-option" data-color="#78909c" style="background:#78909c" title="Grey Blue"></button>
+                </div>
+
+                <h3>Hintergrund</h3>
+                <div class="setting-row">
+                  <label>Typ</label>
+                  <select id="setting-bg-type">
+                    <option value="gradient">Farbverlauf</option>
+                    <option value="color">Einfarbig</option>
+                    <option value="image">Bild</option>
+                  </select>
+                </div>
+                
+                <div id="bg-gradient-options">
+                  <p class="setting-label">Harmonische Verläufe</p>
+                  <div class="gradient-grid">
+                    <!-- Dark Harmonious -->
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)" style="background:linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)" title="Midnight"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)" style="background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)" title="Night Sky"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #141e30 0%, #243b55 100%)" style="background:linear-gradient(135deg, #141e30 0%, #243b55 100%)" title="Steel"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #232526 0%, #414345 100%)" style="background:linear-gradient(135deg, #232526 0%, #414345 100%)" title="Charcoal"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)" style="background:linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)" title="Cosmic"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #000428 0%, #004e92 100%)" style="background:linear-gradient(135deg, #000428 0%, #004e92 100%)" title="Deep Sea"></button>
+                    <!-- Medium Contrast -->
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)" style="background:linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)" title="Aqua"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #373b44 0%, #4286f4 100%)" style="background:linear-gradient(135deg, #373b44 0%, #4286f4 100%)" title="Electric"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #2d3436 0%, #636e72 100%)" style="background:linear-gradient(135deg, #2d3436 0%, #636e72 100%)" title="Slate"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)" style="background:linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)" title="Ocean Blue"></button>
+                    <!-- Colorful Harmonious -->
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%)" title="Aurora"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #5f72bd 0%, #9b23ea 100%)" style="background:linear-gradient(135deg, #5f72bd 0%, #9b23ea 100%)" title="Violet Dream"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #11998e 0%, #38ef7d 100%)" style="background:linear-gradient(135deg, #11998e 0%, #38ef7d 100%)" title="Forest"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" style="background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" title="Sky"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)" style="background:linear-gradient(135deg, #fa709a 0%, #fee140 100%)" title="Sunrise"></button>
+                    <button class="gradient-option" data-gradient="linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)" style="background:linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)" title="Lavender"></button>
+                  </div>
+                  
+                  <div class="setting-row" style="margin-top: 16px;">
+                    <label>Helligkeit anpassen</label>
+                    <input type="range" id="setting-gradient-brightness" min="50" max="150" value="100">
+                    <span id="gradient-brightness-value">100%</span>
+                  </div>
+                  
+                  <div class="custom-gradient-section">
+                    <p class="setting-label">Eigener Verlauf</p>
+                    <div class="custom-gradient-row">
+                      <div class="color-input-group">
+                        <label>Farbe 1</label>
+                        <input type="color" id="setting-gradient-color1" value="#1a1a2e">
+                      </div>
+                      <div class="color-input-group">
+                        <label>Farbe 2</label>
+                        <input type="color" id="setting-gradient-color2" value="#16213e">
+                      </div>
+                      <button id="apply-custom-gradient" class="btn-secondary">Anwenden</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="bg-color-options" class="hidden">
+                  <div class="setting-row">
+                    <label>Farbe</label>
+                    <input type="color" id="setting-bg-color" value="#1a1a2e">
+                  </div>
+                </div>
+                
+                <div id="bg-image-options" class="hidden">
+                  <div class="bg-mode-tabs">
+                    <button class="bg-mode-tab active" data-mode="dark">🌙 Dunkel-Modus</button>
+                    <button class="bg-mode-tab" data-mode="light">☀️ Hell-Modus</button>
+                  </div>
+                  
+                  <!-- Dark Mode Image -->
+                  <div id="bg-dark-settings" class="bg-mode-settings">
+                    <div class="setting-row">
+                      <label>Bild URL</label>
+                      <input type="url" id="setting-bg-url-dark" placeholder="https://...">
+                    </div>
+                    <div class="setting-row">
+                      <label>Oder hochladen</label>
+                      <button id="upload-bg-btn-dark" class="btn-secondary">Bild wählen</button>
+                      <input type="file" id="bg-upload-dark" accept="image/*" hidden>
+                    </div>
+                    <div id="bg-preview-dark" class="bg-preview"></div>
+                  </div>
+                  
+                  <!-- Light Mode Image -->
+                  <div id="bg-light-settings" class="bg-mode-settings hidden">
+                    <div class="setting-row">
+                      <label>Bild URL</label>
+                      <input type="url" id="setting-bg-url-light" placeholder="https://...">
+                    </div>
+                    <div class="setting-row">
+                      <label>Oder hochladen</label>
+                      <button id="upload-bg-btn-light" class="btn-secondary">Bild wählen</button>
+                      <input type="file" id="bg-upload-light" accept="image/*" hidden>
+                    </div>
+                    <div class="setting-row">
+                      <input type="checkbox" id="setting-use-dark-for-light">
+                      <label for="setting-use-dark-for-light">Dunkel-Bild auch für Hell-Modus verwenden</label>
+                    </div>
+                    <div id="bg-preview-light" class="bg-preview"></div>
+                  </div>
+                  
+                  <h4>Anpassungen</h4>
+                  <div class="setting-row">
+                    <label>Weichzeichner (Blur)</label>
+                    <input type="range" id="setting-bg-blur" min="0" max="20" value="0">
+                    <span id="blur-value">0px</span>
+                  </div>
+                  <div class="setting-row">
+                    <label>Overlay-Helligkeit</label>
+                    <input type="range" id="setting-bg-overlay" min="-100" max="100" value="0">
+                    <span id="overlay-value">0</span>
+                  </div>
+                  <p class="setting-hint">Negativ = dunkler, Positiv = heller</p>
+                </div>
+
+                <h3>Animationen</h3>
+                <div class="setting-row">
+                  <label>Hover-Effekte</label>
+                  <input type="checkbox" id="setting-hover" checked>
+                </div>
+                <div class="setting-row">
+                  <label>Seitenwechsel</label>
+                  <select id="setting-transition">
+                    <option value="slide">Slide</option>
+                    <option value="fade">Fade</option>
+                    <option value="none">Keine</option>
+                  </select>
+                </div>
+              </section>
+
+              <!-- Grid Section -->
+              <section id="settings-grid" class="settings-section">
+                <h3>Raster</h3>
+                <div class="setting-row">
+                  <label>Spalten</label>
+                  <input type="number" id="setting-columns" min="2" max="12" value="6">
+                </div>
+                <div class="setting-row">
+                  <label>Zeilen</label>
+                  <input type="number" id="setting-rows" min="2" max="8" value="4">
+                </div>
+                
+                <h3>Icons</h3>
+                <div class="setting-row">
+                  <label>Icon-Größe</label>
+                  <input type="range" id="setting-icon-size" min="48" max="128" value="72">
+                  <span id="icon-size-value">72px</span>
+                </div>
+                <div class="setting-row">
+                  <label>Abstand</label>
+                  <input type="range" id="setting-gap" min="8" max="48" value="24">
+                  <span id="gap-value">24px</span>
+                </div>
+                <div class="setting-row">
+                  <label>Rundung</label>
+                  <input type="range" id="setting-radius" min="0" max="50" value="16">
+                  <span id="radius-value">16px</span>
+                </div>
+                <div class="setting-row">
+                  <label>Schatten</label>
+                  <input type="checkbox" id="setting-shadow" checked>
+                </div>
+                
+                <h4>Icon-Hintergrund</h4>
+                <div class="setting-row">
+                  <label>Transparenz</label>
+                  <input type="range" id="setting-icon-opacity" min="0" max="100" value="100">
+                  <span id="icon-opacity-value">100%</span>
+                </div>
+                <div class="setting-row">
+                  <label>Hintergrundfarbe (Dunkel)</label>
+                  <input type="color" id="setting-icon-bg-dark" value="#1a1a2e">
+                </div>
+                <div class="setting-row">
+                  <label>Hintergrundfarbe (Hell)</label>
+                  <input type="color" id="setting-icon-bg-light" value="#ffffff">
+                </div>
+                <p class="setting-hint">Bei niedriger Transparenz scheint der Seiten-Hintergrund durch.</p>
+
+                <h3>Labels</h3>
+                <div class="setting-row">
+                  <label>Labels anzeigen</label>
+                  <input type="checkbox" id="setting-labels" checked>
+                </div>
+                <div class="setting-row">
+                  <label>Position</label>
+                  <select id="setting-label-pos">
+                    <option value="below">Unter dem Icon</option>
+                    <option value="above">Über dem Icon</option>
+                  </select>
+                </div>
+                <div class="setting-row">
+                  <label>Schriftgröße</label>
+                  <input type="range" id="setting-font-size" min="10" max="18" value="12">
+                  <span id="font-size-value">12px</span>
+                </div>
+                <div class="setting-row">
+                  <label>Max. Zeichen</label>
+                  <input type="number" id="setting-max-chars" min="10" max="50" value="20">
+                </div>
+                
+                <h3>Schriftart</h3>
+                <div class="setting-row">
+                  <label>Font Family</label>
+                  <select id="setting-font-family">
+                    <option value="system">System (Standard)</option>
+                    <option value="sf-pro">SF Pro</option>
+                    <option value="inter">Inter</option>
+                    <option value="roboto">Roboto</option>
+                    <option value="open-sans">Open Sans</option>
+                    <option value="lato">Lato</option>
+                    <option value="montserrat">Montserrat</option>
+                    <option value="poppins">Poppins</option>
+                    <option value="nunito">Nunito</option>
+                    <option value="source-sans">Source Sans Pro</option>
+                    <option value="ubuntu">Ubuntu</option>
+                    <option value="fira-sans">Fira Sans</option>
+                    <option value="custom">Eigene Schriftart...</option>
+                  </select>
+                </div>
+                <div class="setting-row" id="custom-font-row" style="display:none">
+                  <label>Eigene Font Family</label>
+                  <input type="text" id="setting-custom-font" placeholder="z.B. 'Comic Sans MS', cursive">
+                </div>
+                <div class="setting-row">
+                  <label>Schriftstärke</label>
+                  <select id="setting-font-weight">
+                    <option value="300">Light (300)</option>
+                    <option value="400">Normal (400)</option>
+                    <option value="500" selected>Medium (500)</option>
+                    <option value="600">Semibold (600)</option>
+                    <option value="700">Bold (700)</option>
+                  </select>
+                </div>
+              </section>
+
+              <!-- Search Section -->
+              <section id="settings-search" class="settings-section">
+                <h3>Suchmaschine</h3>
+                <div class="setting-row-full">
+                  <label>Such-URL (verwende %s als Platzhalter)</label>
+                  <input type="url" id="setting-search-engine" class="full-width" placeholder="https://www.google.com/search?q=%s">
+                </div>
+                
+                <p class="setting-label">Schnellauswahl</p>
+                <div class="search-presets">
+                  <button data-url="https://www.google.com/search?q=%s">Google</button>
+                  <button data-url="https://duckduckgo.com/?q=%s">DuckDuckGo</button>
+                  <button data-url="https://search.brave.com/search?q=%s">Brave</button>
+                  <button data-url="https://www.bing.com/search?q=%s">Bing</button>
+                  <button data-url="https://www.ecosia.org/search?q=%s">Ecosia</button>
+                  <button data-url="https://www.startpage.com/sp/search?query=%s">Startpage</button>
+                </div>
+
+                <h3>Verhalten</h3>
+                <div class="setting-row">
+                  <label>Instant-Suche</label>
+                  <input type="checkbox" id="setting-instant-search" checked>
+                </div>
+              </section>
+
+              <!-- Navigation Section -->
+              <section id="settings-navigation" class="settings-section">
+                <h3>Klick-Verhalten</h3>
+                <div class="setting-row">
+                  <label>Standard-Aktion bei Klick</label>
+                  <select id="setting-click-behavior">
+                    <option value="newTab">In neuem Tab öffnen</option>
+                    <option value="sameTab">Im aktuellen Tab öffnen</option>
+                  </select>
+                </div>
+                <p class="setting-hint">Mit Ctrl/Cmd+Klick wird die jeweils andere Aktion ausgeführt.</p>
+                
+                <h3>Steuerung</h3>
+                <div class="setting-row">
+                  <label>Tastatur-Navigation (Pfeiltasten)</label>
+                  <input type="checkbox" id="setting-keyboard" checked>
+                </div>
+                <div class="setting-row">
+                  <label>Mausrad-Navigation</label>
+                  <input type="checkbox" id="setting-mousewheel" checked>
+                </div>
+                <div class="setting-row">
+                  <label>Swipe/Trackpad</label>
+                  <input type="checkbox" id="setting-swipe" checked>
+                </div>
+                <div class="setting-row">
+                  <label>Navigations-Pfeile anzeigen</label>
+                  <input type="checkbox" id="setting-arrows" checked>
+                </div>
+                
+                <h3>Startverhalten</h3>
+                <div class="setting-row">
+                  <label>Beim Öffnen zeige</label>
+                  <select id="setting-startup-group">
+                    <option value="last">Letzte Gruppe</option>
+                    <option value="default">Standard-Gruppe</option>
+                    <!-- Dynamisch befüllt -->
+                  </select>
+                </div>
+                
+                <h3>Gruppenreihenfolge</h3>
+                <p class="setting-hint">Ziehe Gruppen um die Reihenfolge zu ändern</p>
+                <div id="group-order-list" class="group-order-list"></div>
+              </section>
+
+              <!-- Data Section -->
+              <section id="settings-data" class="settings-section">
+                
+                <!-- Komplettes Backup -->
+                <div class="data-section-block">
+                  <h3>📦 Komplettes Backup</h3>
+                  <p class="setting-hint">Enthält alle Favoriten, Gruppen und Einstellungen</p>
+                  <div class="data-row">
+                    <button id="export-full-backup" class="btn-primary">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                      </svg>
+                      Backup erstellen (.json)
+                    </button>
+                    <button id="import-full-backup" class="btn-secondary">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                      </svg>
+                      Backup wiederherstellen
+                    </button>
+                    <input type="file" id="import-backup-file" accept=".json" hidden>
+                  </div>
+                </div>
+
+                <!-- Favoriten Export -->
+                <div class="data-section-block">
+                  <h3>📤 Favoriten exportieren</h3>
+                  <p class="setting-hint">Exportiere nur die Favoriten in verschiedenen Formaten</p>
+                  <div class="export-format-grid">
+                    <button data-format="html" class="export-format-btn">
+                      <span class="format-icon">🌐</span>
+                      <span class="format-name">HTML</span>
+                      <span class="format-desc">Browser-kompatibel</span>
+                    </button>
+                    <button data-format="json" class="export-format-btn">
+                      <span class="format-icon">{ }</span>
+                      <span class="format-name">JSON</span>
+                      <span class="format-desc">Strukturierte Daten</span>
+                    </button>
+                    <button data-format="csv" class="export-format-btn">
+                      <span class="format-icon">📊</span>
+                      <span class="format-name">CSV</span>
+                      <span class="format-desc">Excel/Tabellen</span>
+                    </button>
+                    <button data-format="opml" class="export-format-btn">
+                      <span class="format-icon">📰</span>
+                      <span class="format-name">OPML</span>
+                      <span class="format-desc">Feed-Reader</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Favoriten Import -->
+                <div class="data-section-block">
+                  <h3>📥 Favoriten importieren</h3>
+                  <p class="setting-hint">Importiere Lesezeichen aus anderen Quellen</p>
+                  <div class="data-row">
+                    <button id="import-html-btn" class="btn-secondary">HTML-Lesezeichen</button>
+                    <button id="import-json-btn" class="btn-secondary">JSON-Datei</button>
+                    <input type="file" id="import-file" accept=".json,.html,.htm" hidden>
+                  </div>
+                </div>
+
+                <!-- URL-Liste -->
+                <div class="data-section-block">
+                  <h3>📋 URL-Liste</h3>
+                  <p class="setting-hint">Einfache Liste von URLs - eine pro Zeile</p>
+                  <textarea id="url-list-textarea" class="url-textarea" placeholder="https://example.com&#10;https://google.com&#10;https://github.com"></textarea>
+                  <div class="data-row">
+                    <button id="import-url-list" class="btn-secondary">URLs importieren</button>
+                    <button id="export-url-list" class="btn-secondary">URLs exportieren</button>
+                    <button id="clear-url-list" class="btn-ghost">Leeren</button>
+                  </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="data-section-block danger-zone">
+                  <h3>⚠️ Gefahrenzone</h3>
+                  <div class="danger-actions">
+                    <div class="danger-item">
+                      <div>
+                        <strong>Alle Favoriten löschen</strong>
+                        <p>Entfernt alle Favoriten, behält Gruppen und Einstellungen</p>
+                      </div>
+                      <button id="clear-favorites-btn" class="btn-danger-outline">Favoriten löschen</button>
+                    </div>
+                    <div class="danger-item">
+                      <div>
+                        <strong>Alles zurücksetzen</strong>
+                        <p>Setzt die Extension auf Werkseinstellungen zurück</p>
+                      </div>
+                      <button id="reset-all-btn" class="btn-danger">Komplett zurücksetzen</button>
+                    </div>
+                  </div>
+                </div>
+
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary" data-action="close">Fertig</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-small">
+        <div class="modal-header">
+          <h2>Bestätigung</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="confirm-message">Bist du sicher?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-action="cancel">Abbrechen</button>
+          <button type="button" class="btn-danger" data-action="confirm">Löschen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group Manager Modal -->
+    <div id="group-manager-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-fullscreen">
+        <div class="modal-header">
+          <h2>📂 Gruppen-Manager</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="group-manager">
+            <!-- Group Selection -->
+            <div class="group-manager-header">
+              <div class="group-selector">
+                <label>Linke Gruppe:</label>
+                <select id="manager-group-left"></select>
+              </div>
+              <div class="group-manager-actions">
+                <button id="move-all-right" class="btn-secondary" title="Alle nach rechts">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="13 17 18 12 13 7"/>
+                    <polyline points="6 17 11 12 6 7"/>
+                  </svg>
+                </button>
+                <button id="move-all-left" class="btn-secondary" title="Alle nach links">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="11 17 6 12 11 7"/>
+                    <polyline points="18 17 13 12 18 7"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="group-selector">
+                <label>Rechte Gruppe:</label>
+                <select id="manager-group-right"></select>
+              </div>
+            </div>
+            
+            <!-- Drag & Drop Panels -->
+            <div class="group-manager-panels">
+              <div class="group-panel" id="panel-left">
+                <div class="panel-header">
+                  <span class="panel-icon" id="panel-left-icon">⭐</span>
+                  <span class="panel-title" id="panel-left-title">Favoriten</span>
+                  <span class="panel-count" id="panel-left-count">0</span>
+                </div>
+                <div class="panel-content" id="panel-left-content" data-group="left"></div>
+              </div>
+              
+              <div class="group-panel" id="panel-right">
+                <div class="panel-header">
+                  <span class="panel-icon" id="panel-right-icon">📁</span>
+                  <span class="panel-title" id="panel-right-title">Import</span>
+                  <span class="panel-count" id="panel-right-count">0</span>
+                </div>
+                <div class="panel-content" id="panel-right-content" data-group="right"></div>
+              </div>
+            </div>
+            
+            <div class="group-manager-help">
+              <p>💡 <strong>Tipp:</strong> Ziehe Favoriten per Drag & Drop von einer Gruppe zur anderen. Halte <kbd>Shift</kbd> gedrückt, um mehrere auszuwählen.</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary" data-action="close">Fertig</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+  </div>
+
+  <script src="newtab.js"></script>
+</body>
+</html>
