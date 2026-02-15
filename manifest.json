@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "__MSG_extDescription__",
   
   "default_locale": "de",
@@ -41,11 +41,6 @@
   
   "optional_permissions": [
     "topSites"
-  ],
-  
-  "host_permissions": [
-    "https://*/*",
-    "http://*/*"
   ],
   
   "content_security_policy": {
