@@ -10,7 +10,6 @@
   <div id="app" class="app">
     <!-- Background Layer -->
     <div id="background" class="background"></div>
-    <div id="background-overlay" class="background-overlay"></div>
     
     <!-- Main Container -->
     <div class="main-container">
@@ -83,92 +82,90 @@
       </header>
 
       <!-- Grid Container -->
-      <main class="grid-wrapper">
-        <!-- Navigation Arrow Left -->
-        <button id="nav-left" class="nav-arrow nav-left hidden">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
+        <main class="grid-wrapper">
+          <!-- Navigation Arrow Left -->
+          <button id="nav-left" class="nav-arrow nav-left hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
 
-        <!-- Grid -->
-        <div id="grid-container" class="grid-container">
-          <div id="favorites-grid" class="favorites-grid"></div>
-        </div>
+          <!-- Grid -->
+          <div id="grid-container" class="grid-container">
+            <div id="favorites-grid" class="favorites-grid"></div>
+          </div>
 
-        <!-- Navigation Arrow Right -->
-        <button id="nav-right" class="nav-arrow nav-right hidden">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-      </main>
+          <!-- Navigation Arrow Right -->
+          <button id="nav-right" class="nav-arrow nav-right hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </main>
 
       <!-- Pagination Dots -->
       <div id="pagination" class="pagination"></div>
 
-      <!-- Sort Dropdown -->
-      <div class="sort-dropdown-wrapper">
-        <button id="sort-btn" class="sort-btn" title="Sortieren">
+      <!-- Toolbar Links unten -->
+      <div class="toolbar-left">
+        <!-- Settings Button mit Zahnrad -->
+        <button id="settings-btn" class="toolbar-btn" title="Einstellungen">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="4" y1="6" x2="16" y2="6"/>
-            <line x1="4" y1="12" x2="12" y2="12"/>
-            <line x1="4" y1="18" x2="8" y2="18"/>
-            <polyline points="15 15 18 18 21 15"/>
-            <line x1="18" y1="12" x2="18" y2="18"/>
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
         </button>
-        <div id="sort-dropdown" class="sort-dropdown hidden">
-          <button data-sort="manual" class="active">
-            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-            Manuell
+        
+        <!-- Sort Button -->
+        <div class="sort-dropdown-wrapper toolbar-sort">
+          <button id="sort-btn" class="toolbar-btn" title="Sortieren">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="6" x2="16" y2="6"/>
+              <line x1="4" y1="12" x2="12" y2="12"/>
+              <line x1="4" y1="18" x2="8" y2="18"/>
+              <polyline points="15 15 18 18 21 15"/>
+              <line x1="18" y1="12" x2="18" y2="18"/>
+            </svg>
           </button>
-          <button data-sort="name-asc">
-            <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 10l3-3 3 3M20 7v10"/></svg>
-            Name (A-Z)
-          </button>
-          <button data-sort="name-desc">
-            <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 17l3 3 3-3M20 7v13"/></svg>
-            Name (Z-A)
-          </button>
-          <button data-sort="date-desc">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Neueste zuerst
-          </button>
-          <button data-sort="date-asc">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Älteste zuerst
-          </button>
-          <button data-sort="visits-desc">
-            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            Meistbesucht
-          </button>
+          <div id="sort-dropdown" class="sort-dropdown hidden">
+            <button data-sort="manual" class="active">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+              Manuell
+            </button>
+            <button data-sort="name-asc">
+              <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 10l3-3 3 3M20 7v10"/></svg>
+              Name (A-Z)
+            </button>
+            <button data-sort="name-desc">
+              <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 17l3 3 3-3M20 7v13"/></svg>
+              Name (Z-A)
+            </button>
+            <button data-sort="date-desc">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Neueste zuerst
+            </button>
+            <button data-sort="date-asc">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Älteste zuerst
+            </button>
+            <button data-sort="visits-desc">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Meistbesucht
+            </button>
+          </div>
         </div>
+        
+        <!-- Theme Switch Button -->
+        <button id="theme-toggle-btn" class="toolbar-btn" title="Theme wechseln">
+          <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
       </div>
-
-      <!-- Refresh Icons Button -->
-      <button id="refresh-icons-btn" class="refresh-icons-btn" title="Alle Icons aktualisieren">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="23 4 23 10 17 10"/>
-          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-        </svg>
-      </button>
-
-      <!-- Add Favorite Button -->
-      <button id="add-favorite-btn" class="add-favorite-btn" title="Favorit hinzufügen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-      </button>
-
-      <!-- Settings Button -->
-      <button id="settings-btn" class="settings-btn" title="Einstellungen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-        </svg>
-      </button>
     </div>
 
     <!-- Context Menu -->
@@ -258,7 +255,45 @@
               <button type="button" id="upload-icon" class="btn-secondary">Eigenes Bild</button>
               <input type="file" id="icon-upload" accept="image/*" hidden>
             </div>
-            <div id="icon-preview" class="icon-preview"></div>
+            <div class="icon-preview-container">
+              <div id="icon-preview" class="icon-preview"></div>
+              <div class="icon-info">
+                <span id="icon-type-badge" class="icon-type-badge">PNG</span>
+                <span id="icon-size-info" class="icon-size-info"></span>
+              </div>
+            </div>
+            <div class="icon-tools">
+              <div class="white-threshold-control">
+                <label>Weiß-Schwelle: <span id="white-threshold-value">245</span></label>
+                <input type="range" id="white-threshold" min="200" max="255" value="245">
+                <small class="setting-hint">Niedriger = mehr wird entfernt</small>
+              </div>
+              <div class="icon-tool-buttons">
+                <button type="button" id="remove-white-bg" class="btn-tool" title="Weißen Hintergrund transparent machen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M9 9l6 6M15 9l-6 6"/>
+                  </svg>
+                  Anwenden
+                </button>
+                <button type="button" id="reset-icon" class="btn-tool hidden" title="Original-Icon wiederherstellen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                  </svg>
+                  Zurücksetzen
+                </button>
+                <button type="button" id="rescan-icons" class="btn-tool" title="Icon-Cache leeren und neu scannen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                    <path d="M21 21v-5h-5"/>
+                  </svg>
+                  Neu scannen
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -417,21 +452,16 @@
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
                 Daten & Backup
               </button>
+              <div style="flex:1"></div>
+              <button class="settings-nav-item donate-nav-btn" id="donate-btn">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                Ich möchte Danke sagen
+              </button>
             </nav>
             
             <div class="settings-content">
               <!-- Appearance Section -->
               <section id="settings-appearance" class="settings-section active">
-                <h3>Theme</h3>
-                <div class="setting-row">
-                  <label>Farbschema</label>
-                  <select id="setting-theme">
-                    <option value="dark">Dunkel</option>
-                    <option value="light">Hell</option>
-                    <option value="system">System</option>
-                  </select>
-                </div>
-                
                 <h3>Akzentfarbe</h3>
                 <div class="color-palette" id="accent-color-palette">
                   <!-- Material Design Colors -->
@@ -574,10 +604,6 @@
 
                 <h3>Animationen</h3>
                 <div class="setting-row">
-                  <label>Hover-Effekte</label>
-                  <input type="checkbox" id="setting-hover" checked>
-                </div>
-                <div class="setting-row">
                   <label>Seitenwechsel</label>
                   <select id="setting-transition">
                     <option value="slide">Slide</option>
@@ -611,9 +637,16 @@
                   <span id="gap-value">24px</span>
                 </div>
                 <div class="setting-row">
-                  <label>Rundung</label>
+                  <label>Container-Rundung</label>
                   <input type="range" id="setting-radius" min="0" max="50" value="16">
-                  <span id="radius-value">16px</span>
+                  <span id="radius-value">16%</span>
+                  <small class="setting-hint">Glassmorphism-Rahmen</small>
+                </div>
+                <div class="setting-row">
+                  <label>Bild-Rundung</label>
+                  <input type="range" id="setting-image-radius" min="0" max="50" value="0">
+                  <span id="image-radius-value">0%</span>
+                  <small class="setting-hint">Favicon selbst (0% = eckig, 50% = rund)</small>
                 </div>
                 <div class="setting-row">
                   <label>Schatten</label>
@@ -623,8 +656,8 @@
                 <h4>Icon-Hintergrund</h4>
                 <div class="setting-row">
                   <label>Transparenz</label>
-                  <input type="range" id="setting-icon-opacity" min="0" max="100" value="100">
-                  <span id="icon-opacity-value">100%</span>
+                  <input type="range" id="setting-icon-opacity" min="0" max="100" value="60">
+                  <span id="icon-opacity-value">60%</span>
                 </div>
                 <div class="setting-row">
                   <label>Hintergrundfarbe (Dunkel)</label>
@@ -634,7 +667,24 @@
                   <label>Hintergrundfarbe (Hell)</label>
                   <input type="color" id="setting-icon-bg-light" value="#ffffff">
                 </div>
-                <p class="setting-hint">Bei niedriger Transparenz scheint der Seiten-Hintergrund durch.</p>
+                
+                <h4>🔮 Glassmorphism-Effekt</h4>
+                <p class="setting-hint">Der Glas-Effekt ist am besten sichtbar mit einem Hintergrundbild!</p>
+                <div class="setting-row">
+                  <label>Glas-Blur</label>
+                  <input type="range" id="setting-glass-blur" min="0" max="30" value="10">
+                  <span id="glass-blur-value">10px</span>
+                </div>
+                <div class="setting-row">
+                  <label>Rahmen-Helligkeit</label>
+                  <input type="range" id="setting-glass-border" min="0" max="50" value="15">
+                  <span id="glass-border-value">15%</span>
+                </div>
+                <div class="setting-row">
+                  <label>Schatten-Stärke</label>
+                  <input type="range" id="setting-glass-shadow" min="0" max="50" value="20">
+                  <span id="glass-shadow-value">20%</span>
+                </div>
 
                 <h3>Labels</h3>
                 <div class="setting-row">
@@ -656,6 +706,14 @@
                 <div class="setting-row">
                   <label>Max. Zeichen</label>
                   <input type="number" id="setting-max-chars" min="10" max="50" value="20">
+                </div>
+                <div class="setting-row">
+                  <label>Farbe (Dunkel-Modus)</label>
+                  <input type="color" id="setting-label-color-dark" value="#ffffff">
+                </div>
+                <div class="setting-row">
+                  <label>Farbe (Hell-Modus)</label>
+                  <input type="color" id="setting-label-color-light" value="#1a1a2e">
                 </div>
                 
                 <h3>Schriftart</h3>
@@ -860,6 +918,7 @@
                 </div>
 
               </section>
+              
             </div>
           </div>
         </div>
@@ -957,8 +1016,14 @@
 
     <!-- Toast Notifications -->
     <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Version Badge -->
+    <div class="version-badge">v2.7.35</div>
   </div>
 
+  <script src="../lib/storage.js"></script>
+  <script src="../lib/favicon.js"></script>
+  
   <script src="newtab.js"></script>
 </body>
 </html>

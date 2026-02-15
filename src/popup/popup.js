@@ -1,17 +1,30 @@
 /**
  * FavGrid Popup Script
+ * Nutzt zentrale Storage-Konfiguration aus storage.js
  */
+
+// Storage wird über <script src="../lib/storage.js"> im HTML geladen
+// Falls nicht vorhanden, Fallback:
+if (typeof generateId === 'undefined') {
+  function generateId() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // Get current tab info
+    // Aktuellen Tab holen
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const currentUrl = tab?.url || '';
     const currentTitle = tab?.title || '';
     
     console.log('Current tab:', currentUrl, currentTitle);
     
-    // Update current URL display
+    // URL-Anzeige aktualisieren
     const urlDisplay = document.getElementById('current-url');
     const addButton = document.getElementById('add-current');
     
@@ -28,12 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       addButton.style.cursor = 'not-allowed';
     }
     
-    // Load stats and groups
+    // Stats und Gruppen laden
     let data = await chrome.storage.local.get(['favorites', 'groups']);
     let favorites = data.favorites || [];
     let groups = data.groups || [];
     
-    // Initialize default group if none exists
+    // Default-Gruppe initialisieren falls keine existiert
     if (groups.length === 0) {
       const defaultGroup = {
         id: 'default',
@@ -51,15 +64,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.log('Created default group');
     }
     
-    // Update stats
+    // Stats aktualisieren
     document.getElementById('total-favorites').textContent = favorites.length;
     document.getElementById('total-groups').textContent = groups.length;
     
-    // Populate group select
+    // Gruppen-Dropdown befüllen
     const groupSelect = document.getElementById('target-group');
     const defaultGroup = groups.find(g => g.isDefault) || groups[0];
     
-    groupSelect.innerHTML = ''; // Clear first
+    groupSelect.innerHTML = '';
     groups.sort((a, b) => a.position - b.position).forEach(group => {
       const option = document.createElement('option');
       option.value = group.id;
@@ -68,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       groupSelect.appendChild(option);
     });
     
-    // Add current page
+    // Aktuelle Seite hinzufügen
     addButton.addEventListener('click', async () => {
       if (!currentUrl || !currentUrl.startsWith('http')) {
         showToast('Diese Seite kann nicht hinzugefügt werden', true);
@@ -76,11 +89,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       
       try {
-        // Reload favorites to get current state
+        // Favoriten neu laden für aktuellen Stand
         const freshData = await chrome.storage.local.get(['favorites']);
         const currentFavorites = freshData.favorites || [];
         
-        // Check if already exists
+        // Prüfen ob bereits vorhanden
         const exists = currentFavorites.some(f => f.url === currentUrl);
         if (exists) {
           showToast('Diese Seite ist bereits in deinen Favoriten!', true);
@@ -90,8 +103,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const groupId = groupSelect.value;
         const groupFavorites = currentFavorites.filter(f => f.groupId === groupId);
         
+        // Neuen Favorit erstellen (nutzt zentrale oder lokale generateId)
         const newFavorite = {
-          id: generateId(),
+          id: (typeof Storage !== 'undefined' && Storage.generateId) ? Storage.generateId() : generateId(),
           url: currentUrl,
           alias: currentTitle || new URL(currentUrl).hostname,
           description: '',
@@ -113,14 +127,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Added favorite:', newFavorite);
         showToast('Favorit hinzugefügt! ✓');
         
-        // Update stats
+        // Stats aktualisieren
         document.getElementById('total-favorites').textContent = currentFavorites.length;
         
-        // Disable button to prevent double-add
+        // Button deaktivieren um Doppel-Hinzufügen zu verhindern
         addButton.disabled = true;
         addButton.style.opacity = '0.5';
         
-        // Close popup after short delay
+        // Popup nach kurzer Verzögerung schließen
         setTimeout(() => window.close(), 1200);
         
       } catch (err) {
@@ -129,15 +143,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
     
-    // Open new tab
+    // New Tab öffnen
     document.getElementById('open-newtab').addEventListener('click', () => {
       chrome.tabs.create({ url: chrome.runtime.getURL('src/newtab/newtab.html') });
       window.close();
     });
     
-    // Open settings
-    document.getElementById('open-settings').addEventListener('click', () => {
-      chrome.runtime.openOptionsPage();
+    // Donate-Seite öffnen
+    document.getElementById('open-donate').addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('src/donate/donate.html') });
       window.close();
     });
     
@@ -147,14 +161,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-function generateId() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
+/**
+ * Zeigt Toast-Nachricht an
+ * @param {string} message - Nachricht
+ * @param {boolean} isError - Fehler-Styling
+ */
 function showToast(message, isError = false) {
   const toast = document.getElementById('toast');
   toast.textContent = message;

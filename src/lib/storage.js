@@ -1,17 +1,29 @@
 /**
- * FavGrid Storage Library
- * Handles all data persistence using chrome.storage.local
+ * FavGrid - Zentrales Storage Modul
+ * Enthält alle Default-Werte und Storage-Operationen
+ * WICHTIG: Diese Datei ist die einzige Quelle für defaultSettings und generateId
  */
 
-const FavGridStorage = {
-  // Default settings
+// ============================================
+// Zentrale Konfiguration
+// ============================================
+const StorageConfig = {
   defaultSettings: {
     theme: 'dark',
+    accentColor: '#7f5af0',
     background: {
       type: 'gradient',
       value: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
+      imageDark: '',
+      imageLight: '',
+      useDarkForLight: true,
       blur: 0,
-      overlay: 0
+      overlay: 0,
+      customGradient: {
+        color1: '#1a1a2e',
+        color2: '#16213e'
+      },
+      brightness: 100
     },
     grid: {
       columns: 6,
@@ -19,7 +31,17 @@ const FavGridStorage = {
       iconSize: 72,
       gap: 24,
       borderRadius: 16,
+      imageRadius: 0,      // Bild-Rundung in %
       showShadow: true
+    },
+    icons: {
+      opacity: 60,           // Standard: 60% für Glaseffekt
+      bgDark: '#1a1a2e',
+      bgLight: '#ffffff',
+      // Glassmorphism-Einstellungen
+      glassBlur: 10,         // Blur in px
+      glassBorder: 15,       // Border-Opacity in %
+      glassShadow: 20        // Shadow-Opacity in %
     },
     labels: {
       show: true,
@@ -28,12 +50,12 @@ const FavGridStorage = {
       maxLength: 20,
       fontFamily: 'system',
       customFont: '',
-      fontWeight: '500'
+      fontWeight: '500',
+      colorDark: '#ffffff',   // Label-Farbe im Dark Mode
+      colorLight: '#1a1a2e'   // Label-Farbe im Light Mode
     },
     animations: {
-      hover: true,
-      pageTransition: 'slide',
-      loadAnimation: true
+      pageTransition: 'slide'
     },
     search: {
       engine: 'https://www.google.com/search?q=%s',
@@ -44,19 +66,19 @@ const FavGridStorage = {
       keyboard: true,
       mousewheel: true,
       swipe: true,
-      showArrows: true
-    },
-    startup: {
-      group: 'last',
-      lastGroupId: null
+      showArrows: true,
+      clickBehavior: 'newTab'
     },
     backup: {
       autoBackup: false,
       frequency: 'weekly'
+    },
+    startup: {
+      group: 'last',
+      lastGroupId: null
     }
   },
 
-  // Default group
   defaultGroup: {
     id: 'default',
     name: 'Favoriten',
@@ -67,27 +89,81 @@ const FavGridStorage = {
     source: 'manual',
     createdAt: Date.now(),
     updatedAt: Date.now()
-  },
+  }
+};
 
-  // Generate UUID
-  generateId() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  },
+// ============================================
+// Utility Functions
+// ============================================
 
-  // Initialize storage with defaults
+/**
+ * Generiert eine UUID v4
+ * @returns {string} UUID
+ */
+function generateId() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+/**
+ * Deep Merge für Objekte
+ * @param {Object} target - Ziel-Objekt
+ * @param {Object} source - Quell-Objekt
+ * @returns {Object} Gemergtes Objekt
+ */
+function deepMerge(target, source) {
+  const result = { ...target };
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      result[key] = deepMerge(target[key] || {}, source[key]);
+    } else {
+      result[key] = source[key];
+    }
+  }
+  return result;
+}
+
+/**
+ * Extrahiert Hostname aus URL
+ * @param {string} url - URL
+ * @returns {string} Hostname
+ */
+function getHostname(url) {
+  try {
+    return new URL(url).hostname.replace('www.', '');
+  } catch {
+    return url;
+  }
+}
+
+// ============================================
+// Storage API
+// ============================================
+const Storage = {
+  // Konfiguration exportieren
+  defaultSettings: StorageConfig.defaultSettings,
+  defaultGroup: StorageConfig.defaultGroup,
+  
+  // Utility-Funktionen exportieren
+  generateId,
+  deepMerge,
+  getHostname,
+
+  /**
+   * Initialisiert Storage mit Defaults
+   */
   async init() {
     const data = await chrome.storage.local.get(['settings', 'groups', 'favorites']);
     
     if (!data.settings) {
-      await chrome.storage.local.set({ settings: this.defaultSettings });
+      await chrome.storage.local.set({ settings: StorageConfig.defaultSettings });
     }
     
     if (!data.groups || data.groups.length === 0) {
-      await chrome.storage.local.set({ groups: [this.defaultGroup] });
+      await chrome.storage.local.set({ groups: [{ ...StorageConfig.defaultGroup, createdAt: Date.now(), updatedAt: Date.now() }] });
     }
     
     if (!data.favorites) {
@@ -97,52 +173,51 @@ const FavGridStorage = {
     return this.getAll();
   },
 
-  // Get all data
+  /**
+   * Holt alle Daten
+   */
   async getAll() {
     const data = await chrome.storage.local.get(['settings', 'groups', 'favorites']);
     return {
-      settings: { ...this.defaultSettings, ...data.settings },
-      groups: data.groups || [this.defaultGroup],
+      settings: deepMerge(StorageConfig.defaultSettings, data.settings || {}),
+      groups: data.groups || [StorageConfig.defaultGroup],
       favorites: data.favorites || []
     };
   },
 
-  // Settings methods
+  /**
+   * Holt Settings
+   */
   async getSettings() {
     const data = await chrome.storage.local.get('settings');
-    return { ...this.defaultSettings, ...data.settings };
+    return deepMerge(StorageConfig.defaultSettings, data.settings || {});
   },
 
+  /**
+   * Aktualisiert Settings
+   */
   async updateSettings(updates) {
     const current = await this.getSettings();
-    const merged = this.deepMerge(current, updates);
+    const merged = deepMerge(current, updates);
     await chrome.storage.local.set({ settings: merged });
     return merged;
   },
 
-  // Deep merge helper
-  deepMerge(target, source) {
-    const result = { ...target };
-    for (const key in source) {
-      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-        result[key] = this.deepMerge(target[key] || {}, source[key]);
-      } else {
-        result[key] = source[key];
-      }
-    }
-    return result;
-  },
-
-  // Groups methods
+  /**
+   * Holt alle Gruppen
+   */
   async getGroups() {
     const data = await chrome.storage.local.get('groups');
-    return data.groups || [this.defaultGroup];
+    return data.groups || [StorageConfig.defaultGroup];
   },
 
+  /**
+   * Fügt neue Gruppe hinzu
+   */
   async addGroup(group) {
     const groups = await this.getGroups();
     const newGroup = {
-      id: this.generateId(),
+      id: generateId(),
       position: groups.length,
       source: 'manual',
       createdAt: Date.now(),
@@ -154,6 +229,9 @@ const FavGridStorage = {
     return newGroup;
   },
 
+  /**
+   * Aktualisiert Gruppe
+   */
   async updateGroup(id, updates) {
     const groups = await this.getGroups();
     const index = groups.findIndex(g => g.id === id);
@@ -165,14 +243,15 @@ const FavGridStorage = {
     return null;
   },
 
+  /**
+   * Löscht Gruppe (verschiebt Favoriten zur Default-Gruppe)
+   */
   async deleteGroup(id) {
     let groups = await this.getGroups();
     const defaultGroup = groups.find(g => g.isDefault);
     
-    // Don't delete default group
     if (id === defaultGroup?.id) return false;
     
-    // Move favorites to default group
     const favorites = await this.getFavorites();
     const updatedFavorites = favorites.map(f => 
       f.groupId === id ? { ...f, groupId: defaultGroup.id } : f
@@ -184,35 +263,33 @@ const FavGridStorage = {
     return true;
   },
 
-  async reorderGroups(orderedIds) {
-    const groups = await this.getGroups();
-    const reordered = orderedIds.map((id, index) => {
-      const group = groups.find(g => g.id === id);
-      return { ...group, position: index };
-    });
-    await chrome.storage.local.set({ groups: reordered });
-    return reordered;
-  },
-
-  // Favorites methods
+  /**
+   * Holt alle Favoriten
+   */
   async getFavorites() {
     const data = await chrome.storage.local.get('favorites');
     return data.favorites || [];
   },
 
+  /**
+   * Holt Favoriten einer Gruppe
+   */
   async getFavoritesByGroup(groupId) {
     const favorites = await this.getFavorites();
     return favorites
       .filter(f => f.groupId === groupId)
-      .sort((a, b) => a.position - b.position);
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   },
 
+  /**
+   * Fügt Favorit hinzu
+   */
   async addFavorite(favorite) {
     const favorites = await this.getFavorites();
     const groupFavorites = favorites.filter(f => f.groupId === favorite.groupId);
     
     const newFavorite = {
-      id: this.generateId(),
+      id: generateId(),
       alias: '',
       description: '',
       tags: [],
@@ -232,6 +309,9 @@ const FavGridStorage = {
     return newFavorite;
   },
 
+  /**
+   * Aktualisiert Favorit
+   */
   async updateFavorite(id, updates) {
     const favorites = await this.getFavorites();
     const index = favorites.findIndex(f => f.id === id);
@@ -243,6 +323,9 @@ const FavGridStorage = {
     return null;
   },
 
+  /**
+   * Löscht Favorit
+   */
   async deleteFavorite(id) {
     let favorites = await this.getFavorites();
     favorites = favorites.filter(f => f.id !== id);
@@ -250,53 +333,27 @@ const FavGridStorage = {
     return true;
   },
 
-  async moveFavorite(id, newGroupId, newPosition = null) {
+  /**
+   * Verschiebt Favorit in andere Gruppe
+   */
+  async moveFavorite(id, newGroupId) {
     const favorites = await this.getFavorites();
     const favorite = favorites.find(f => f.id === id);
     
     if (!favorite) return null;
     
-    // Update group
+    const groupFavorites = favorites.filter(f => f.groupId === newGroupId && f.id !== id);
     favorite.groupId = newGroupId;
+    favorite.position = groupFavorites.length;
     favorite.updatedAt = Date.now();
-    
-    // Update position
-    if (newPosition !== null) {
-      favorite.position = newPosition;
-    } else {
-      const groupFavorites = favorites.filter(f => f.groupId === newGroupId && f.id !== id);
-      favorite.position = groupFavorites.length;
-    }
     
     await chrome.storage.local.set({ favorites });
     return favorite;
   },
 
-  async reorderFavorites(groupId, orderedIds) {
-    const favorites = await this.getFavorites();
-    
-    orderedIds.forEach((id, index) => {
-      const fav = favorites.find(f => f.id === id);
-      if (fav && fav.groupId === groupId) {
-        fav.position = index;
-      }
-    });
-    
-    await chrome.storage.local.set({ favorites });
-    return favorites.filter(f => f.groupId === groupId).sort((a, b) => a.position - b.position);
-  },
-
-  async incrementVisit(id) {
-    const favorites = await this.getFavorites();
-    const favorite = favorites.find(f => f.id === id);
-    if (favorite) {
-      favorite.visitCount++;
-      favorite.lastVisited = Date.now();
-      await chrome.storage.local.set({ favorites });
-    }
-  },
-
-  // Search
+  /**
+   * Sucht in Favoriten
+   */
   async search(query) {
     if (!query || query.trim() === '') return [];
     
@@ -318,7 +375,14 @@ const FavGridStorage = {
     });
   },
 
-  // Export methods
+  // ============================================
+  // Export/Import Funktionen
+  // ============================================
+
+  /**
+   * Exportiert als JSON (Vollbackup)
+   * Format: { version, exportDate, data: { settings, groups, favorites } }
+   */
   async exportJSON() {
     const data = await this.getAll();
     return JSON.stringify({
@@ -328,6 +392,9 @@ const FavGridStorage = {
     }, null, 2);
   },
 
+  /**
+   * Exportiert als HTML (Lesezeichen-Format)
+   */
   async exportHTML() {
     const { favorites, groups } = await this.getAll();
     
@@ -337,12 +404,12 @@ const FavGridStorage = {
 <H1>FavGrid Bookmarks</H1>
 <DL><p>\n`;
     
-    for (const group of groups.sort((a, b) => a.position - b.position)) {
+    for (const group of groups.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
       const groupFavorites = favorites.filter(f => f.groupId === group.id);
       html += `    <DT><H3>${this.escapeHtml(group.name)}</H3>\n    <DL><p>\n`;
       
-      for (const fav of groupFavorites.sort((a, b) => a.position - b.position)) {
-        const name = fav.alias || new URL(fav.url).hostname;
+      for (const fav of groupFavorites.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
+        const name = fav.alias || this.getHostname(fav.url);
         html += `        <DT><A HREF="${this.escapeHtml(fav.url)}" ADD_DATE="${Math.floor(fav.createdAt / 1000)}">${this.escapeHtml(name)}</A>\n`;
       }
       
@@ -353,6 +420,9 @@ const FavGridStorage = {
     return html;
   },
 
+  /**
+   * Exportiert als CSV
+   */
   async exportCSV() {
     const { favorites, groups } = await this.getAll();
     
@@ -366,17 +436,20 @@ const FavGridStorage = {
     return csv;
   },
 
+  /**
+   * Exportiert als Markdown
+   */
   async exportMarkdown() {
     const { favorites, groups } = await this.getAll();
     
     let md = `# FavGrid Export\n\n_Exported: ${new Date().toLocaleString()}_\n\n`;
     
-    for (const group of groups.sort((a, b) => a.position - b.position)) {
+    for (const group of groups.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
       const groupFavorites = favorites.filter(f => f.groupId === group.id);
       md += `## ${group.icon} ${group.name}\n\n`;
       
-      for (const fav of groupFavorites.sort((a, b) => a.position - b.position)) {
-        const name = fav.alias || new URL(fav.url).hostname;
+      for (const fav of groupFavorites.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
+        const name = fav.alias || this.getHostname(fav.url);
         const desc = fav.description ? ` - ${fav.description}` : '';
         md += `- [${name}](${fav.url})${desc}\n`;
       }
@@ -387,12 +460,18 @@ const FavGridStorage = {
     return md;
   },
 
+  /**
+   * Exportiert als Text (nur URLs)
+   */
   async exportText() {
     const favorites = await this.getFavorites();
     return favorites.map(f => f.url).join('\n');
   },
 
-  // Import methods
+  /**
+   * Importiert JSON
+   * Erwartet Format: { data: { favorites, groups, settings } }
+   */
   async importJSON(jsonString) {
     try {
       const imported = JSON.parse(jsonString);
@@ -413,6 +492,9 @@ const FavGridStorage = {
     }
   },
 
+  /**
+   * Importiert HTML-Lesezeichen
+   */
   async importHTML(htmlString) {
     try {
       const parser = new DOMParser();
@@ -421,14 +503,13 @@ const FavGridStorage = {
       const defaultGroup = groups.find(g => g.isDefault);
       
       let imported = 0;
-      const dts = doc.querySelectorAll('DT');
+      const anchors = doc.querySelectorAll('A');
       
-      for (const dt of dts) {
-        const anchor = dt.querySelector('A');
-        if (anchor) {
+      for (const anchor of anchors) {
+        if (anchor.href && anchor.href.startsWith('http')) {
           await this.addFavorite({
             url: anchor.href,
-            alias: anchor.textContent,
+            alias: anchor.textContent || '',
             groupId: defaultGroup.id
           });
           imported++;
@@ -441,17 +522,25 @@ const FavGridStorage = {
     }
   },
 
-  // Helper
+  /**
+   * Escaped HTML-Zeichen
+   */
   escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 };
 
-// Export for use in other scripts
+// Export für verschiedene Kontexte
 if (typeof window !== 'undefined') {
-  window.FavGridStorage = FavGridStorage;
+  window.Storage = Storage;
+  window.generateId = generateId;
 }
 
-export default FavGridStorage;
+if (typeof module !== 'undefined') {
+  module.exports = { Storage, generateId, StorageConfig };
+}

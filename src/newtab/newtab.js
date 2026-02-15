@@ -4,457 +4,9 @@
  */
 
 // ============================================
-// Storage Module (inline for simplicity)
+// Storage Module - Extern geladen aus ../lib/storage.js
+// Favicon Module - Extern geladen aus ../lib/favicon.js
 // ============================================
-const Storage = {
-  defaultSettings: {
-    theme: 'dark',
-    accentColor: '#7f5af0',
-    background: {
-      type: 'gradient',
-      value: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
-      imageDark: '',
-      imageLight: '',
-      useDarkForLight: true,
-      blur: 0,
-      overlay: 0,
-      customGradient: {
-        color1: '#1a1a2e',
-        color2: '#16213e'
-      },
-      brightness: 100
-    },
-    grid: {
-      columns: 6,
-      rows: 4,
-      iconSize: 72,
-      gap: 24,
-      borderRadius: 16,
-      showShadow: true
-    },
-    icons: {
-      opacity: 100,
-      bgDark: '#1a1a2e',
-      bgLight: '#ffffff'
-    },
-    labels: {
-      show: true,
-      position: 'below',
-      fontSize: 12,
-      maxLength: 20,
-      fontFamily: 'system',
-      customFont: '',
-      fontWeight: '500'
-    },
-    animations: {
-      hover: true,
-      pageTransition: 'slide',
-      loadAnimation: true
-    },
-    search: {
-      engine: 'https://www.google.com/search?q=%s',
-      instantSearch: true,
-      suggestions: false
-    },
-    navigation: {
-      keyboard: true,
-      mousewheel: true,
-      swipe: true,
-      showArrows: true,
-      clickBehavior: 'newTab'
-    },
-    backup: {
-      autoBackup: false,
-      frequency: 'weekly'
-    },
-    startup: {
-      group: 'last',
-      lastGroupId: null
-    }
-  },
-
-  defaultGroup: {
-    id: 'default',
-    name: 'Favoriten',
-    icon: '⭐',
-    color: '#7f5af0',
-    position: 0,
-    isDefault: true,
-    source: 'manual',
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  },
-
-  generateId() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  },
-
-  deepMerge(target, source) {
-    const result = { ...target };
-    for (const key in source) {
-      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-        result[key] = this.deepMerge(target[key] || {}, source[key]);
-      } else {
-        result[key] = source[key];
-      }
-    }
-    return result;
-  },
-
-  async init() {
-    const data = await chrome.storage.local.get(['settings', 'groups', 'favorites']);
-    
-    if (!data.settings) {
-      await chrome.storage.local.set({ settings: this.defaultSettings });
-    }
-    
-    if (!data.groups || data.groups.length === 0) {
-      await chrome.storage.local.set({ groups: [this.defaultGroup] });
-    }
-    
-    if (!data.favorites) {
-      await chrome.storage.local.set({ favorites: [] });
-    }
-    
-    return this.getAll();
-  },
-
-  async getAll() {
-    const data = await chrome.storage.local.get(['settings', 'groups', 'favorites']);
-    return {
-      settings: this.deepMerge(this.defaultSettings, data.settings || {}),
-      groups: data.groups || [this.defaultGroup],
-      favorites: data.favorites || []
-    };
-  },
-
-  async getSettings() {
-    const data = await chrome.storage.local.get('settings');
-    return this.deepMerge(this.defaultSettings, data.settings || {});
-  },
-
-  async updateSettings(updates) {
-    const current = await this.getSettings();
-    const merged = this.deepMerge(current, updates);
-    await chrome.storage.local.set({ settings: merged });
-    return merged;
-  },
-
-  async getGroups() {
-    const data = await chrome.storage.local.get('groups');
-    return data.groups || [this.defaultGroup];
-  },
-
-  async addGroup(group) {
-    const groups = await this.getGroups();
-    const newGroup = {
-      id: this.generateId(),
-      position: groups.length,
-      source: 'manual',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      ...group
-    };
-    groups.push(newGroup);
-    await chrome.storage.local.set({ groups });
-    return newGroup;
-  },
-
-  async updateGroup(id, updates) {
-    const groups = await this.getGroups();
-    const index = groups.findIndex(g => g.id === id);
-    if (index !== -1) {
-      groups[index] = { ...groups[index], ...updates, updatedAt: Date.now() };
-      await chrome.storage.local.set({ groups });
-      return groups[index];
-    }
-    return null;
-  },
-
-  async deleteGroup(id) {
-    let groups = await this.getGroups();
-    const defaultGroup = groups.find(g => g.isDefault);
-    
-    if (id === defaultGroup?.id) return false;
-    
-    const favorites = await this.getFavorites();
-    const updatedFavorites = favorites.map(f => 
-      f.groupId === id ? { ...f, groupId: defaultGroup.id } : f
-    );
-    
-    groups = groups.filter(g => g.id !== id);
-    
-    await chrome.storage.local.set({ groups, favorites: updatedFavorites });
-    return true;
-  },
-
-  async getFavorites() {
-    const data = await chrome.storage.local.get('favorites');
-    return data.favorites || [];
-  },
-
-  async getFavoritesByGroup(groupId) {
-    const favorites = await this.getFavorites();
-    return favorites
-      .filter(f => f.groupId === groupId)
-      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-  },
-
-  async addFavorite(favorite) {
-    const favorites = await this.getFavorites();
-    const groupFavorites = favorites.filter(f => f.groupId === favorite.groupId);
-    
-    const newFavorite = {
-      id: this.generateId(),
-      alias: '',
-      description: '',
-      tags: [],
-      favicon: '',
-      customIcon: null,
-      position: groupFavorites.length,
-      source: 'manual',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      visitCount: 0,
-      lastVisited: null,
-      ...favorite
-    };
-    
-    favorites.push(newFavorite);
-    await chrome.storage.local.set({ favorites });
-    return newFavorite;
-  },
-
-  async updateFavorite(id, updates) {
-    const favorites = await this.getFavorites();
-    const index = favorites.findIndex(f => f.id === id);
-    if (index !== -1) {
-      favorites[index] = { ...favorites[index], ...updates, updatedAt: Date.now() };
-      await chrome.storage.local.set({ favorites });
-      return favorites[index];
-    }
-    return null;
-  },
-
-  async deleteFavorite(id) {
-    let favorites = await this.getFavorites();
-    favorites = favorites.filter(f => f.id !== id);
-    await chrome.storage.local.set({ favorites });
-    return true;
-  },
-
-  async moveFavorite(id, newGroupId) {
-    const favorites = await this.getFavorites();
-    const favorite = favorites.find(f => f.id === id);
-    
-    if (!favorite) return null;
-    
-    const groupFavorites = favorites.filter(f => f.groupId === newGroupId && f.id !== id);
-    favorite.groupId = newGroupId;
-    favorite.position = groupFavorites.length;
-    favorite.updatedAt = Date.now();
-    
-    await chrome.storage.local.set({ favorites });
-    return favorite;
-  },
-
-  async search(query) {
-    if (!query || query.trim() === '') return [];
-    
-    const favorites = await this.getFavorites();
-    const groups = await this.getGroups();
-    const lowerQuery = query.toLowerCase();
-    
-    return favorites.filter(f => {
-      const group = groups.find(g => g.id === f.groupId);
-      const searchText = [
-        f.url,
-        f.alias,
-        f.description,
-        ...(f.tags || []),
-        group?.name || ''
-      ].join(' ').toLowerCase();
-      
-      return searchText.includes(lowerQuery);
-    });
-  },
-
-  async exportJSON() {
-    const data = await this.getAll();
-    return JSON.stringify({
-      version: '1.0.0',
-      exportDate: new Date().toISOString(),
-      data
-    }, null, 2);
-  },
-
-  async exportHTML() {
-    const { favorites, groups } = await this.getAll();
-    
-    let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>FavGrid Bookmarks</TITLE>
-<H1>FavGrid Bookmarks</H1>
-<DL><p>\n`;
-    
-    for (const group of groups.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
-      const groupFavorites = favorites.filter(f => f.groupId === group.id);
-      html += `    <DT><H3>${this.escapeHtml(group.name)}</H3>\n    <DL><p>\n`;
-      
-      for (const fav of groupFavorites.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
-        const name = fav.alias || this.getHostname(fav.url);
-        html += `        <DT><A HREF="${this.escapeHtml(fav.url)}" ADD_DATE="${Math.floor(fav.createdAt / 1000)}">${this.escapeHtml(name)}</A>\n`;
-      }
-      
-      html += `    </DL><p>\n`;
-    }
-    
-    html += `</DL><p>`;
-    return html;
-  },
-
-  async exportCSV() {
-    const { favorites, groups } = await this.getAll();
-    
-    let csv = '"URL","Alias","Description","Group","Tags","Created"\n';
-    
-    for (const fav of favorites) {
-      const group = groups.find(g => g.id === fav.groupId);
-      csv += `"${fav.url}","${fav.alias}","${fav.description}","${group?.name || ''}","${(fav.tags || []).join(',')}","${new Date(fav.createdAt).toISOString()}"\n`;
-    }
-    
-    return csv;
-  },
-
-  async exportMarkdown() {
-    const { favorites, groups } = await this.getAll();
-    
-    let md = `# FavGrid Export\n\n_Exported: ${new Date().toLocaleString()}_\n\n`;
-    
-    for (const group of groups.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
-      const groupFavorites = favorites.filter(f => f.groupId === group.id);
-      md += `## ${group.icon} ${group.name}\n\n`;
-      
-      for (const fav of groupFavorites.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))) {
-        const name = fav.alias || this.getHostname(fav.url);
-        const desc = fav.description ? ` - ${fav.description}` : '';
-        md += `- [${name}](${fav.url})${desc}\n`;
-      }
-      
-      md += '\n';
-    }
-    
-    return md;
-  },
-
-  async exportText() {
-    const favorites = await this.getFavorites();
-    return favorites.map(f => f.url).join('\n');
-  },
-
-  async importJSON(jsonString) {
-    try {
-      const imported = JSON.parse(jsonString);
-      
-      if (imported.data) {
-        const { favorites, groups, settings } = imported.data;
-        
-        if (groups) await chrome.storage.local.set({ groups });
-        if (favorites) await chrome.storage.local.set({ favorites });
-        if (settings) await chrome.storage.local.set({ settings });
-        
-        return { success: true, count: favorites?.length || 0 };
-      }
-      
-      return { success: false, error: 'Invalid format' };
-    } catch (e) {
-      return { success: false, error: e.message };
-    }
-  },
-
-  async importHTML(htmlString) {
-    try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlString, 'text/html');
-      const groups = await this.getGroups();
-      const defaultGroup = groups.find(g => g.isDefault);
-      
-      let imported = 0;
-      const anchors = doc.querySelectorAll('A');
-      
-      for (const anchor of anchors) {
-        if (anchor.href && anchor.href.startsWith('http')) {
-          await this.addFavorite({
-            url: anchor.href,
-            alias: anchor.textContent || '',
-            groupId: defaultGroup.id
-          });
-          imported++;
-        }
-      }
-      
-      return { success: true, count: imported };
-    } catch (e) {
-      return { success: false, error: e.message };
-    }
-  },
-
-  escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  },
-
-  getHostname(url) {
-    try {
-      return new URL(url).hostname.replace('www.', '');
-    } catch {
-      return url;
-    }
-  }
-};
-
-// ============================================
-// Favicon Module
-// ============================================
-const Favicon = {
-  colors: [
-    '#7f5af0', '#2cb67d', '#ff8906', '#e53170', '#3da9fc',
-    '#f25f4c', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'
-  ],
-
-  async get(url) {
-    if (!url) return this.generateFallback(url);
-    
-    try {
-      const hostname = new URL(url).hostname;
-      return `https://www.google.com/s2/favicons?domain=${hostname}&sz=128`;
-    } catch {
-      return this.generateFallback(url);
-    }
-  },
-
-  generateFallback(url) {
-    let letter = '?';
-    let colorIndex = 0;
-    
-    try {
-      const hostname = new URL(url).hostname.replace('www.', '');
-      letter = hostname.charAt(0).toUpperCase();
-      colorIndex = hostname.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % this.colors.length;
-    } catch {}
-
-    const color = this.colors[colorIndex];
-    return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-      <rect width="64" height="64" rx="12" fill="${color}"/>
-      <text x="32" y="42" font-family="sans-serif" font-size="32" font-weight="600" fill="white" text-anchor="middle">${letter}</text>
-    </svg>`)}`;
-  }
-};
 
 // ============================================
 // App State
@@ -472,6 +24,13 @@ const App = {
   editingFavorite: null,
   editingGroup: null,
   contextTarget: null,
+  
+  // Icon-Quellen Rotation
+  iconSources: [],
+  iconSourceIndex: -1,
+  iconSourceName: '',
+  iconSourcesDiscovered: false,
+  originalCustomIcon: null, // Das Icon vor dem Blättern
 
   // DOM Elements
   elements: {},
@@ -573,7 +132,6 @@ const App = {
     this.elements = {
       app: document.getElementById('app'),
       background: document.getElementById('background'),
-      backgroundOverlay: document.getElementById('background-overlay'),
       searchInput: document.getElementById('search-input'),
       searchClear: document.getElementById('search-clear'),
       groupTabs: document.getElementById('group-tabs'),
@@ -583,11 +141,10 @@ const App = {
       navLeft: document.getElementById('nav-left'),
       navRight: document.getElementById('nav-right'),
       pagination: document.getElementById('pagination'),
-      addFavoriteBtn: document.getElementById('add-favorite-btn'),
       settingsBtn: document.getElementById('settings-btn'),
       sortBtn: document.getElementById('sort-btn'),
       sortDropdown: document.getElementById('sort-dropdown'),
-      refreshIconsBtn: document.getElementById('refresh-icons-btn'),
+      themeToggleBtn: document.getElementById('theme-toggle-btn'),
       contextMenu: document.getElementById('context-menu'),
       moveSubmenu: document.getElementById('move-submenu'),
       favoriteModal: document.getElementById('favorite-modal'),
@@ -631,18 +188,41 @@ const App = {
     document.documentElement.style.setProperty('--grid-rows', settings.grid.rows);
     document.documentElement.style.setProperty('--icon-size', `${settings.grid.iconSize}px`);
     document.documentElement.style.setProperty('--icon-gap', `${settings.grid.gap}px`);
-    document.documentElement.style.setProperty('--icon-radius', `${settings.grid.borderRadius}px`);
+    document.documentElement.style.setProperty('--icon-radius', `${settings.grid.borderRadius}%`);
+    document.documentElement.style.setProperty('--icon-image-radius', `${settings.grid.imageRadius || 0}%`);
     document.documentElement.style.setProperty('--label-font-size', `${settings.labels.fontSize}px`);
     document.documentElement.style.setProperty('--label-font-weight', settings.labels.fontWeight || '500');
     
-    // Icon settings
-    const iconSettings = settings.icons || { opacity: 100, bgDark: '#1a1a2e', bgLight: '#ffffff' };
-    const iconOpacity = (iconSettings.opacity ?? 100) / 100;
+    // Label-Farbe basierend auf Theme
+    const labelColor = theme === 'light' 
+      ? (settings.labels.colorLight || '#1a1a2e') 
+      : (settings.labels.colorDark || '#ffffff');
+    document.documentElement.style.setProperty('--label-color', labelColor);
+    
+    // Icon settings mit Glassmorphism
+    const iconSettings = settings.icons || { 
+      opacity: 60, 
+      bgDark: '#1a1a2e', 
+      bgLight: '#ffffff',
+      glassBlur: 10,
+      glassBorder: 15,
+      glassShadow: 20
+    };
+    const iconOpacity = (iconSettings.opacity ?? 60) / 100;
     const iconBgHex = theme === 'light' ? (iconSettings.bgLight || '#ffffff') : (iconSettings.bgDark || '#1a1a2e');
     
     // Konvertiere Hex zu rgba für Transparenz-Effekt
     const iconBgRgba = this.hexToRgba(iconBgHex, iconOpacity);
     document.documentElement.style.setProperty('--icon-bg-color', iconBgRgba);
+    
+    // Glassmorphism CSS-Variablen
+    const glassBlur = iconSettings.glassBlur ?? 10;
+    const glassBorder = (iconSettings.glassBorder ?? 15) / 100;
+    const glassShadow = (iconSettings.glassShadow ?? 20) / 100;
+    
+    document.documentElement.style.setProperty('--glass-blur', `${glassBlur}px`);
+    document.documentElement.style.setProperty('--glass-border-opacity', glassBorder);
+    document.documentElement.style.setProperty('--glass-shadow-opacity', glassShadow);
     
     // Font Family
     const fontFamily = this.getFontFamily(settings.labels.fontFamily, settings.labels.customFont);
@@ -686,7 +266,6 @@ const App = {
   applyBackground() {
     const { background } = this.settings;
     const el = this.elements.background;
-    const overlay = this.elements.backgroundOverlay;
     
     if (!el) {
       console.error('Background element not found!');
@@ -742,24 +321,28 @@ const App = {
       }
     }
     
-    // Apply blur if set (only for images)
-    el.style.filter = (background.type === 'image' && background.blur > 0) 
-      ? `blur(${background.blur}px)` 
-      : 'none';
-    
-    // Apply overlay (negative = black/darker, positive = white/lighter)
-    if (overlay) {
-      const overlayValue = background.overlay || 0;
-      if (overlayValue < 0) {
-        // Negative: black overlay (darker)
-        overlay.style.background = `rgba(0, 0, 0, ${Math.abs(overlayValue) / 100})`;
-      } else if (overlayValue > 0) {
-        // Positive: white overlay (lighter)
-        overlay.style.background = `rgba(255, 255, 255, ${overlayValue / 100})`;
-      } else {
-        overlay.style.background = 'transparent';
-      }
+    // Apply blur and brightness filter
+    const filters = [];
+    if (background.type === 'image' && background.blur > 0) {
+      filters.push(`blur(${background.blur}px)`);
     }
+    const brightness = background.brightness ?? 100;
+    if (brightness !== 100) {
+      filters.push(`brightness(${brightness / 100})`);
+    }
+    el.style.filter = filters.length > 0 ? filters.join(' ') : 'none';
+    
+    // Apply overlay via CSS variable (für ::after pseudo-element)
+    const overlayValue = background.overlay || 0;
+    let overlayColor = 'transparent';
+    if (overlayValue < 0) {
+      // Negative: black overlay (darker)
+      overlayColor = `rgba(0, 0, 0, ${Math.abs(overlayValue) / 100})`;
+    } else if (overlayValue > 0) {
+      // Positive: white overlay (lighter)
+      overlayColor = `rgba(255, 255, 255, ${overlayValue / 100})`;
+    }
+    document.documentElement.style.setProperty('--bg-overlay-color', overlayColor);
   },
 
   // ============================================
@@ -981,15 +564,13 @@ const App = {
     this.elements.searchInput.value = '';
     this.elements.searchClear.classList.add('hidden');
     
-    // Save last group for startup
+    // Save last group for startup (renders internally)
     this.saveSettingImmediate('startup.lastGroupId', groupId);
     
     // Update tabs
     document.querySelectorAll('.group-tab').forEach(tab => {
       tab.classList.toggle('active', tab.dataset.groupId === groupId);
     });
-    
-    this.renderFavorites();
   },
 
   // ============================================
@@ -1006,65 +587,70 @@ const App = {
       items = this.applySorting(items);
     }
     
-    // Pagination
-    this.totalPages = Math.max(1, Math.ceil(items.length / this.itemsPerPage));
+    // Pagination - Add-Icon zählt als 1 Element auf Seite 1
+    const addIconOnPage = !this.searchMode && this.currentPage === 0 ? 1 : 0;
+    const effectiveItemsPerPage = this.itemsPerPage - addIconOnPage;
+    
+    this.totalPages = Math.max(1, Math.ceil((items.length + (this.searchMode ? 0 : 1)) / this.itemsPerPage));
     this.currentPage = Math.min(this.currentPage, this.totalPages - 1);
     
-    const startIndex = this.currentPage * this.itemsPerPage;
-    const pageItems = items.slice(startIndex, startIndex + this.itemsPerPage);
+    const startIndex = this.currentPage === 0 ? 0 : (this.currentPage * this.itemsPerPage) - 1;
+    const pageItems = items.slice(startIndex, startIndex + effectiveItemsPerPage);
     
     // Render
     grid.innerHTML = '';
     
-    if (pageItems.length === 0) {
+    // Add-Icon als erstes Element (nur auf Seite 1, nicht im Suchmodus)
+    if (!this.searchMode && this.currentPage === 0) {
+      const addItem = this.createAddElement();
+      grid.appendChild(addItem);
+    }
+    
+    // Favoriten rendern
+    if (this.searchMode && pageItems.length === 0) {
+      // Nur im Suchmodus: "Keine Ergebnisse" anzeigen
       grid.innerHTML = `
         <div class="empty-state" style="grid-column: 1 / -1;">
           <div class="empty-illustration">
             <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="60" cy="60" r="50" stroke="currentColor" stroke-width="2" opacity="0.2"/>
-              <rect x="35" y="30" width="50" height="60" rx="8" stroke="currentColor" stroke-width="2" opacity="0.3"/>
               <path d="M45 50h30M45 60h20M45 70h25" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
-              <circle cx="85" cy="85" r="20" fill="var(--accent-primary)" opacity="0.2"/>
-              <path d="M80 85h10M85 80v10" stroke="var(--accent-primary)" stroke-width="3" stroke-linecap="round"/>
             </svg>
           </div>
-          <h3>${this.searchMode ? 'Keine Ergebnisse' : 'Noch keine Favoriten'}</h3>
-          <p>${this.searchMode ? 'Versuche einen anderen Suchbegriff.' : 'Füge deinen ersten Favoriten hinzu oder importiere Lesezeichen.'}</p>
-          ${!this.searchMode ? `
-            <div class="empty-actions">
-              <button id="add-first-btn" class="btn-primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Favorit hinzufügen
-              </button>
-              <button id="import-first-btn" class="btn-secondary">Importieren</button>
-            </div>
-          ` : ''}
+          <h3>Keine Ergebnisse</h3>
+          <p>Versuche einen anderen Suchbegriff.</p>
         </div>
       `;
-      
-      // Add event listeners for empty state buttons
-      if (!this.searchMode) {
-        document.getElementById('add-first-btn')?.addEventListener('click', () => this.openFavoriteModal());
-        document.getElementById('import-first-btn')?.addEventListener('click', () => {
-          this.openSettingsModal();
-          // Navigate to data tab
-          setTimeout(() => {
-            document.querySelector('[data-settings-tab="data"]')?.click();
-          }, 100);
-        });
-      }
     } else {
       pageItems.forEach((fav, index) => {
-        const item = this.createFavoriteElement(fav, index);
+        const item = this.createFavoriteElement(fav, index + addIconOnPage);
         grid.appendChild(item);
       });
     }
     
     this.renderPagination();
     this.updateNavigationArrows();
+  },
+  
+  // Add-Element erstellen (Plus-Icon im Grid)
+  createAddElement() {
+    const item = document.createElement('div');
+    item.className = 'add-favorite-grid-item';
+    item.title = 'Neuen Favorit hinzufügen';
+    
+    item.innerHTML = `
+      <div class="favorite-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </div>
+      ${this.settings.labels.show ? '<span class="favorite-label">Hinzufügen</span>' : ''}
+    `;
+    
+    item.addEventListener('click', () => this.openFavoriteModal());
+    
+    return item;
   },
   
   // Sortierung anwenden
@@ -1115,11 +701,16 @@ const App = {
 
   createFavoriteElement(favorite, index) {
     const item = document.createElement('a');
-    item.className = `favorite-item ${this.settings.grid.showShadow ? 'has-shadow' : ''}`;
+    // animate-in Klasse für Einblend-Animation, wird nach Animation entfernt
+    item.className = `favorite-item animate-in ${this.settings.grid.showShadow ? 'has-shadow' : ''}`;
     item.href = favorite.url;
     item.dataset.favoriteId = favorite.id;
-    item.style.animationDelay = `${index * 0.02}s`;
     item.draggable = true;
+    
+    // Animation entfernen nach Abschluss (damit backdrop-filter funktioniert)
+    setTimeout(() => {
+      item.classList.remove('animate-in');
+    }, 400 + (index * 20)); // Animation-Dauer + Delay
     
     const displayName = favorite.alias || Storage.getHostname(favorite.url);
     const truncatedName = displayName.length > this.settings.labels.maxLength 
@@ -1128,6 +719,17 @@ const App = {
     
     const defaultGroup = this.groups.find(g => g.isDefault);
     const isInDefaultGroup = favorite.groupId === defaultGroup?.id;
+    
+    // Icon-Quelle bestimmen: customIcon oder Google-Fallback
+    let iconSrc = favorite.customIcon;
+    if (!iconSrc) {
+      try {
+        const hostname = new URL(favorite.url).hostname;
+        iconSrc = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=128`;
+      } catch {
+        iconSrc = Favicon.generateFallback(favorite.url);
+      }
+    }
     
     item.innerHTML = `
       <!-- Edit button - LEFT side -->
@@ -1158,7 +760,7 @@ const App = {
       </div>
       
       <div class="favorite-icon">
-        <img src="${favorite.customIcon || Favicon.generateFallback(favorite.url)}" 
+        <img src="${iconSrc}" 
              alt="${displayName}"
              onerror="this.src='${Favicon.generateFallback(favorite.url)}'">
         <div class="favorite-hover-actions">
@@ -1174,7 +776,7 @@ const App = {
     `;
     
     item.querySelector('.favorite-icon').title = `${displayName}\n${favorite.url}`;
-    this.loadFavicon(item.querySelector('img'), favorite);
+    // Kein loadFavicon mehr nötig - Google URL ist bereits im src
     
     // Click events
     item.addEventListener('click', (e) => this.handleFavoriteClick(e, favorite));
@@ -1300,10 +902,16 @@ const App = {
   },
 
   async loadFavicon(img, favorite) {
+    // Wenn bereits ein customIcon gespeichert ist, nichts tun
     if (favorite.customIcon) return;
     
-    const favicon = await Favicon.get(favorite.url);
-    img.src = favicon;
+    // Schneller Google-Fallback für Anzeige (keine Speicherung!)
+    try {
+      const hostname = new URL(favorite.url).hostname;
+      img.src = `https://www.google.com/s2/favicons?domain=${hostname}&sz=128`;
+    } catch {
+      img.src = Favicon.generateFallback(favorite.url);
+    }
   },
 
   handleFavoriteClick(e, favorite) {
@@ -1351,11 +959,56 @@ const App = {
     
     if (this.totalPages <= 1) return;
     
-    for (let i = 0; i < this.totalPages; i++) {
-      const dot = document.createElement('button');
-      dot.className = `page-dot ${i === this.currentPage ? 'active' : ''}`;
-      dot.addEventListener('click', () => this.goToPage(i));
-      container.appendChild(dot);
+    const maxVisibleDots = 10;
+    
+    if (this.totalPages <= maxVisibleDots) {
+      // Normale Punkte für wenige Seiten
+      for (let i = 0; i < this.totalPages; i++) {
+        const dot = document.createElement('button');
+        dot.className = `page-dot ${i === this.currentPage ? 'active' : ''}`;
+        dot.addEventListener('click', () => this.goToPage(i));
+        container.appendChild(dot);
+      }
+    } else {
+      // Kompakte Darstellung: 1 2 3 ... [current-1] [current] [current+1] ... n-2 n-1 n
+      const pagesToShow = new Set();
+      
+      // Erste 3
+      pagesToShow.add(0);
+      pagesToShow.add(1);
+      pagesToShow.add(2);
+      
+      // Letzte 3
+      pagesToShow.add(this.totalPages - 3);
+      pagesToShow.add(this.totalPages - 2);
+      pagesToShow.add(this.totalPages - 1);
+      
+      // Aktuelle ± 1
+      if (this.currentPage > 0) pagesToShow.add(this.currentPage - 1);
+      pagesToShow.add(this.currentPage);
+      if (this.currentPage < this.totalPages - 1) pagesToShow.add(this.currentPage + 1);
+      
+      // Sortieren und rendern
+      const sortedPages = [...pagesToShow].filter(p => p >= 0 && p < this.totalPages).sort((a, b) => a - b);
+      
+      let lastPage = -1;
+      for (const page of sortedPages) {
+        // Ellipse einfügen wenn Lücke > 1
+        if (lastPage !== -1 && page - lastPage > 1) {
+          const ellipsis = document.createElement('span');
+          ellipsis.className = 'page-ellipsis';
+          ellipsis.textContent = '…';
+          container.appendChild(ellipsis);
+        }
+        
+        const dot = document.createElement('button');
+        dot.className = `page-dot ${page === this.currentPage ? 'active' : ''}`;
+        dot.title = `Seite ${page + 1}`;
+        dot.addEventListener('click', () => this.goToPage(page));
+        container.appendChild(dot);
+        
+        lastPage = page;
+      }
     }
   },
 
@@ -1501,11 +1154,24 @@ const App = {
         const group = this.groups.find(g => g.id === fav.groupId);
         const displayName = fav.alias || Storage.getHostname(fav.url);
         
+        // Icon-Quelle: customIcon oder schneller Google-Fallback
+        let iconSrc;
+        if (fav.customIcon) {
+          iconSrc = fav.customIcon;
+        } else {
+          try {
+            const hostname = new URL(fav.url).hostname;
+            iconSrc = `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`;
+          } catch {
+            iconSrc = Favicon.generateFallback(fav.url);
+          }
+        }
+        
         const item = document.createElement('div');
         item.className = 'search-result-item';
         item.dataset.index = index;
         item.innerHTML = `
-          <img src="${Favicon.generateFallback(fav.url)}" alt="">
+          <img src="${iconSrc}" alt="">
           <div class="search-result-info">
             <div class="search-result-title">${this.highlightMatch(displayName, query)}</div>
             <div class="search-result-url">${this.highlightMatch(fav.url, query)}</div>
@@ -1521,11 +1187,6 @@ const App = {
           document.querySelectorAll('.search-result-item').forEach(i => i.classList.remove('selected'));
           item.classList.add('selected');
           this.selectedSearchIndex = index + 1; // +1 because web search is 0
-        });
-        
-        // Load actual favicon
-        Favicon.get(fav.url).then(src => {
-          item.querySelector('img').src = src;
         });
         
         favoritesList.appendChild(item);
@@ -1599,14 +1260,467 @@ const App = {
     
     // Icon preview
     const preview = document.getElementById('icon-preview');
-    if (favorite?.customIcon || favorite?.url) {
-      preview.innerHTML = `<img src="${favorite.customIcon || Favicon.generateFallback(favorite.url)}">`;
+    const iconSrc = favorite?.customIcon || favorite?.favicon || (favorite?.url ? Favicon.generateFallback(favorite.url) : null);
+    
+    if (iconSrc) {
+      preview.innerHTML = `<img src="${iconSrc}">`;
+      this.updateIconInfo(iconSrc, favorite);
     } else {
       preview.innerHTML = '';
+      this.updateIconInfo(null, favorite);
     }
+    
+    // Reset-Button anzeigen wenn Original vorhanden
+    const resetBtn = document.getElementById('reset-icon');
+    if (resetBtn) {
+      resetBtn.classList.toggle('hidden', !favorite?.faviconOriginal);
+    }
+    
+    // Icon-Quellen für Rotation initialisieren
+    if (favorite?.url) {
+      this.initIconSources(favorite.url);
+    }
+    
+    // Weiß-Schwelle Slider zurücksetzen
+    const thresholdSlider = document.getElementById('white-threshold');
+    const thresholdValue = document.getElementById('white-threshold-value');
+    if (thresholdSlider) thresholdSlider.value = 245;
+    if (thresholdValue) thresholdValue.textContent = '245';
     
     modal.classList.remove('hidden');
     document.getElementById('fav-url').focus();
+  },
+  
+  // Icon-Info aktualisieren (Typ-Badge, Größe)
+  updateIconInfo(iconSrc, favorite = null) {
+    const typeBadge = document.getElementById('icon-type-badge');
+    const sizeInfo = document.getElementById('icon-size-info');
+    
+    if (!iconSrc) {
+      if (typeBadge) typeBadge.textContent = '-';
+      if (sizeInfo) sizeInfo.textContent = '';
+      return;
+    }
+    
+    // Typ ermitteln
+    let type = 'UNK';
+    let badgeClass = '';
+    
+    if (iconSrc.startsWith('data:image/png')) {
+      type = 'PNG';
+      badgeClass = 'badge-png';
+    } else if (iconSrc.startsWith('data:image/svg')) {
+      type = 'SVG';
+      badgeClass = 'badge-svg';
+    } else if (iconSrc.startsWith('data:image/jpeg') || iconSrc.startsWith('data:image/jpg')) {
+      type = 'JPG';
+      badgeClass = 'badge-jpg';
+    } else if (iconSrc.startsWith('data:image/webp')) {
+      type = 'WEBP';
+      badgeClass = 'badge-webp';
+    } else if (iconSrc.startsWith('data:image/x-icon') || iconSrc.includes('.ico')) {
+      type = 'ICO';
+      badgeClass = 'badge-ico';
+    } else if (iconSrc.startsWith('data:')) {
+      type = 'IMG';
+    }
+    
+    // Badge für verarbeitetes Icon
+    if (favorite?.faviconProcessed) {
+      type = type + ' ✓';
+      badgeClass = 'badge-processed';
+    }
+    
+    // Source-Name anhängen wenn vorhanden
+    if (this.iconSourceName) {
+      type = `${this.iconSourceName} ▶`;
+      badgeClass = 'badge-clickable';
+    }
+    
+    if (typeBadge) {
+      typeBadge.textContent = type;
+      typeBadge.className = 'icon-type-badge ' + badgeClass;
+    }
+    
+    // Größe ermitteln (async für Bilder)
+    if (sizeInfo && iconSrc.startsWith('data:')) {
+      const img = new Image();
+      img.onload = () => {
+        sizeInfo.textContent = `${img.width} × ${img.height}`;
+      };
+      img.src = iconSrc;
+    } else if (sizeInfo) {
+      sizeInfo.textContent = '';
+    }
+  },
+  
+  // Icon-Quellen initialisieren (nur Index zurücksetzen)
+  initIconSources(url) {
+    this.iconSources = [];
+    this.iconSourceIndex = -1;
+    this.iconSourceName = '';
+    this.iconSourcesDiscovered = false;
+    // Original-Icon für diese Session speichern
+    this.originalCustomIcon = this.editingFavorite?.customIcon || null;
+  },
+  
+  // Icon-Quellen Reset (Cache leeren, neu entdecken)
+  async resetIconSources() {
+    const url = this.editingFavorite?.url || document.getElementById('fav-url')?.value?.trim();
+    if (!url) {
+      this.showToast('Keine URL vorhanden', 'error');
+      return;
+    }
+    
+    // URL normalisieren
+    let normalizedUrl = url;
+    if (!normalizedUrl.startsWith('http')) {
+      normalizedUrl = 'https://' + normalizedUrl;
+    }
+    
+    // Cache leeren
+    Favicon.clearCacheForUrl(normalizedUrl);
+    
+    // State zurücksetzen - ABER originalCustomIcon behalten!
+    this.iconSources = [];
+    this.iconSourceIndex = -1;
+    this.iconSourceName = '';
+    this.iconSourcesDiscovered = false;
+    // originalCustomIcon wird NICHT zurückgesetzt!
+    
+    this.showToast('Icon-Cache geleert, neu scannen...', 'info');
+    
+    // Direkt erste Quelle laden
+    await this.nextIconSource();
+  },
+  
+  // Nächste Icon-Quelle laden
+  async nextIconSource() {
+    // URL aus editingFavorite oder aus dem Input-Feld
+    let url = this.editingFavorite?.url;
+    if (!url) {
+      url = document.getElementById('fav-url')?.value?.trim();
+    }
+    
+    if (!url) {
+      this.showToast('Bitte erst URL eingeben', 'error');
+      return;
+    }
+    
+    // URL normalisieren
+    if (!url.startsWith('http')) {
+      url = 'https://' + url;
+    }
+    
+    const preview = document.getElementById('icon-preview');
+    if (!preview) return;
+    
+    // Quellen entdecken falls noch nicht geschehen
+    if (!this.iconSourcesDiscovered) {
+      const typeBadge = document.getElementById('icon-type-badge');
+      if (typeBadge) {
+        typeBadge.textContent = 'Scanning... ⏳';
+        typeBadge.className = 'icon-type-badge badge-loading';
+      }
+      
+      // Basis-Quellen laden
+      const baseSources = await Favicon.discoverSources(url);
+      
+      // Aktuelles/eigenes Icon als ERSTE Quelle hinzufügen (falls vorhanden)
+      this.iconSources = [];
+      
+      // Das originale customIcon des Favoriten (bevor Rotation begann)
+      const originalIcon = this.originalCustomIcon;
+      if (originalIcon && originalIcon.startsWith('data:')) {
+        this.iconSources.push({
+          url: 'current',
+          name: 'Aktuell',
+          type: 'custom',
+          dataUrl: originalIcon
+        });
+      }
+      
+      // Dann die entdeckten Quellen
+      this.iconSources.push(...baseSources);
+      
+      this.iconSourcesDiscovered = true;
+      this.iconSourceIndex = -1;
+      
+      this.showToast(`${this.iconSources.length} Quellen gefunden`, 'success');
+    }
+    
+    // Schutz vor Endlosschleife
+    const maxAttempts = this.iconSources.length;
+    let attempts = 0;
+    
+    while (attempts < maxAttempts) {
+      // Zum nächsten Index
+      this.iconSourceIndex++;
+      if (this.iconSourceIndex >= this.iconSources.length) {
+        this.iconSourceIndex = 0; // Zurück zum Anfang
+      }
+      
+      const source = this.iconSources[this.iconSourceIndex];
+      this.iconSourceName = source.name;
+      
+      // Zeige Ladezustand
+      const typeBadge = document.getElementById('icon-type-badge');
+      if (typeBadge) {
+        typeBadge.textContent = `${source.name} ⏳`;
+        typeBadge.className = 'icon-type-badge badge-loading';
+      }
+      
+      // Spezialfall: Eigenes/aktuelles Icon (bereits als dataUrl vorhanden)
+      if (source.type === 'custom' && source.dataUrl) {
+        preview.innerHTML = `<img src="${source.dataUrl}">`;
+        this.iconSourceName = source.name;
+        
+        const counter = `${this.iconSourceIndex + 1}/${this.iconSources.length}`;
+        if (typeBadge) {
+          typeBadge.textContent = `${source.name} ▶ ${counter}`;
+          typeBadge.className = 'icon-type-badge badge-clickable';
+        }
+        
+        // Größe anzeigen
+        this.updateIconInfoSize(source.dataUrl);
+        
+        if (this.editingFavorite) {
+          this.editingFavorite.customIcon = source.dataUrl;
+        }
+        return;
+      }
+      
+      // Quelle laden
+      const result = await Favicon.fetchSource(source, url);
+      
+      if (result) {
+        // Vorschau aktualisieren
+        preview.innerHTML = `<img src="${result.dataUrl}">`;
+        this.iconSourceName = result.name;
+        
+        // Zähler anzeigen
+        const counter = `${this.iconSourceIndex + 1}/${this.iconSources.length}`;
+        if (typeBadge) {
+          typeBadge.textContent = `${result.name} ▶ ${counter}`;
+          typeBadge.className = 'icon-type-badge badge-clickable';
+        }
+        
+        // Größe anzeigen
+        this.updateIconInfoSize(result.dataUrl);
+        
+        // Temporär speichern (wird erst beim Speichern-Klick persistiert)
+        if (this.editingFavorite) {
+          this.editingFavorite.customIcon = result.dataUrl;
+        }
+        return; // Erfolgreich
+      }
+      
+      attempts++;
+    }
+    
+    // Keine Quelle hat funktioniert
+    this.showToast('Keine Icon-Quellen verfügbar', 'error');
+    this.iconSourceName = '';
+  },
+  
+  // Nur Größen-Info aktualisieren (ohne Badge zu überschreiben)
+  updateIconInfoSize(iconSrc) {
+    const sizeInfo = document.getElementById('icon-size-info');
+    if (sizeInfo && iconSrc && iconSrc.startsWith('data:')) {
+      const img = new Image();
+      img.onload = () => {
+        sizeInfo.textContent = `${img.width} × ${img.height}`;
+      };
+      img.src = iconSrc;
+    }
+  },
+  
+  // Weißen Hintergrund entfernen (Schwellenwert einstellbar)
+  // Behandelt das Ergebnis wie ein manuell hochgeladenes customIcon
+  async removeWhiteBackground() {
+    const preview = document.getElementById('icon-preview');
+    const img = preview?.querySelector('img');
+    
+    if (!img || !img.src) {
+      this.showToast('Kein Icon vorhanden', 'error');
+      return;
+    }
+    
+    // Schwellenwert aus Slider holen
+    const threshold = parseInt(document.getElementById('white-threshold')?.value || 245);
+    
+    this.showToast(`Verarbeite (Schwelle: ${threshold})...`);
+    
+    try {
+      // Immer vom Original arbeiten, damit man mehrfach testen kann
+      let sourceDataUrl = this.editingFavorite?.faviconOriginal || img.src;
+      
+      // 1. Bild als Data-URL laden (egal ob extern oder bereits Data-URL)
+      if (!sourceDataUrl.startsWith('data:')) {
+        sourceDataUrl = await this.imageUrlToDataUrl(sourceDataUrl);
+        
+        if (!sourceDataUrl) {
+          this.showToast('Bild konnte nicht geladen werden', 'error');
+          return;
+        }
+      }
+      
+      // 2. Original sichern (nur beim ersten Mal)
+      if (!this.editingFavorite?.faviconOriginal) {
+        if (this.editingFavorite) {
+          this.editingFavorite.faviconOriginal = sourceDataUrl;
+        }
+      }
+      
+      // 3. Weiß transparent machen mit einstellbarem Schwellenwert
+      const processedDataUrl = await this.processImageTransparency(sourceDataUrl, threshold);
+      
+      if (!processedDataUrl) {
+        this.showToast('Bildverarbeitung fehlgeschlagen', 'error');
+        return;
+      }
+      
+      // 4. Wie beim Upload behandeln: Preview + customIcon setzen
+      preview.innerHTML = `<img src="${processedDataUrl}">`;
+      this.updateIconInfo(processedDataUrl, this.editingFavorite);
+      
+      if (this.editingFavorite) {
+        this.editingFavorite.customIcon = processedDataUrl;
+        this.editingFavorite.faviconProcessed = true;
+      }
+      
+      // Reset-Button anzeigen
+      document.getElementById('reset-icon')?.classList.remove('hidden');
+      
+      this.showToast(`Weiß entfernt (≥${threshold})`);
+      
+    } catch (err) {
+      console.error('Fehler beim Entfernen des Hintergrunds:', err);
+      this.showToast('Fehler bei der Bildverarbeitung', 'error');
+    }
+  },
+  
+  // URL zu Data-URL konvertieren (für jede Bild-URL)
+  async imageUrlToDataUrl(url) {
+    try {
+      const response = await fetch(url, {
+        credentials: 'omit' // Keine Auth-Dialoge
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      const blob = await response.blob();
+      
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.warn('Bild-Fetch fehlgeschlagen:', e);
+      return null;
+    }
+  },
+  
+  // Bild verarbeiten: Weiß (≥threshold) → Transparent
+  processImageTransparency(src, threshold = 245) {
+    return new Promise((resolve) => {
+      if (!src) {
+        resolve(null);
+        return;
+      }
+      
+      const img = new Image();
+      
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width || 128;
+          canvas.height = img.height || 128;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          
+          // Jeden Pixel prüfen
+          let changedPixels = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            
+            // Weiß-Bereich: alle Kanäle >= Schwellenwert
+            if (r >= threshold && g >= threshold && b >= threshold) {
+              data[i + 3] = 0; // Alpha auf 0 (transparent)
+              changedPixels++;
+            }
+          }
+          
+          console.log(`Transparenz (≥${threshold}): ${changedPixels} Pixel verändert`);
+          
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        } catch (e) {
+          console.error('Canvas-Verarbeitung fehlgeschlagen:', e);
+          resolve(null);
+        }
+      };
+      
+      img.onerror = (e) => {
+        console.error('Bild konnte nicht geladen werden:', e);
+        resolve(null);
+      };
+      
+      // Timeout nach 10 Sekunden
+      setTimeout(() => {
+        console.warn('Bild-Laden Timeout');
+        resolve(null);
+      }, 10000);
+      
+      img.src = src;
+    });
+  },
+  
+  // Favicon als Data-URL laden (holt erst Favicon-URL, dann konvertiert)
+  async fetchFaviconAsDataUrl(url) {
+    const faviconUrl = await Favicon.get(url);
+    
+    // Wenn bereits Data-URL (z.B. generierter Fallback), direkt zurückgeben
+    if (faviconUrl.startsWith('data:')) {
+      return faviconUrl;
+    }
+    
+    // Externe URL zu Data-URL konvertieren
+    const dataUrl = await this.imageUrlToDataUrl(faviconUrl);
+    return dataUrl || Favicon.generateFallback(url);
+  },
+  
+  // Original-Icon wiederherstellen
+  resetIcon() {
+    if (!this.editingFavorite?.faviconOriginal) {
+      this.showToast('Kein Original vorhanden', 'error');
+      return;
+    }
+    
+    const preview = document.getElementById('icon-preview');
+    const img = preview?.querySelector('img');
+    
+    if (img) {
+      img.src = this.editingFavorite.faviconOriginal;
+    }
+    
+    // Processed-Flag entfernen
+    this.editingFavorite.faviconProcessed = false;
+    
+    // Info aktualisieren
+    this.updateIconInfo(this.editingFavorite.faviconOriginal, this.editingFavorite);
+    
+    // Reset-Button verstecken
+    document.getElementById('reset-icon')?.classList.add('hidden');
+    
+    this.showToast('Original wiederhergestellt');
   },
 
   closeFavoriteModal() {
@@ -1641,26 +1755,38 @@ const App = {
     
     // Duplikat-Prüfung (nur bei neuen Favoriten)
     if (!this.editingFavorite) {
-      const normalizedUrl = this.normalizeUrl(validUrl);
-      const duplicate = this.favorites.find(f => this.normalizeUrl(f.url) === normalizedUrl);
-      
-      if (duplicate) {
-        const dupName = duplicate.alias || Storage.getHostname(duplicate.url);
-        const dupGroup = this.groups.find(g => g.id === duplicate.groupId);
-        this.showToast(`URL existiert bereits: "${dupName}" in ${dupGroup?.name || 'Unbekannt'}`, 'error');
+      // Exakt gleiche URL? → Blockieren
+      const exactDuplicate = this.favorites.find(f => f.url === validUrl);
+      if (exactDuplicate) {
+        const dupName = exactDuplicate.alias || Storage.getHostname(exactDuplicate.url);
+        const dupGroup = this.groups.find(g => g.id === exactDuplicate.groupId);
+        this.showToast(`Exakt gleiche URL existiert bereits: "${dupName}" in ${dupGroup?.name || 'Unbekannt'}`, 'error');
         return;
+      }
+      
+      // Ähnliche URL (normalisiert gleich)? → Warnung, aber erlauben
+      const normalizedUrl = this.normalizeUrl(validUrl);
+      const similarDuplicate = this.favorites.find(f => this.normalizeUrl(f.url) === normalizedUrl);
+      if (similarDuplicate) {
+        const dupName = similarDuplicate.alias || Storage.getHostname(similarDuplicate.url);
+        const dupGroup = this.groups.find(g => g.id === similarDuplicate.groupId);
+        this.showToast(`⚠️ Ähnliche URL existiert: "${dupName}" in ${dupGroup?.name || 'Unbekannt'}`, 'warning');
+        // Nicht return - trotzdem hinzufügen
       }
     }
     
     const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
     
-    // Hole customIcon aus der Vorschau oder dem editingFavorite
+    // Hole Icon aus der Vorschau
     const iconPreview = document.getElementById('icon-preview').querySelector('img');
     let customIcon = null;
-    if (this.editingFavorite?.customIcon) {
-      customIcon = this.editingFavorite.customIcon;
-    } else if (iconPreview && iconPreview.src.startsWith('data:')) {
+    let faviconOriginal = this.editingFavorite?.faviconOriginal || null;
+    let faviconProcessed = this.editingFavorite?.faviconProcessed || false;
+    
+    if (iconPreview && iconPreview.src.startsWith('data:')) {
       customIcon = iconPreview.src;
+    } else if (this.editingFavorite?.customIcon) {
+      customIcon = this.editingFavorite.customIcon;
     }
     
     const data = {
@@ -1669,7 +1795,9 @@ const App = {
       description,
       tags,
       groupId,
-      customIcon
+      customIcon,
+      faviconOriginal,
+      faviconProcessed
     };
     
     if (this.editingFavorite) {
@@ -1852,8 +1980,7 @@ const App = {
   populateSettingsForm() {
     const s = this.settings;
     
-    // Appearance
-    document.getElementById('setting-theme').value = s.theme;
+    // Appearance - Background Type
     document.getElementById('setting-bg-type').value = s.background.type;
     this.updateBackgroundOptions();
     
@@ -1899,7 +2026,6 @@ const App = {
       btn.style.background = btn.dataset.gradient;
     });
     
-    document.getElementById('setting-hover').checked = s.animations.hover;
     document.getElementById('setting-transition').value = s.animations.pageTransition;
     
     // Grid
@@ -1910,15 +2036,35 @@ const App = {
     document.getElementById('setting-gap').value = s.grid.gap;
     document.getElementById('gap-value').textContent = `${s.grid.gap}px`;
     document.getElementById('setting-radius').value = s.grid.borderRadius;
-    document.getElementById('radius-value').textContent = `${s.grid.borderRadius}px`;
+    document.getElementById('radius-value').textContent = `${s.grid.borderRadius}%`;
+    document.getElementById('setting-image-radius').value = s.grid.imageRadius || 0;
+    document.getElementById('image-radius-value').textContent = `${s.grid.imageRadius || 0}%`;
     document.getElementById('setting-shadow').checked = s.grid.showShadow;
     
     // Icon background settings
-    const iconSettings = s.icons || { opacity: 100, bgDark: '#1a1a2e', bgLight: '#ffffff' };
-    document.getElementById('setting-icon-opacity').value = iconSettings.opacity ?? 100;
-    document.getElementById('icon-opacity-value').textContent = `${iconSettings.opacity ?? 100}%`;
+    const iconSettings = s.icons || { opacity: 60, bgDark: '#1a1a2e', bgLight: '#ffffff', glassBlur: 10, glassBorder: 15, glassShadow: 20 };
+    document.getElementById('setting-icon-opacity').value = iconSettings.opacity ?? 60;
+    document.getElementById('icon-opacity-value').textContent = `${iconSettings.opacity ?? 60}%`;
     document.getElementById('setting-icon-bg-dark').value = iconSettings.bgDark || '#1a1a2e';
     document.getElementById('setting-icon-bg-light').value = iconSettings.bgLight || '#ffffff';
+    
+    // Glassmorphism-Einstellungen laden
+    const glassBlurEl = document.getElementById('setting-glass-blur');
+    const glassBorderEl = document.getElementById('setting-glass-border');
+    const glassShadowEl = document.getElementById('setting-glass-shadow');
+    
+    if (glassBlurEl) {
+      glassBlurEl.value = iconSettings.glassBlur ?? 10;
+      document.getElementById('glass-blur-value').textContent = `${iconSettings.glassBlur ?? 10}px`;
+    }
+    if (glassBorderEl) {
+      glassBorderEl.value = iconSettings.glassBorder ?? 15;
+      document.getElementById('glass-border-value').textContent = `${iconSettings.glassBorder ?? 15}%`;
+    }
+    if (glassShadowEl) {
+      glassShadowEl.value = iconSettings.glassShadow ?? 20;
+      document.getElementById('glass-shadow-value').textContent = `${iconSettings.glassShadow ?? 20}%`;
+    }
     
     document.getElementById('setting-labels').checked = s.labels.show;
     document.getElementById('setting-label-pos').value = s.labels.position;
@@ -1931,6 +2077,10 @@ const App = {
     document.getElementById('setting-custom-font').value = s.labels.customFont || '';
     document.getElementById('setting-font-weight').value = s.labels.fontWeight || '500';
     document.getElementById('custom-font-row').style.display = s.labels.fontFamily === 'custom' ? 'flex' : 'none';
+    
+    // Label colors
+    document.getElementById('setting-label-color-dark').value = s.labels.colorDark || '#ffffff';
+    document.getElementById('setting-label-color-light').value = s.labels.colorLight || '#1a1a2e';
     
     // Search
     document.getElementById('setting-search-engine').value = s.search.engine;
@@ -2046,20 +2196,44 @@ const App = {
     }
   },
 
+  // Debounce Timer für Settings
+  _settingsSaveTimeout: null,
+  _pendingSettingsUpdate: {},
+
+  // Settings mit Debounce speichern (1 Sekunde Verzögerung)
   async saveSettingImmediate(key, value) {
     const keys = key.split('.');
-    const update = {};
-    let current = update;
+    let current = this._pendingSettingsUpdate;
     
+    // Update in pending sammeln
     for (let i = 0; i < keys.length - 1; i++) {
-      current[keys[i]] = {};
+      if (!current[keys[i]]) current[keys[i]] = {};
       current = current[keys[i]];
     }
     current[keys[keys.length - 1]] = value;
     
-    this.settings = await Storage.updateSettings(update);
+    // Lokales Settings-Objekt sofort aktualisieren für UI
+    current = this.settings;
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!current[keys[i]]) current[keys[i]] = {};
+      current = current[keys[i]];
+    }
+    current[keys[keys.length - 1]] = value;
+    
+    // UI sofort aktualisieren
     this.applySettings();
     this.renderFavorites();
+    
+    // Debounced speichern (1 Sekunde)
+    clearTimeout(this._settingsSaveTimeout);
+    this._settingsSaveTimeout = setTimeout(async () => {
+      if (Object.keys(this._pendingSettingsUpdate).length > 0) {
+        this._isOwnStorageUpdate = true;
+        this.settings = await Storage.updateSettings(this._pendingSettingsUpdate);
+        this._pendingSettingsUpdate = {};
+        this._isOwnStorageUpdate = false;
+      }
+    }, 1000);
   },
 
   showConfirm(message, onConfirm) {
@@ -2237,12 +2411,26 @@ const App = {
     content.innerHTML = favorites.map(fav => {
       const displayName = fav.alias || Storage.getHostname(fav.url);
       const isSelected = this.managerSelectedItems.has(fav.id);
+      
+      // Icon-Quelle: customIcon oder schneller Google-Fallback
+      let iconSrc;
+      if (fav.customIcon) {
+        iconSrc = fav.customIcon;
+      } else {
+        try {
+          const hostname = new URL(fav.url).hostname;
+          iconSrc = `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`;
+        } catch {
+          iconSrc = Favicon.generateFallback(fav.url);
+        }
+      }
+      
       return `
         <div class="panel-item ${isSelected ? 'selected' : ''}" 
              data-id="${fav.id}" 
              data-side="${side}"
              draggable="true">
-          <img src="${Favicon.generateFallback(fav.url)}" alt="">
+          <img src="${iconSrc}" alt="">
           <div class="panel-item-info">
             <div class="panel-item-title">${displayName}</div>
             <div class="panel-item-url">${fav.url}</div>
@@ -2251,16 +2439,6 @@ const App = {
         </div>
       `;
     }).join('');
-    
-    // Load favicons
-    content.querySelectorAll('.panel-item').forEach(item => {
-      const fav = favorites.find(f => f.id === item.dataset.id);
-      if (fav) {
-        Favicon.get(fav.url).then(src => {
-          item.querySelector('img').src = src;
-        });
-      }
-    });
     
     // Setup drag & drop and selection for items
     this.setupPanelItemEvents(content, side);
@@ -2452,8 +2630,7 @@ const App = {
     this.elements.navLeft.addEventListener('click', () => this.prevPage());
     this.elements.navRight.addEventListener('click', () => this.nextPage());
     
-    // Add buttons
-    this.elements.addFavoriteBtn.addEventListener('click', () => this.openFavoriteModal());
+    // Buttons
     this.elements.addGroupBtn.addEventListener('click', () => this.openGroupModal());
     this.elements.settingsBtn.addEventListener('click', () => this.openSettingsModal());
     this.elements.manageGroupsBtn?.addEventListener('click', () => this.openGroupManager());
@@ -2486,8 +2663,8 @@ const App = {
       }
     });
     
-    // Refresh icons button
-    this.elements.refreshIconsBtn?.addEventListener('click', () => this.refreshAllFavicons());
+    // Theme toggle button
+    this.elements.themeToggleBtn?.addEventListener('click', () => this.toggleTheme());
     
     // Keyboard shortcuts (1-9 for favorites)
     document.addEventListener('keydown', (e) => {
@@ -2585,8 +2762,17 @@ const App = {
     document.getElementById('fetch-favicon').addEventListener('click', async () => {
       const url = document.getElementById('fav-url').value;
       if (url) {
-        const favicon = await Favicon.get(url);
-        document.getElementById('icon-preview').innerHTML = `<img src="${favicon}">`;
+        this.showToast('Lade Favicon...');
+        const faviconDataUrl = await this.fetchFaviconAsDataUrl(url);
+        document.getElementById('icon-preview').innerHTML = `<img src="${faviconDataUrl}">`;
+        this.updateIconInfo(faviconDataUrl, this.editingFavorite);
+        // Reset-Status zurücksetzen bei neuem Favicon
+        if (this.editingFavorite) {
+          this.editingFavorite.faviconOriginal = null;
+          this.editingFavorite.faviconProcessed = false;
+          this.editingFavorite.customIcon = faviconDataUrl;
+        }
+        document.getElementById('reset-icon')?.classList.add('hidden');
       }
     });
     
@@ -2600,12 +2786,41 @@ const App = {
         const reader = new FileReader();
         reader.onload = (e) => {
           document.getElementById('icon-preview').innerHTML = `<img src="${e.target.result}">`;
+          this.updateIconInfo(e.target.result, this.editingFavorite);
           if (this.editingFavorite) {
             this.editingFavorite.customIcon = e.target.result;
+            // Reset-Status zurücksetzen bei neuem Upload
+            this.editingFavorite.faviconOriginal = null;
+            this.editingFavorite.faviconProcessed = false;
           }
+          document.getElementById('reset-icon')?.classList.add('hidden');
         };
         reader.readAsDataURL(file);
       }
+    });
+    
+    // Icon-Tools: Weiß-Schwelle Slider
+    document.getElementById('white-threshold')?.addEventListener('input', (e) => {
+      document.getElementById('white-threshold-value').textContent = e.target.value;
+    });
+    
+    // Icon-Tools: Weiß entfernen und Zurücksetzen
+    document.getElementById('remove-white-bg')?.addEventListener('click', () => {
+      this.removeWhiteBackground();
+    });
+    
+    document.getElementById('reset-icon')?.addEventListener('click', () => {
+      this.resetIcon();
+    });
+    
+    // Icon-Badge Klick: Nächste Quelle laden
+    document.getElementById('icon-type-badge')?.addEventListener('click', () => {
+      this.nextIconSource();
+    });
+    
+    // Rescan-Button: Cache leeren und neu scannen
+    document.getElementById('rescan-icons')?.addEventListener('click', () => {
+      this.resetIconSources();
     });
     
     // Group modal
@@ -2667,7 +2882,7 @@ const App = {
 
   setupSettingsEvents() {
     // Settings navigation
-    document.querySelectorAll('.settings-nav-item').forEach(btn => {
+    document.querySelectorAll('.settings-nav-item[data-section]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.settings-nav-item').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
@@ -2677,9 +2892,9 @@ const App = {
       });
     });
     
-    // Theme
-    document.getElementById('setting-theme').addEventListener('change', (e) => {
-      this.saveSettingImmediate('theme', e.target.value);
+    // Donate button → opens donate page in new tab
+    document.getElementById('donate-btn')?.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('src/donate/donate.html') });
     });
     
     // Accent Color Palette
@@ -2865,10 +3080,6 @@ const App = {
     });
     
     // Animations
-    document.getElementById('setting-hover').addEventListener('change', (e) => {
-      this.saveSettingImmediate('animations.hover', e.target.checked);
-    });
-    
     document.getElementById('setting-transition').addEventListener('change', (e) => {
       this.saveSettingImmediate('animations.pageTransition', e.target.value);
     });
@@ -2893,8 +3104,13 @@ const App = {
     });
     
     document.getElementById('setting-radius').addEventListener('input', (e) => {
-      document.getElementById('radius-value').textContent = `${e.target.value}px`;
+      document.getElementById('radius-value').textContent = `${e.target.value}%`;
       this.saveSettingImmediate('grid.borderRadius', parseInt(e.target.value));
+    });
+    
+    document.getElementById('setting-image-radius').addEventListener('input', (e) => {
+      document.getElementById('image-radius-value').textContent = `${e.target.value}%`;
+      this.saveSettingImmediate('grid.imageRadius', parseInt(e.target.value));
     });
     
     document.getElementById('setting-shadow').addEventListener('change', (e) => {
@@ -2913,6 +3129,22 @@ const App = {
     
     document.getElementById('setting-icon-bg-light')?.addEventListener('change', (e) => {
       this.saveSettingImmediate('icons.bgLight', e.target.value);
+    });
+    
+    // Glassmorphism-Einstellungen
+    document.getElementById('setting-glass-blur')?.addEventListener('input', (e) => {
+      document.getElementById('glass-blur-value').textContent = `${e.target.value}px`;
+      this.saveSettingImmediate('icons.glassBlur', parseInt(e.target.value));
+    });
+    
+    document.getElementById('setting-glass-border')?.addEventListener('input', (e) => {
+      document.getElementById('glass-border-value').textContent = `${e.target.value}%`;
+      this.saveSettingImmediate('icons.glassBorder', parseInt(e.target.value));
+    });
+    
+    document.getElementById('setting-glass-shadow')?.addEventListener('input', (e) => {
+      document.getElementById('glass-shadow-value').textContent = `${e.target.value}%`;
+      this.saveSettingImmediate('icons.glassShadow', parseInt(e.target.value));
     });
     
     // Labels
@@ -2946,6 +3178,15 @@ const App = {
     
     document.getElementById('setting-font-weight').addEventListener('change', (e) => {
       this.saveSettingImmediate('labels.fontWeight', e.target.value);
+    });
+    
+    // Label colors
+    document.getElementById('setting-label-color-dark').addEventListener('change', (e) => {
+      this.saveSettingImmediate('labels.colorDark', e.target.value);
+    });
+    
+    document.getElementById('setting-label-color-light').addEventListener('change', (e) => {
+      this.saveSettingImmediate('labels.colorLight', e.target.value);
     });
     
     // Search
@@ -3327,25 +3568,29 @@ const App = {
   async refreshFavicon(favorite) {
     this.showToast('Lade Icon...');
     const newFavicon = await Favicon.get(favorite.url, true); // force refresh
-    await Storage.updateFavorite(favorite.id, { favicon: newFavicon, customIcon: null });
+    await Storage.updateFavorite(favorite.id, { 
+      customIcon: newFavicon,
+      faviconOriginal: null,
+      faviconProcessed: false
+    });
     await this.refreshData();
     this.showToast('Icon aktualisiert');
   },
 
-  async refreshAllFavicons() {
-    this.showToast('Aktualisiere alle Icons...');
-    let updated = 0;
+  // Theme zwischen Light/Dark wechseln
+  toggleTheme() {
+    // Aktuelles effektives Theme ermitteln (aus DOM, da könnte auch 'system' aufgelöst sein)
+    const currentEffectiveTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentEffectiveTheme === 'dark' ? 'light' : 'dark';
     
-    for (const fav of this.favorites) {
-      if (!fav.customIcon) {
-        const newFavicon = await Favicon.get(fav.url, true);
-        await Storage.updateFavorite(fav.id, { favicon: newFavicon });
-        updated++;
-      }
-    }
+    // In Settings speichern (überschreibt 'system' mit expliziter Wahl)
+    this.settings.theme = newTheme;
+    Storage.updateSettings({ theme: newTheme });
     
-    await this.refreshData();
-    this.showToast(`${updated} Icons aktualisiert`);
+    // Settings anwenden (setzt Theme, Background, Label-Farben etc.)
+    this.applySettings();
+    
+    this.showToast(newTheme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode');
   },
 
   async duplicateFavorite(favorite) {

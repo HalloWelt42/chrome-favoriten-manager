@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "FavGrid - Premium Speed Dial",
-  "version": "1.0.0",
-  "description": "Ein eleganter, hochgradig anpassbarer Speed Dial für Brave Browser. Organisiere deine Favoriten wie App-Icons.",
+  "name": "__MSG_extName__",
+  "version": "3.0.10",
+  "description": "__MSG_extDescription__",
   
   "default_locale": "de",
   
@@ -26,11 +26,6 @@
     "newtab": "src/newtab/newtab.html"
   },
   
-  "options_ui": {
-    "page": "src/options/options.html",
-    "open_in_tab": true
-  },
-  
   "background": {
     "service_worker": "src/background/service-worker.js"
   },
@@ -40,7 +35,8 @@
     "activeTab",
     "tabs",
     "contextMenus",
-    "notifications"
+    "notifications",
+    "alarms"
   ],
   
   "optional_permissions": [
@@ -48,13 +44,6 @@
   ],
   
   "host_permissions": [
-    "<all_urls>",
-    "https://www.google.com/s2/favicons/*",
-    "https://icons.duckduckgo.com/*",
-    "https://t1.gstatic.com/faviconV2/*",
-    "https://favicone.com/*",
-    "https://icon.horse/*",
-    "https://api.allorigins.win/*",
     "https://*/*",
     "http://*/*"
   ],

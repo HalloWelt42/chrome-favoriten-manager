@@ -1,98 +1,41 @@
 /**
- * FavGrid Service Worker
- * Handles background tasks, context menus, and browser events
+ * FavGrid Service Worker v3.0.2
+ * Standalone – kein importScripts, keine DOM-Abhängigkeiten
  */
 
-// Initialize on install
+// ============================================
+// Inline Utilities (kein importScripts nötig)
+// ============================================
+function generateId() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+const DEFAULT_GROUP = {
+  id: 'default',
+  name: 'Favoriten',
+  icon: '⭐',
+  color: '#7f5af0',
+  position: 0,
+  isDefault: true,
+  source: 'manual'
+};
+
+// ============================================
+// Installation & Update
+// ============================================
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
-    // Initialize storage with defaults
     await initializeStorage();
     console.log('FavGrid installed successfully');
   } else if (details.reason === 'update') {
     console.log('FavGrid updated to version', chrome.runtime.getManifest().version);
   }
-});
-
-// Initialize storage
-async function initializeStorage() {
-  const defaultSettings = {
-    theme: 'dark',
-    background: {
-      type: 'gradient',
-      value: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
-      blur: 0,
-      overlay: 0
-    },
-    grid: {
-      columns: 6,
-      rows: 4,
-      iconSize: 72,
-      gap: 24,
-      borderRadius: 16,
-      showShadow: true
-    },
-    labels: {
-      show: true,
-      position: 'below',
-      fontSize: 12,
-      maxLength: 20
-    },
-    animations: {
-      hover: true,
-      pageTransition: 'slide',
-      loadAnimation: true
-    },
-    search: {
-      engine: 'https://www.google.com/search?q=%s',
-      instantSearch: true,
-      suggestions: false
-    },
-    navigation: {
-      keyboard: true,
-      mousewheel: true,
-      swipe: true,
-      showArrows: true
-    },
-    startup: {
-      group: 'last',
-      lastGroupId: null
-    },
-    backup: {
-      autoBackup: false,
-      frequency: 'weekly'
-    }
-  };
-
-  const defaultGroup = {
-    id: 'default',
-    name: 'Favoriten',
-    icon: '⭐',
-    color: '#7f5af0',
-    position: 0,
-    isDefault: true,
-    source: 'manual',
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  };
-
-  const data = await chrome.storage.local.get(['settings', 'groups', 'favorites']);
   
-  if (!data.settings) {
-    await chrome.storage.local.set({ settings: defaultSettings });
-  }
-  
-  if (!data.groups || data.groups.length === 0) {
-    await chrome.storage.local.set({ groups: [defaultGroup] });
-  }
-  
-  if (!data.favorites) {
-    await chrome.storage.local.set({ favorites: [] });
-  }
-}
-
-// Context menu for adding current page
-chrome.runtime.onInstalled.addListener(() => {
+  // Context Menu erstellen
   chrome.contextMenus.create({
     id: 'add-to-favgrid',
     title: 'Zu FavGrid hinzufügen',
@@ -100,7 +43,26 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// Handle context menu clicks
+// ============================================
+// Storage Initialisierung
+// ============================================
+async function initializeStorage() {
+  const data = await chrome.storage.local.get(['groups', 'favorites']);
+  
+  if (!data.groups || data.groups.length === 0) {
+    await chrome.storage.local.set({
+      groups: [{ ...DEFAULT_GROUP, createdAt: Date.now(), updatedAt: Date.now() }]
+    });
+  }
+  
+  if (!data.favorites) {
+    await chrome.storage.local.set({ favorites: [] });
+  }
+}
+
+// ============================================
+// Context Menu Handler
+// ============================================
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'add-to-favgrid') {
     const url = info.linkUrl || info.pageUrl;
@@ -112,13 +74,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 });
 
-// Add favorite from context menu
+// ============================================
+// Favorit hinzufügen (Context Menu / Popup)
+// ============================================
 async function addFavoriteFromContextMenu(url, title) {
   const data = await chrome.storage.local.get(['favorites', 'groups']);
   const favorites = data.favorites || [];
   const groups = data.groups || [];
   
-  // Find default group
   const defaultGroup = groups.find(g => g.isDefault) || groups[0];
   
   if (!defaultGroup) {
@@ -126,10 +89,8 @@ async function addFavoriteFromContextMenu(url, title) {
     return;
   }
   
-  // Check if already exists
-  const exists = favorites.some(f => f.url === url);
-  if (exists) {
-    // Notify user
+  // Prüfen ob bereits vorhanden
+  if (favorites.some(f => f.url === url)) {
     chrome.notifications.create({
       type: 'basic',
       iconUrl: 'assets/icons/icon-48.png',
@@ -139,7 +100,6 @@ async function addFavoriteFromContextMenu(url, title) {
     return;
   }
   
-  // Add new favorite
   const newFavorite = {
     id: generateId(),
     url: url,
@@ -160,7 +120,6 @@ async function addFavoriteFromContextMenu(url, title) {
   favorites.push(newFavorite);
   await chrome.storage.local.set({ favorites });
   
-  // Notify user
   chrome.notifications.create({
     type: 'basic',
     iconUrl: 'assets/icons/icon-48.png',
@@ -169,16 +128,9 @@ async function addFavoriteFromContextMenu(url, title) {
   });
 }
 
-// Generate UUID
-function generateId() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-// Handle messages from content scripts and popup
+// ============================================
+// Message Handler
+// ============================================
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
     case 'addFavorite':
@@ -195,21 +147,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// Fetch page metadata
+// ============================================
+// Page Info abrufen
+// ============================================
 async function fetchPageInfo(url) {
   try {
     const response = await fetch(url);
     const text = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, 'text/html');
+    
+    const getTitle = () => {
+      const match = text.match(/<title[^>]*>([^<]*)<\/title>/i);
+      return match ? match[1].trim() : '';
+    };
     
     const getMetaContent = (name) => {
-      const meta = doc.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
-      return meta?.getAttribute('content') || '';
+      const regex = new RegExp(
+        `<meta[^>]*(?:name|property)=["']${name}["'][^>]*content=["']([^"']*)["']` +
+        `|<meta[^>]*content=["']([^"']*)["'][^>]*(?:name|property)=["']${name}["']`, 'i'
+      );
+      const match = text.match(regex);
+      return (match ? (match[1] || match[2]) : '').trim();
     };
     
     return {
-      title: doc.title || '',
+      title: getTitle(),
       description: getMetaContent('description') || getMetaContent('og:description'),
       image: getMetaContent('og:image'),
       siteName: getMetaContent('og:site_name'),
@@ -220,22 +181,21 @@ async function fetchPageInfo(url) {
   }
 }
 
-
-// Auto-backup (runs periodically if enabled)
-chrome.alarms.create('autoBackup', { periodInMinutes: 1440 }); // Once per day
+// ============================================
+// Auto-Backup (täglich)
+// ============================================
+chrome.alarms.create('autoBackup', { periodInMinutes: 1440 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'autoBackup') {
     const data = await chrome.storage.local.get('settings');
     if (data.settings?.backup?.autoBackup) {
-      // Create backup in storage
       const allData = await chrome.storage.local.get(null);
       const backup = {
         date: new Date().toISOString(),
         data: allData
       };
       
-      // Store last 5 backups
       const backups = (await chrome.storage.local.get('backups')).backups || [];
       backups.unshift(backup);
       if (backups.length > 5) backups.pop();
@@ -246,7 +206,9 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
-// Handle keyboard shortcut for quick add
+// ============================================
+// Keyboard Shortcut Handler
+// ============================================
 chrome.commands?.onCommand?.addListener(async (command) => {
   if (command === 'add-current-page') {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });

@@ -219,6 +219,23 @@ body {
   height: 16px;
 }
 
+/* Donate Link */
+.donate-link {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.donate-link svg {
+  fill: #ef4444;
+  stroke: #ef4444;
+}
+
+.donate-link:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
 /* Toast */
 .toast {
   position: fixed;
