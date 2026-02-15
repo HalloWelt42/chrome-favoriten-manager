@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FavGrid – Unterstützen</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #1a1a1a;
+      --bg-card: #2d2d2d;
+      --bg-hover: #374151;
+      --text: #ffffff;
+      --text-muted: #9ca3af;
+      --donate-color: #ff5e5b;
+      --donate-color-hover: #ff4442;
+      --donate-bg-hover: rgba(255, 94, 91, 0.1);
+      --crypto-btc: #f7931a;
+      --crypto-doge: #c2a633;
+      --crypto-eth: #627eea;
+    }
+    
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f3f4f6;
+        --bg-card: #ffffff;
+        --bg-hover: #e5e7eb;
+        --text: #1f2937;
+        --text-muted: #6b7280;
+      }
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .donate-page {
+      max-width: 440px;
+      width: 100%;
+      margin: 24px;
+    }
+    
+    /* Header */
+    .donate-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    
+    .donate-header .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    
+    .donate-header h1 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    
+    .donate-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    
+    /* Ko-fi Primary Button */
+    .kofi-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      background: var(--donate-color);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+      margin-bottom: 28px;
+    }
+    
+    .kofi-btn:hover {
+      background: var(--donate-color-hover);
+      transform: translateY(-1px);
+    }
+    
+    .kofi-btn .kofi-icon {
+      font-size: 20px;
+    }
+    
+    /* Crypto Section */
+    .crypto-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    
+    .crypto-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .crypto-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--bg-hover);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .crypto-tab:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+    
+    .crypto-tab.active {
+      border-color: var(--donate-color);
+      color: var(--text);
+      background: var(--donate-bg-hover);
+    }
+    
+    .coin-icon {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    
+    /* Crypto Content */
+    .crypto-content {
+      display: none;
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .crypto-content.active {
+      display: block;
+    }
+    
+    .crypto-box {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    
+    .qr-code {
+      width: 120px;
+      height: 120px;
+      background: white;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+    }
+    
+    .qr-code img {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .qr-code .placeholder {
+      color: #999;
+      font-size: 11px;
+      text-align: center;
+    }
+    
+    .crypto-details {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .crypto-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .crypto-address {
+      font-family: monospace;
+      font-size: 11px;
+      word-break: break-all;
+      color: var(--text-muted);
+      background: var(--bg);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+    
+    .copy-btn:hover {
+      background: var(--donate-color);
+      color: white;
+    }
+    
+    /* Footer */
+    .donate-footer {
+      text-align: center;
+      margin-top: 28px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 400px) {
+      .crypto-box {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .crypto-address {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="donate-page">
+    <!-- Header -->
+    <div class="donate-header">
+      <span class="icon">☕</span>
+      <h1>Made with ❤️ in Sachsen-Anhalt</h1>
+      <p>Open Source aus Sachsen-Anhalt.<br>Kein Tracking, keine Werbung, keine Kompromisse.</p>
+    </div>
+    
+    <!-- Ko-fi Primary -->
+    <a id="kofi-btn" href="" target="_blank" rel="noopener" class="kofi-btn">
+      <span class="kofi-icon">☕</span>
+      <span>Ko-fi – Kaffee spendieren</span>
+    </a>
+    
+    <!-- Crypto -->
+    <p class="crypto-label">Oder per Kryptowährung:</p>
+    
+    <div class="crypto-tabs">
+      <button class="crypto-tab active" data-crypto="btc">
+        <span class="coin-icon">₿</span>
+        <span>Bitcoin</span>
+      </button>
+      <button class="crypto-tab" data-crypto="doge">
+        <span class="coin-icon">Ð</span>
+        <span>Dogecoin</span>
+      </button>
+      <button class="crypto-tab" data-crypto="eth">
+        <span class="coin-icon">Ξ</span>
+        <span>Ethereum</span>
+      </button>
+    </div>
+    
+    <!-- BTC -->
+    <div class="crypto-content active" id="crypto-btc">
+      <div class="crypto-box">
+        <div class="qr-code" id="btc-qr"><span class="placeholder">QR</span></div>
+        <div class="crypto-details">
+          <p class="crypto-name">Bitcoin (BTC)</p>
+          <p class="crypto-address" id="btc-address"></p>
+          <button class="copy-btn" data-coin="btc">📋 <span class="copy-text">Adresse kopieren</span></button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- DOGE -->
+    <div class="crypto-content" id="crypto-doge">
+      <div class="crypto-box">
+        <div class="qr-code" id="doge-qr"><span class="placeholder">QR</span></div>
+        <div class="crypto-details">
+          <p class="crypto-name">Dogecoin (DOGE)</p>
+          <p class="crypto-address" id="doge-address"></p>
+          <button class="copy-btn" data-coin="doge">📋 <span class="copy-text">Adresse kopieren</span></button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ETH -->
+    <div class="crypto-content" id="crypto-eth">
+      <div class="crypto-box">
+        <div class="qr-code" id="eth-qr"><span class="placeholder">QR</span></div>
+        <div class="crypto-details">
+          <p class="crypto-name">Ethereum (ETH)</p>
+          <p class="crypto-address" id="eth-address"></p>
+          <button class="copy-btn" data-coin="eth">📋 <span class="copy-text">Adresse kopieren</span></button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="donate-footer">
+      Danke für deine Unterstützung! ❤️
+    </div>
+  </div>
+  
+  <script src="donate-config.js"></script>
+  <script src="donate.js"></script>
+</body>
+</html>
