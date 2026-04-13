@@ -90,9 +90,10 @@ const Favicon = {
     const sources = [];
     const origin = new URL(url).origin;
 
-    // Interne URLs überspringen
+    // Interne/geschützte Browser-URLs überspringen
     if (url.startsWith('chrome://') || url.startsWith('chrome-extension://') ||
-        url.startsWith('about:') || url.startsWith('edge://')) {
+        url.startsWith('about:') || url.startsWith('edge://') ||
+        url.includes('chrome.google.com') || url.includes('chromewebstore.google.com')) {
       return sources;
     }
 
@@ -401,9 +402,10 @@ const Favicon = {
    */
   async fetchAndConvert(imageUrl) {
     try {
-      // Interne Browser-URLs überspringen (kein Zugriff möglich)
+      // Interne/geschützte Browser-URLs überspringen
       if (imageUrl.startsWith('chrome://') || imageUrl.startsWith('chrome-extension://') ||
-          imageUrl.startsWith('about:') || imageUrl.startsWith('edge://')) {
+          imageUrl.startsWith('about:') || imageUrl.startsWith('edge://') ||
+          imageUrl.includes('chrome.google.com') || imageUrl.includes('chromewebstore.google.com')) {
         return null;
       }
 

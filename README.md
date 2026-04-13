@@ -1,4 +1,4 @@
-# FavGrid v3.4.0 - Premium Speed Dial
+# FavGrid v3.4.1 - Premium Speed Dial
 
 Ein eleganter, hochgradig anpassbarer Speed Dial mit Glassmorphism-Design für Chrome und Chromium-basierte Browser.
 
