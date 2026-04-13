@@ -58,7 +58,6 @@ const StorageConfig = {
       pageTransition: 'slide'
     },
     search: {
-      engine: 'https://www.google.com/search?q=%s',
       instantSearch: true,
       suggestions: false
     },

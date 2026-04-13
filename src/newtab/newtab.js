@@ -230,6 +230,9 @@ const App = {
     
     // Recalculate items per page
     this.itemsPerPage = settings.grid.columns * settings.grid.rows;
+
+    // Preview aktualisieren
+    if (typeof updatePreview === 'function') updatePreview();
   },
   
   // Hex-Farbe zu rgba konvertieren
@@ -278,17 +281,15 @@ const App = {
       theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     
-    // Reset all background properties first
-    el.style.background = '';
-    el.style.backgroundImage = '';
-    el.style.backgroundColor = '';
+    // Reset komplett
+    el.style.cssText = '';
     el.classList.remove('has-image');
-    
+
     // Apply background based on type
     if (background.type === 'gradient') {
       el.style.background = background.value;
     } else if (background.type === 'color') {
-      el.style.backgroundColor = background.value;
+      el.style.background = background.value;
     } else if (background.type === 'image') {
       // Determine which image to use based on theme
       let imageUrl = '';
@@ -321,28 +322,22 @@ const App = {
       }
     }
     
-    // Apply blur and brightness filter
-    const filters = [];
-    if (background.type === 'image' && background.blur > 0) {
-      filters.push(`blur(${background.blur}px)`);
+    // Blur und Helligkeit nur bei Bildern
+    if (background.type === 'image') {
+      const filters = [];
+      if (Number(background.blur) > 0) {
+        filters.push(`blur(${Number(background.blur)}px)`);
+      }
+      const brightness = Number(background.brightness) || 100;
+      if (brightness !== 100) {
+        filters.push(`brightness(${brightness / 100})`);
+      }
+      el.style.filter = filters.length > 0 ? filters.join(' ') : '';
     }
-    const brightness = background.brightness ?? 100;
-    if (brightness !== 100) {
-      filters.push(`brightness(${brightness / 100})`);
-    }
-    el.style.filter = filters.length > 0 ? filters.join(' ') : 'none';
-    
-    // Apply overlay via CSS variable (für ::after pseudo-element)
-    const overlayValue = background.overlay || 0;
-    let overlayColor = 'transparent';
-    if (overlayValue < 0) {
-      // Negative: black overlay (darker)
-      overlayColor = `rgba(0, 0, 0, ${Math.abs(overlayValue) / 100})`;
-    } else if (overlayValue > 0) {
-      // Positive: white overlay (lighter)
-      overlayColor = `rgba(255, 255, 255, ${overlayValue / 100})`;
-    }
-    document.documentElement.style.setProperty('--bg-overlay-color', overlayColor);
+
+
+    // Preview-Hintergrund sofort aktualisieren
+    if (typeof updatePreview === 'function') updatePreview();
   },
 
   // ============================================
@@ -372,14 +367,14 @@ const App = {
         <span class="name">${group.name}</span>
         <span class="count">${count}</span>
         <div class="group-tab-actions">
-          <button class="group-tab-action edit-action" title="Bearbeiten">
+          <button class="group-tab-action edit-action" title="${t('edit')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
           ${!group.isDefault ? `
-          <button class="group-tab-action delete-action" title="Löschen">
+          <button class="group-tab-action delete-action" title="${t('delete')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"/>
               <line x1="6" y1="6" x2="18" y2="18"/>
@@ -416,7 +411,7 @@ const App = {
         e.stopPropagation();
         await Storage.deleteGroup(group.id);
         await this.refreshData();
-        this.showToast('Gruppe gelöscht');
+        this.showToast(t('groupDeleted'));
       });
       
       // Drag & Drop for reordering
@@ -487,7 +482,7 @@ const App = {
       // Update local state
       this.groups = groups;
       this.renderGroups();
-      this.showToast('Reihenfolge geändert');
+      this.showToast(t('orderChanged'));
     } finally {
       this._isOwnStorageUpdate = false;
     }
@@ -564,8 +559,9 @@ const App = {
     this.elements.searchInput.value = '';
     this.elements.searchClear.classList.add('hidden');
     
-    // Save last group for startup (renders internally)
+    // Save last group for startup and popup preselection
     this.saveSettingImmediate('startup.lastGroupId', groupId);
+    chrome.storage.local.set({ lastSelectedGroupId: groupId });
     
     // Update tabs
     document.querySelectorAll('.group-tab').forEach(tab => {
@@ -617,8 +613,8 @@ const App = {
               <path d="M45 50h30M45 60h20M45 70h25" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
             </svg>
           </div>
-          <h3>Keine Ergebnisse</h3>
-          <p>Versuche einen anderen Suchbegriff.</p>
+          <h3>${t('noResults')}</h3>
+          <p>${t('noResultsDesc')}.</p>
         </div>
       `;
     } else {
@@ -636,7 +632,7 @@ const App = {
   createAddElement() {
     const item = document.createElement('div');
     item.className = 'add-favorite-grid-item';
-    item.title = 'Neuen Favorit hinzufügen';
+    item.title = t('addNewFavorite');
     
     item.innerHTML = `
       <div class="favorite-icon">
@@ -645,7 +641,7 @@ const App = {
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
       </div>
-      ${this.settings.labels.show ? '<span class="favorite-label">Hinzufügen</span>' : ''}
+      ${this.settings.labels.show ? '<span class="favorite-label">' + t('add') + '</span>' : ''}
     `;
     
     item.addEventListener('click', () => this.openFavoriteModal());
@@ -734,7 +730,7 @@ const App = {
     item.innerHTML = `
       <!-- Edit button - LEFT side -->
       <div class="quick-edit-left">
-        <button class="quick-action edit-action" title="Bearbeiten">
+        <button class="quick-action edit-action" title="${t('edit')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -744,14 +740,14 @@ const App = {
       
       <!-- Delete/Archive buttons - RIGHT side -->
       <div class="quick-edit-right">
-        <button class="quick-action delete-action" title="Löschen">
+        <button class="quick-action delete-action" title="${t('delete')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
         ${!isInDefaultGroup ? `
-        <button class="quick-action archive-action" title="Zu ${defaultGroup?.name || 'Favoriten'}">
+        <button class="quick-action archive-action" title="${t('moveTo')} ${defaultGroup?.name || t('favorites')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/>
           </svg>
@@ -764,7 +760,7 @@ const App = {
              alt="${displayName}"
              onerror="this.src='${Favicon.generateFallback(favorite.url)}'">
         <div class="favorite-hover-actions">
-          <button class="hover-action open-bg" title="Im Hintergrund öffnen">
+          <button class="hover-action open-bg" title="${t('openInBackground')}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <path d="M9 3v18M21 9H9"/>
@@ -825,7 +821,7 @@ const App = {
       e.preventDefault();
       e.stopPropagation();
       window.open(favorite.url, '_blank');
-      this.showToast('Im Hintergrund geöffnet');
+      this.showToast(t('openedInBg'));
     });
     
     item.querySelector('.edit-action')?.addEventListener('click', (e) => {
@@ -839,7 +835,7 @@ const App = {
       e.stopPropagation();
       await Storage.deleteFavorite(favorite.id);
       await this.refreshData();
-      this.showToast('Gelöscht');
+      this.showToast(t('deleted'));
     });
     
     item.querySelector('.archive-action')?.addEventListener('click', async (e) => {
@@ -848,7 +844,7 @@ const App = {
       if (defaultGroup) {
         await Storage.moveFavorite(favorite.id, defaultGroup.id);
         await this.refreshData();
-        this.showToast(`Zu "${defaultGroup.name}" verschoben`);
+        this.showToast(t('movedTo', [defaultGroup.name]));
       }
     });
     
@@ -895,7 +891,7 @@ const App = {
       // Update local state
       this.favorites = allFavorites;
       this.renderFavorites();
-      this.showToast('Reihenfolge geändert');
+      this.showToast(t('orderChanged'));
     } finally {
       this._isOwnStorageUpdate = false;
     }
@@ -1107,7 +1103,7 @@ const App = {
     await Storage.moveFavorite(this.contextTarget.id, groupId);
     await this.refreshData();
     this.hideContextMenu();
-    this.showToast('Favorit verschoben');
+    this.showToast(t('favoriteMoved'));
   },
 
   // ============================================
@@ -1210,8 +1206,7 @@ const App = {
   },
 
   performExternalSearch(query) {
-    const searchUrl = this.settings.search.engine.replace('%s', encodeURIComponent(query));
-    window.location.href = searchUrl;
+    chrome.search.query({ text: query, disposition: 'CURRENT_TAB' });
   },
 
   isValidUrl(string) {
@@ -1242,7 +1237,7 @@ const App = {
     const modal = this.elements.favoriteModal;
     const title = document.getElementById('favorite-modal-title');
     
-    title.textContent = favorite ? 'Favorit bearbeiten' : 'Favorit hinzufügen';
+    title.textContent = favorite ? t('editFavorite') : t('addFavorite');
     
     // Fill form
     document.getElementById('fav-url').value = favorite?.url || '';
@@ -1368,7 +1363,7 @@ const App = {
   async resetIconSources() {
     const url = this.editingFavorite?.url || document.getElementById('fav-url')?.value?.trim();
     if (!url) {
-      this.showToast('Keine URL vorhanden', 'error');
+      this.showToast(t('noUrlAvailable'), 'error');
       return;
     }
     
@@ -1388,7 +1383,7 @@ const App = {
     this.iconSourcesDiscovered = false;
     // originalCustomIcon wird NICHT zurückgesetzt!
     
-    this.showToast('Icon-Cache geleert, neu scannen...', 'info');
+    this.showToast(t('iconCacheCleared'), 'info');
     
     // Direkt erste Quelle laden
     await this.nextIconSource();
@@ -1403,7 +1398,7 @@ const App = {
     }
     
     if (!url) {
-      this.showToast('Bitte erst URL eingeben', 'error');
+      this.showToast(t('enterUrlFirst'), 'error');
       return;
     }
     
@@ -1419,7 +1414,7 @@ const App = {
     if (!this.iconSourcesDiscovered) {
       const typeBadge = document.getElementById('icon-type-badge');
       if (typeBadge) {
-        typeBadge.textContent = 'Scanning... ⏳';
+        typeBadge.textContent = t('scanning');
         typeBadge.className = 'icon-type-badge badge-loading';
       }
       
@@ -1446,7 +1441,7 @@ const App = {
       this.iconSourcesDiscovered = true;
       this.iconSourceIndex = -1;
       
-      this.showToast(`${this.iconSources.length} Quellen gefunden`, 'success');
+      this.showToast(t('sourcesFound', [String(this.iconSources.length)]), 'success');
     }
     
     // Schutz vor Endlosschleife
@@ -1519,7 +1514,7 @@ const App = {
     }
     
     // Keine Quelle hat funktioniert
-    this.showToast('Keine Icon-Quellen verfügbar', 'error');
+    this.showToast(t('noIconSources'), 'error');
     this.iconSourceName = '';
   },
   
@@ -1542,14 +1537,14 @@ const App = {
     const img = preview?.querySelector('img');
     
     if (!img || !img.src) {
-      this.showToast('Kein Icon vorhanden', 'error');
+      this.showToast(t('noIconAvailable'), 'error');
       return;
     }
     
     // Schwellenwert aus Slider holen
     const threshold = parseInt(document.getElementById('white-threshold')?.value || 245);
     
-    this.showToast(`Verarbeite (Schwelle: ${threshold})...`);
+    this.showToast(t('processingThreshold', [threshold]));
     
     try {
       // Immer vom Original arbeiten, damit man mehrfach testen kann
@@ -1560,7 +1555,7 @@ const App = {
         sourceDataUrl = await this.imageUrlToDataUrl(sourceDataUrl);
         
         if (!sourceDataUrl) {
-          this.showToast('Bild konnte nicht geladen werden', 'error');
+          this.showToast(t('imageLoadFailed'), 'error');
           return;
         }
       }
@@ -1576,7 +1571,7 @@ const App = {
       const processedDataUrl = await this.processImageTransparency(sourceDataUrl, threshold);
       
       if (!processedDataUrl) {
-        this.showToast('Bildverarbeitung fehlgeschlagen', 'error');
+        this.showToast(t('imageProcessFailed'), 'error');
         return;
       }
       
@@ -1592,11 +1587,11 @@ const App = {
       // Reset-Button anzeigen
       document.getElementById('reset-icon')?.classList.remove('hidden');
       
-      this.showToast(`Weiß entfernt (≥${threshold})`);
+      this.showToast(t('whiteRemovedThreshold', [threshold]));
       
     } catch (err) {
       console.error('Fehler beim Entfernen des Hintergrunds:', err);
-      this.showToast('Fehler bei der Bildverarbeitung', 'error');
+      this.showToast(t('imageError'), 'error');
     }
   },
   
@@ -1700,7 +1695,7 @@ const App = {
   // Original-Icon wiederherstellen
   resetIcon() {
     if (!this.editingFavorite?.faviconOriginal) {
-      this.showToast('Kein Original vorhanden', 'error');
+      this.showToast(t('noOriginal'), 'error');
       return;
     }
     
@@ -1720,7 +1715,7 @@ const App = {
     // Reset-Button verstecken
     document.getElementById('reset-icon')?.classList.add('hidden');
     
-    this.showToast('Original wiederhergestellt');
+    this.showToast(t('originalRestored'));
   },
 
   closeFavoriteModal() {
@@ -1736,7 +1731,7 @@ const App = {
     const groupId = document.getElementById('fav-group').value;
     
     if (!url) {
-      this.showToast('Bitte gib eine URL ein', 'error');
+      this.showToast(t('errorUrlRequired'), 'error');
       return;
     }
     
@@ -1749,7 +1744,7 @@ const App = {
     try {
       new URL(validUrl);
     } catch {
-      this.showToast('Ungültige URL', 'error');
+      this.showToast(t('errorInvalidUrl'), 'error');
       return;
     }
     
@@ -1760,7 +1755,7 @@ const App = {
       if (exactDuplicate) {
         const dupName = exactDuplicate.alias || Storage.getHostname(exactDuplicate.url);
         const dupGroup = this.groups.find(g => g.id === exactDuplicate.groupId);
-        this.showToast(`Exakt gleiche URL existiert bereits: "${dupName}" in ${dupGroup?.name || 'Unbekannt'}`, 'error');
+        this.showToast(t('urlExistsAlready') + `: "${dupName}" ${t('inGroup')} ${dupGroup?.name || t('unknown')}`, 'error');
         return;
       }
       
@@ -1770,7 +1765,7 @@ const App = {
       if (similarDuplicate) {
         const dupName = similarDuplicate.alias || Storage.getHostname(similarDuplicate.url);
         const dupGroup = this.groups.find(g => g.id === similarDuplicate.groupId);
-        this.showToast(`⚠️ Ähnliche URL existiert: "${dupName}" in ${dupGroup?.name || 'Unbekannt'}`, 'warning');
+        this.showToast(`⚠️ ` + t('similarUrlExists') + `: "${dupName}" ${t('inGroup')} ${dupGroup?.name || t('unknown')}`, 'warning');
         // Nicht return - trotzdem hinzufügen
       }
     }
@@ -1802,10 +1797,10 @@ const App = {
     
     if (this.editingFavorite) {
       await Storage.updateFavorite(this.editingFavorite.id, data);
-      this.showToast('Favorit aktualisiert');
+      this.showToast(t('favoriteUpdated'));
     } else {
       await Storage.addFavorite(data);
-      this.showToast('Favorit hinzugefügt');
+      this.showToast(t('favoriteAdded'));
     }
     
     this.closeFavoriteModal();
@@ -1830,7 +1825,7 @@ const App = {
     const title = document.getElementById('group-modal-title');
     const deleteBtn = document.getElementById('delete-group-btn');
     
-    title.textContent = group ? 'Gruppe bearbeiten' : 'Neue Gruppe';
+    title.textContent = group ? t('editGroup') : t('newGroup');
     deleteBtn.style.display = group && !group.isDefault ? 'block' : 'none';
     
     document.getElementById('group-name').value = group?.name || '';
@@ -1852,7 +1847,7 @@ const App = {
     const color = document.getElementById('group-color').value;
     
     if (!name) {
-      this.showToast('Bitte gib einen Namen ein', 'error');
+      this.showToast(t('errorNameRequired'), 'error');
       return;
     }
     
@@ -1860,10 +1855,10 @@ const App = {
     
     if (this.editingGroup) {
       await Storage.updateGroup(this.editingGroup.id, data);
-      this.showToast('Gruppe aktualisiert');
+      this.showToast(t('groupUpdated'));
     } else {
       const newGroup = await Storage.addGroup(data);
-      this.showToast('Gruppe erstellt');
+      this.showToast(t('groupCreated'));
       this.selectGroup(newGroup.id);
     }
     
@@ -1881,7 +1876,7 @@ const App = {
         this.closeGroupModal();
         await this.refreshData();
         this.selectFirstGroup();
-        this.showToast('Gruppe gelöscht');
+        this.showToast(t('groupDeleted'));
       }
     );
   },
@@ -1952,7 +1947,7 @@ const App = {
     html += `
       <div class="info-item">
         <label>Quelle</label>
-        <p>${favorite.source === 'browser' ? 'Browser-Import' : 'Manuell'}</p>
+        <p>${favorite.source === 'browser' ? t('browserImport') : t('manual')}</p>
       </div>
     `;
     
@@ -1994,8 +1989,6 @@ const App = {
     const customGradient = s.background.customGradient || { color1: '#1a1a2e', color2: '#16213e' };
     document.getElementById('setting-gradient-color1').value = customGradient.color1;
     document.getElementById('setting-gradient-color2').value = customGradient.color2;
-    document.getElementById('setting-gradient-brightness').value = s.background.brightness || 100;
-    document.getElementById('gradient-brightness-value').textContent = `${s.background.brightness || 100}%`;
     
     if (s.background.type === 'color') {
       document.getElementById('setting-bg-color').value = s.background.value;
@@ -2013,11 +2006,11 @@ const App = {
       // Use dark for light checkbox
       document.getElementById('setting-use-dark-for-light').checked = s.background.useDarkForLight !== false;
       
-      // Blur and overlay
+      // Blur und Helligkeit
       document.getElementById('setting-bg-blur').value = s.background.blur || 0;
-      document.getElementById('setting-bg-overlay').value = s.background.overlay || 0;
       document.getElementById('blur-value').textContent = `${s.background.blur || 0}px`;
-      document.getElementById('overlay-value').textContent = s.background.overlay || 0;
+      document.getElementById('setting-gradient-brightness').value = s.background.brightness || 100;
+      document.getElementById('gradient-brightness-value').textContent = `${s.background.brightness || 100}%`;
     }
     
     // Mark active gradient
@@ -2083,7 +2076,6 @@ const App = {
     document.getElementById('setting-label-color-light').value = s.labels.colorLight || '#1a1a2e';
     
     // Search
-    document.getElementById('setting-search-engine').value = s.search.engine;
     document.getElementById('setting-instant-search').checked = s.search.instantSearch;
     
     // Navigation
@@ -2343,7 +2335,7 @@ const App = {
           await this.refreshData();
           this.renderManagerPanels();
           
-          this.showToast(`${data.ids.length} Favorit(en) verschoben`);
+          this.showToast(t('xFavoritesMoved', [String(data.ids.length)]));
         } catch (err) {
           console.error('Drop error:', err);
         }
@@ -2390,7 +2382,7 @@ const App = {
     
     // Update header
     document.getElementById(`panel-${side}-icon`).textContent = group?.icon || '📁';
-    document.getElementById(`panel-${side}-title`).textContent = group?.name || 'Unbekannt';
+    document.getElementById(`panel-${side}-title`).textContent = group?.name || t('unknown');
     document.getElementById(`panel-${side}-count`).textContent = favorites.length;
     
     // Render items
@@ -2501,14 +2493,14 @@ const App = {
     const toGroupId = toSide === 'left' ? this.managerLeftGroupId : this.managerRightGroupId;
     
     if (fromGroupId === toGroupId) {
-      this.showToast('Wähle zwei verschiedene Gruppen', 'error');
+      this.showToast(t('selectDifferentGroups'), 'error');
       return;
     }
     
     const itemsToMove = this.favorites.filter(f => f.groupId === fromGroupId);
     
     if (itemsToMove.length === 0) {
-      this.showToast('Keine Favoriten zum Verschieben');
+      this.showToast(t('noFavoritesToMove'));
       return;
     }
     
@@ -2518,7 +2510,7 @@ const App = {
     
     await this.refreshData();
     this.renderManagerPanels();
-    this.showToast(`${itemsToMove.length} Favorit(en) verschoben`);
+    this.showToast(t('xFavoritesMoved', [String(itemsToMove.length)]));
   },
 
   // ============================================
@@ -2652,7 +2644,7 @@ const App = {
         
         this.elements.sortDropdown.classList.add('hidden');
         this.renderFavorites();
-        this.showToast(`Sortierung: ${btn.textContent.trim()}`);
+        this.showToast(t('sorting') + ': ' + btn.textContent.trim());
       });
     });
     
@@ -2680,7 +2672,7 @@ const App = {
           if (e.ctrlKey || e.metaKey) {
             // Ctrl+1-9: Open in background
             window.open(favorite.url, '_blank');
-            this.showToast(`${num}: Im Hintergrund geöffnet`);
+            this.showToast(`${num}: ` + t('openedInBg'));
           } else {
             // 1-9: Open in current tab
             window.location.href = favorite.url;
@@ -2702,16 +2694,16 @@ const App = {
             break;
           case 'open-new':
             window.open(this.contextTarget.url, '_blank');
-            this.showToast('In neuem Tab geöffnet');
+            this.showToast(t('openedInNewTab'));
             break;
           case 'open-bg':
             window.open(this.contextTarget.url, '_blank');
             window.focus();
-            this.showToast('Im Hintergrund geöffnet');
+            this.showToast(t('openedInBg'));
             break;
           case 'copy-url':
             await navigator.clipboard.writeText(this.contextTarget.url);
-            this.showToast('URL kopiert');
+            this.showToast(t('urlCopied'));
             break;
           case 'edit':
             this.openFavoriteModal(this.contextTarget);
@@ -2762,7 +2754,7 @@ const App = {
     document.getElementById('fetch-favicon').addEventListener('click', async () => {
       const url = document.getElementById('fav-url').value;
       if (url) {
-        this.showToast('Lade Favicon...');
+        this.showToast(t('loadingFavicon'));
         const faviconDataUrl = await this.fetchFaviconAsDataUrl(url);
         document.getElementById('icon-preview').innerHTML = `<img src="${faviconDataUrl}">`;
         this.updateIconInfo(faviconDataUrl, this.editingFavorite);
@@ -2907,11 +2899,12 @@ const App = {
     });
     
     // Gradient Brightness
+    // Helligkeit (nur Bilder)
     document.getElementById('setting-gradient-brightness')?.addEventListener('input', (e) => {
       document.getElementById('gradient-brightness-value').textContent = `${e.target.value}%`;
       this.saveSettingImmediate('background.brightness', parseInt(e.target.value));
     });
-    
+
     // Custom Gradient
     document.getElementById('apply-custom-gradient')?.addEventListener('click', async () => {
       const color1 = document.getElementById('setting-gradient-color1').value;
@@ -2929,7 +2922,7 @@ const App = {
       await chrome.storage.local.set({ settings: current });
       this.settings = current;
       this.applySettings();
-      this.showToast('Eigener Verlauf angewendet');
+      this.showToast(t('customGradientApplied'));
     });
     
     // Background type
@@ -3073,12 +3066,6 @@ const App = {
       this.saveSettingImmediate('background.blur', parseInt(e.target.value));
     });
     
-    document.getElementById('setting-bg-overlay').addEventListener('input', (e) => {
-      const val = parseInt(e.target.value);
-      document.getElementById('overlay-value').textContent = val;
-      this.saveSettingImmediate('background.overlay', val);
-    });
-    
     // Animations
     document.getElementById('setting-transition').addEventListener('change', (e) => {
       this.saveSettingImmediate('animations.pageTransition', e.target.value);
@@ -3190,17 +3177,6 @@ const App = {
     });
     
     // Search
-    document.getElementById('setting-search-engine').addEventListener('change', (e) => {
-      this.saveSettingImmediate('search.engine', e.target.value);
-    });
-    
-    document.querySelectorAll('.search-presets button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('setting-search-engine').value = btn.dataset.url;
-        this.saveSettingImmediate('search.engine', btn.dataset.url);
-      });
-    });
-    
     document.getElementById('setting-instant-search').addEventListener('change', (e) => {
       this.saveSettingImmediate('search.instantSearch', e.target.checked);
     });
@@ -3248,7 +3224,7 @@ const App = {
       const content = JSON.stringify(exportData, null, 2);
       const date = new Date().toISOString().split('T')[0];
       this.downloadFile(content, `favgrid-backup-${date}.json`, 'application/json');
-      this.showToast('Backup erstellt');
+      this.showToast(t('backupCreated'));
     });
     
     // Full Backup Import
@@ -3266,11 +3242,11 @@ const App = {
           const importData = JSON.parse(event.target.result);
           
           if (importData.type !== 'full-backup' && !importData.favorites) {
-            throw new Error('Ungültiges Backup-Format');
+            throw new Error('Invalid backup format');
           }
           
           this.showConfirm(
-            'Backup wiederherstellen? Alle aktuellen Daten werden überschrieben!',
+            t('confirmReset'),
             async () => {
               if (importData.settings) {
                 await chrome.storage.local.set({ settings: importData.settings });
@@ -3284,11 +3260,11 @@ const App = {
               
               await this.refreshData();
               this.applySettings();
-              this.showToast('Backup wiederhergestellt');
+              this.showToast(t('backupRestored'));
             }
           );
         } catch (err) {
-          this.showToast('Fehler: ' + err.message, 'error');
+          this.showToast(t('errorPrefix') + ': ' + err.message, 'error');
         }
       };
       reader.readAsText(file);
@@ -3326,7 +3302,7 @@ const App = {
         
         if (content) {
           this.downloadFile(content, filename, type);
-          this.showToast(`Export als ${format.toUpperCase()} erfolgreich`);
+          this.showToast(t('exportFormatSuccess', [format.toUpperCase()]));
         }
       });
     });
@@ -3361,7 +3337,7 @@ const App = {
         
         if (result.success) {
           await this.refreshData();
-          this.showToast(`${result.count} Favoriten importiert`);
+          this.showToast(t('xFavoritesImported', [String(result.count)]));
         } else {
           this.showToast(result.error, 'error');
         }
@@ -3374,7 +3350,7 @@ const App = {
     document.getElementById('export-url-list')?.addEventListener('click', async () => {
       const urls = this.favorites.map(f => f.url).join('\n');
       document.getElementById('url-list-textarea').value = urls;
-      this.showToast(`${this.favorites.length} URLs in Liste geschrieben`);
+      this.showToast(t('xUrlsExported', [String(this.favorites.length)]));
     });
     
     document.getElementById('import-url-list')?.addEventListener('click', async () => {
@@ -3382,7 +3358,7 @@ const App = {
       const text = textarea.value.trim();
       
       if (!text) {
-        this.showToast('Keine URLs eingegeben', 'error');
+        this.showToast(t('noUrlsEntered'), 'error');
         return;
       }
       
@@ -3391,7 +3367,7 @@ const App = {
       const validUrls = lines.filter(l => urlPattern.test(l));
       
       if (validUrls.length === 0) {
-        this.showToast('Keine gültigen URLs gefunden', 'error');
+        this.showToast(t('errorInvalidUrl'), 'error');
         return;
       }
       
@@ -3423,11 +3399,11 @@ const App = {
     // Clear Favorites
     document.getElementById('clear-favorites-btn')?.addEventListener('click', () => {
       this.showConfirm(
-        'Alle Favoriten wirklich löschen? Gruppen und Einstellungen bleiben erhalten.',
+        t('confirmDelete'),
         async () => {
           await chrome.storage.local.set({ favorites: [] });
           await this.refreshData();
-          this.showToast('Alle Favoriten gelöscht');
+          this.showToast(t('favoriteDeleted'));
         }
       );
     });
@@ -3435,7 +3411,7 @@ const App = {
     // Reset All
     document.getElementById('reset-all-btn')?.addEventListener('click', () => {
       this.showConfirm(
-        'Alle Daten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!',
+        t('confirmReset'),
         async () => {
           await chrome.storage.local.clear();
           location.reload();
@@ -3566,7 +3542,7 @@ const App = {
   // Utility Functions
   // ============================================
   async refreshFavicon(favorite) {
-    this.showToast('Lade Icon...');
+    this.showToast(t('loadingFavicon'));
     const newFavicon = await Favicon.get(favorite.url, true); // force refresh
     await Storage.updateFavorite(favorite.id, { 
       customIcon: newFavicon,
@@ -3574,7 +3550,7 @@ const App = {
       faviconProcessed: false
     });
     await this.refreshData();
-    this.showToast('Icon aktualisiert');
+    this.showToast(t('refreshIcon'));
   },
 
   // Theme zwischen Light/Dark wechseln
@@ -3590,7 +3566,7 @@ const App = {
     // Settings anwenden (setzt Theme, Background, Label-Farben etc.)
     this.applySettings();
     
-    this.showToast(newTheme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode');
+    this.showToast(newTheme === 'dark' ? t('darkMode') : t('lightMode'));
   },
 
   async duplicateFavorite(favorite) {
@@ -3602,7 +3578,7 @@ const App = {
       updatedAt: undefined
     });
     await this.refreshData();
-    this.showToast('Favorit dupliziert');
+    this.showToast(t('favoriteDuplicated'));
   },
 
   confirmDeleteFavorite(favorite) {
@@ -3612,7 +3588,7 @@ const App = {
       async () => {
         await Storage.deleteFavorite(favorite.id);
         await this.refreshData();
-        this.showToast('Favorit gelöscht');
+        this.showToast(t('favoriteDeleted'));
       }
     );
   },
@@ -3629,7 +3605,167 @@ const App = {
 };
 
 // ============================================
+// Material Design Farbpalette
+// ============================================
+const MDColorPicker = {
+  colors: [
+    // Red
+    '#ffebee','#ffcdd2','#ef9a9a','#e57373','#ef5350','#f44336','#e53935','#d32f2f','#c62828','#b71c1c','#ff8a80','#ff5252','#ff1744','#d50000',
+    // Pink
+    '#fce4ec','#f8bbd0','#f48fb1','#f06292','#ec407a','#e91e63','#d81b60','#c2185b','#ad1457','#880e4f','#ff80ab','#ff4081','#f50057','#c51162',
+    // Purple
+    '#f3e5f5','#e1bee7','#ce93d8','#ba68c8','#ab47bc','#9c27b0','#8e24aa','#7b1fa2','#6a1b9a','#4a148c','#ea80fc','#e040fb','#d500f9','#aa00ff',
+    // Deep Purple
+    '#ede7f6','#d1c4e9','#b39ddb','#9575cd','#7e57c2','#673ab7','#5e35b1','#512da8','#4527a0','#311b92','#b388ff','#7c4dff','#651fff','#6200ea',
+    // Indigo
+    '#e8eaf6','#c5cae9','#9fa8da','#7986cb','#5c6bc0','#3f51b5','#3949ab','#303f9f','#283593','#1a237e','#8c9eff','#536dfe','#3d5afe','#304ffe',
+    // Blue
+    '#e3f2fd','#bbdefb','#90caf9','#64b5f6','#42a5f5','#2196f3','#1e88e5','#1976d2','#1565c0','#0d47a1','#82b1ff','#448aff','#2979ff','#2962ff',
+    // Light Blue
+    '#e1f5fe','#b3e5fc','#81d4fa','#4fc3f7','#29b6f6','#03a9f4','#039be5','#0288d1','#0277bd','#01579b','#80d8ff','#40c4ff','#00b0ff','#0091ea',
+    // Cyan
+    '#e0f7fa','#b2ebf2','#80deea','#4dd0e1','#26c6da','#00bcd4','#00acc1','#0097a7','#00838f','#006064','#84ffff','#18ffff','#00e5ff','#00b8d4',
+    // Teal
+    '#e0f2f1','#b2dfdb','#80cbc4','#4db6ac','#26a69a','#009688','#00897b','#00796b','#00695c','#004d40','#a7ffeb','#64ffda','#1de9b6','#00bfa5',
+    // Green
+    '#e8f5e9','#c8e6c9','#a5d6a7','#81c784','#66bb6a','#4caf50','#43a047','#388e3c','#2e7d32','#1b5e20','#b9f6ca','#69f0ae','#00e676','#00c853',
+    // Light Green
+    '#f1f8e9','#dcedc8','#c5e1a5','#aed581','#9ccc65','#8bc34a','#7cb342','#689f38','#558b2f','#33691e','#ccff90','#b2ff59','#76ff03','#64dd17',
+    // Lime
+    '#f9fbe7','#f0f4c3','#e6ee9c','#dce775','#d4e157','#cddc39','#c0ca33','#afb42b','#9e9d24','#827717','#f4ff81','#eeff41','#c6ff00','#aeea00',
+    // Yellow
+    '#fffde7','#fff9c4','#fff59d','#fff176','#ffee58','#ffeb3b','#fdd835','#fbc02d','#f9a825','#f57f17','#ffff8d','#ffff00','#ffea00','#ffd600',
+    // Amber
+    '#fff8e1','#ffecb3','#ffe082','#ffd54f','#ffca28','#ffc107','#ffb300','#ffa000','#ff8f00','#ff6f00','#ffe57f','#ffd740','#ffc400','#ffab00',
+    // Orange
+    '#fff3e0','#ffe0b2','#ffcc80','#ffb74d','#ffa726','#ff9800','#fb8c00','#f57c00','#ef6c00','#e65100','#ffd180','#ffab40','#ff9100','#ff6d00',
+    // Deep Orange
+    '#fbe9e7','#ffccbc','#ffab91','#ff8a65','#ff7043','#ff5722','#f4511e','#e64a19','#d84315','#bf360c','#ff9e80','#ff6e40','#ff3d00','#dd2c00',
+    // Brown
+    '#efebe9','#d7ccc8','#bcaaa4','#a1887f','#8d6e63','#795548','#6d4c41','#5d4037','#4e342e','#3e2723','#3e2723','#3e2723','#3e2723','#3e2723',
+    // Grey
+    '#fafafa','#f5f5f5','#eeeeee','#e0e0e0','#bdbdbd','#9e9e9e','#757575','#616161','#424242','#212121','#000000','#ffffff','#000000','#ffffff'
+  ],
+
+  activeSwatch: null,
+  callback: null,
+
+  init() {
+    const grid = document.getElementById('md-color-grid');
+    if (!grid) return;
+
+    this.colors.forEach(color => {
+      const btn = document.createElement('button');
+      btn.className = 'md-color-cell';
+      btn.style.background = color;
+      btn.dataset.color = color;
+      btn.addEventListener('click', () => this.select(color));
+      grid.appendChild(btn);
+    });
+
+    document.getElementById('md-color-picker-backdrop')
+      ?.addEventListener('click', () => this.close());
+
+    // Alle .color-swatch Buttons initialisieren + .value Kompatibilität
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+      // .value Property damit bestehender Code weiterhin funktioniert
+      Object.defineProperty(swatch, 'value', {
+        get() { return this.dataset.color; },
+        set(v) { this.dataset.color = v; this.style.background = v; }
+      });
+      swatch.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.open(swatch);
+      });
+    });
+  },
+
+  open(swatch) {
+    this.activeSwatch = swatch;
+    const currentColor = swatch.dataset.color;
+
+    // Aktive Farbe markieren
+    document.querySelectorAll('.md-color-cell').forEach(cell => {
+      cell.classList.toggle('selected', cell.dataset.color === currentColor);
+    });
+
+    document.getElementById('md-color-picker-overlay').classList.remove('hidden');
+  },
+
+  select(color) {
+    if (this.activeSwatch) {
+      this.activeSwatch.style.background = color;
+      this.activeSwatch.dataset.color = color;
+      // Change-Event simulieren damit bestehende Listener reagieren
+      this.activeSwatch.value = color;
+      this.activeSwatch.dispatchEvent(new Event('input', { bubbles: true }));
+      this.activeSwatch.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    this.close();
+  },
+
+  close() {
+    document.getElementById('md-color-picker-overlay').classList.add('hidden');
+    this.activeSwatch = null;
+  }
+};
+
+// ============================================
+// Preview synchronisieren
+// ============================================
+function updatePreview() {
+  const mirror = document.getElementById('preview-bg-mirror');
+  const bg = document.getElementById('background');
+  const previewImg = document.getElementById('preview-icon-img');
+  const previewTile = document.querySelector('.preview-icon-tile');
+
+  // Hintergrund 1:1 vom Background-Element kopieren
+  if (mirror && bg) {
+    // Alles zurücksetzen
+    mirror.style.cssText = '';
+    mirror.style.position = 'absolute';
+    mirror.style.inset = '0';
+    mirror.style.borderRadius = '12px';
+
+    // Direkt die gesetzten Inline-Styles kopieren
+    if (bg.style.backgroundImage) {
+      mirror.style.backgroundImage = bg.style.backgroundImage;
+      mirror.style.backgroundSize = 'cover';
+      mirror.style.backgroundPosition = 'center';
+    } else if (bg.style.background) {
+      mirror.style.background = bg.style.background;
+    } else if (bg.style.backgroundColor) {
+      mirror.style.backgroundColor = bg.style.backgroundColor;
+    }
+
+    // Filter (Blur/Overlay) auch kopieren
+    if (bg.style.filter) {
+      mirror.style.filter = bg.style.filter;
+    }
+  }
+
+  // Schatten-Toggle
+  if (previewImg && App.settings) {
+    previewImg.classList.toggle('no-shadow', !App.settings.grid.showShadow);
+  }
+
+  // Label-Position
+  if (previewTile && App.settings) {
+    const pos = App.settings.labels?.position || 'below';
+    previewTile.classList.toggle('label-above', pos === 'above');
+  }
+}
+
+// ============================================
 // Initialize App
 // ============================================
 window.FavGrid = App;
-document.addEventListener('DOMContentLoaded', () => App.init());
+document.addEventListener('DOMContentLoaded', () => {
+  App.init();
+  MDColorPicker.init();
+  // Preview bei jeder Aenderung synchronisieren
+  setTimeout(updatePreview, 500);
+  const bgObserver = new MutationObserver(updatePreview);
+  const bgEl = document.getElementById('background');
+  if (bgEl) bgObserver.observe(bgEl, { attributes: true, attributeFilter: ['style', 'class'] });
+});

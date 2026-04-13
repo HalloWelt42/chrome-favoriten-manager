@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-default-lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,7 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="search-input" class="search-input" placeholder="Suchen oder URL eingeben..." autocomplete="off">
+            <input type="text" id="search-input" class="search-input" placeholder="Suchen oder URL eingeben..." data-i18n-placeholder="searchPlaceholder" autocomplete="off">
             <button id="search-clear" class="search-clear hidden">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -31,18 +31,18 @@
             <!-- Live Search Results Dropdown -->
             <div id="search-dropdown" class="search-dropdown hidden">
               <div class="search-section">
-                <div class="search-section-title">🔍 Web-Suche</div>
+                <div class="search-section-title" data-i18n="webSearch">Web-Suche</div>
                 <div id="web-search-option" class="search-result-item web-search">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                   </svg>
-                  <span class="search-query-text">Suchen nach "<span id="search-query-display"></span>"</span>
+                  <span class="search-query-text"><span data-i18n="searchFor">Suchen nach</span> "<span id="search-query-display"></span>"</span>
                 </div>
               </div>
               <div id="favorites-results" class="search-section hidden">
-                <div class="search-section-title">⭐ Favoriten</div>
+                <div class="search-section-title" data-i18n="favoritesEmoji">⭐ Favoriten</div>
                 <div id="favorites-results-list"></div>
               </div>
             </div>
@@ -62,13 +62,13 @@
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>
-          <button id="add-group-btn" class="add-group-btn" title="Neue Gruppe">
+          <button id="add-group-btn" class="add-group-btn" title="Neue Gruppe" data-i18n-title="newGroup">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </button>
-          <button id="manage-groups-btn" class="manage-groups-btn" title="Gruppen verwalten">
+          <button id="manage-groups-btn" class="manage-groups-btn" title="Gruppen verwalten" data-i18n-title="manageGroups">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <line x1="4" y1="6" x2="20" y2="6"/>
               <line x1="4" y1="12" x2="20" y2="12"/>
@@ -109,7 +109,7 @@
       <!-- Toolbar Links unten -->
       <div class="toolbar-left">
         <!-- Settings Button mit Zahnrad -->
-        <button id="settings-btn" class="toolbar-btn" title="Einstellungen">
+        <button id="settings-btn" class="toolbar-btn" title="Einstellungen" data-i18n-title="settings">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -118,7 +118,7 @@
         
         <!-- Sort Button -->
         <div class="sort-dropdown-wrapper toolbar-sort">
-          <button id="sort-btn" class="toolbar-btn" title="Sortieren">
+          <button id="sort-btn" class="toolbar-btn" title="Sortieren" data-i18n-title="sortBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="4" y1="6" x2="16" y2="6"/>
               <line x1="4" y1="12" x2="12" y2="12"/>
@@ -130,33 +130,33 @@
           <div id="sort-dropdown" class="sort-dropdown hidden">
             <button data-sort="manual" class="active">
               <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-              Manuell
+              <span data-i18n="sortManual">Manuell</span>
             </button>
             <button data-sort="name-asc">
               <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 10l3-3 3 3M20 7v10"/></svg>
-              Name (A-Z)
+              <span data-i18n="sortNameAsc">Name (A-Z)</span>
             </button>
             <button data-sort="name-desc">
               <svg viewBox="0 0 24 24"><path d="M4 6h10M4 12h7M4 18h4M17 17l3 3 3-3M20 7v13"/></svg>
-              Name (Z-A)
+              <span data-i18n="sortNameDesc">Name (Z-A)</span>
             </button>
             <button data-sort="date-desc">
               <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Neueste zuerst
+              <span data-i18n="sortDateDesc">Neueste zuerst</span>
             </button>
             <button data-sort="date-asc">
               <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Älteste zuerst
+              <span data-i18n="sortDateAsc">Älteste zuerst</span>
             </button>
             <button data-sort="visits-desc">
               <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              Meistbesucht
+              <span data-i18n="sortVisitsDesc">Meistbesucht</span>
             </button>
           </div>
         </div>
         
         <!-- Theme Switch Button -->
-        <button id="theme-toggle-btn" class="toolbar-btn" title="Theme wechseln">
+        <button id="theme-toggle-btn" class="toolbar-btn" title="Theme wechseln" data-i18n-title="toggleTheme">
           <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5"/>
             <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -172,46 +172,46 @@
     <div id="context-menu" class="context-menu hidden">
       <button data-action="open">
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-        Öffnen
+        <span data-i18n="open">Öffnen</span>
       </button>
       <button data-action="open-new">
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        In neuem Tab öffnen
+        <span data-i18n="openInNewTab">In neuem Tab öffnen</span>
       </button>
       <button data-action="open-bg">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M21 9H9"/></svg>
-        Im Hintergrund öffnen
+        <span data-i18n="openInBackground">Im Hintergrund öffnen</span>
       </button>
       <div class="context-divider"></div>
       <button data-action="copy-url">
         <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        URL kopieren
+        <span data-i18n="copyUrl">URL kopieren</span>
       </button>
       <button data-action="edit">
         <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Bearbeiten
+        <span data-i18n="edit">Bearbeiten</span>
       </button>
       <button data-action="refresh-icon">
         <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Icon aktualisieren
+        <span data-i18n="refreshIcon">Icon aktualisieren</span>
       </button>
       <button data-action="info">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        Seiteninformationen
+        <span data-i18n="pageInfo">Seiteninformationen</span>
       </button>
       <button data-action="move">
         <svg viewBox="0 0 24 24"><path d="M5 9l7-7 7 7M12 2v13M5 15l7 7 7-7"/></svg>
-        Verschieben nach
+        <span data-i18n="moveTo">Verschieben nach</span>
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
       <div class="context-divider"></div>
       <button data-action="duplicate">
         <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Duplizieren
+        <span data-i18n="duplicate">Duplizieren</span>
       </button>
       <button data-action="delete" class="danger">
         <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Löschen
+        <span data-i18n="delete">Löschen</span>
       </button>
     </div>
 
@@ -224,35 +224,35 @@
       <div class="modal-backdrop"></div>
       <div class="modal-content">
         <div class="modal-header">
-          <h2 id="favorite-modal-title">Favorit hinzufügen</h2>
+          <h2 id="favorite-modal-title" data-i18n="addFavorite">Favorit hinzufügen</h2>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="fav-url">URL</label>
-            <input type="url" id="fav-url" placeholder="https://example.com" required>
+            <label for="fav-url" data-i18n="url">URL</label>
+            <input type="url" id="fav-url" placeholder="https://example.com" data-i18n-placeholder="placeholderUrlExample" required>
           </div>
           <div class="form-group">
-            <label for="fav-alias">Name (Alias)</label>
-            <input type="text" id="fav-alias" placeholder="Meine Website">
+            <label for="fav-alias" data-i18n="nameAlias">Name (Alias)</label>
+            <input type="text" id="fav-alias" placeholder="Meine Website" data-i18n-placeholder="placeholderMyWebsite">
           </div>
           <div class="form-group">
-            <label for="fav-description">Beschreibung</label>
-            <textarea id="fav-description" rows="2" placeholder="Kurze Beschreibung..."></textarea>
+            <label for="fav-description" data-i18n="description">Beschreibung</label>
+            <textarea id="fav-description" rows="2" placeholder="Kurze Beschreibung..." data-i18n-placeholder="placeholderDescription"></textarea>
           </div>
           <div class="form-group">
-            <label for="fav-tags">Tags (kommagetrennt)</label>
-            <input type="text" id="fav-tags" placeholder="arbeit, wichtig, tools">
+            <label for="fav-tags" data-i18n="tagsSeparated">Tags (kommagetrennt)</label>
+            <input type="text" id="fav-tags" placeholder="arbeit, wichtig, tools" data-i18n-placeholder="placeholderTags">
           </div>
           <div class="form-group">
-            <label for="fav-group">Gruppe</label>
+            <label for="fav-group" data-i18n="group">Gruppe</label>
             <select id="fav-group"></select>
           </div>
           <div class="form-group">
-            <label>Icon</label>
+            <label data-i18n="icon">Icon</label>
             <div class="icon-options">
-              <button type="button" id="fetch-favicon" class="btn-secondary">Favicon laden</button>
-              <button type="button" id="upload-icon" class="btn-secondary">Eigenes Bild</button>
+              <button type="button" id="fetch-favicon" class="btn-secondary" data-i18n="fetchFavicon">Favicon laden</button>
+              <button type="button" id="upload-icon" class="btn-secondary" data-i18n="uploadCustom">Eigenes Bild</button>
               <input type="file" id="icon-upload" accept="image/*" hidden>
             </div>
             <div class="icon-preview-container">
@@ -264,41 +264,41 @@
             </div>
             <div class="icon-tools">
               <div class="white-threshold-control">
-                <label>Weiß-Schwelle: <span id="white-threshold-value">245</span></label>
+                <label><span data-i18n="whiteThreshold">Weiß-Schwelle</span>: <span id="white-threshold-value">245</span></label>
                 <input type="range" id="white-threshold" min="200" max="255" value="245">
-                <small class="setting-hint">Niedriger = mehr wird entfernt</small>
+                <small class="setting-hint" data-i18n="thresholdHint">Niedriger = mehr wird entfernt</small>
               </div>
               <div class="icon-tool-buttons">
-                <button type="button" id="remove-white-bg" class="btn-tool" title="Weißen Hintergrund transparent machen">
+                <button type="button" id="remove-white-bg" class="btn-tool" title="Weißen Hintergrund transparent machen" data-i18n-title="removeWhiteBg">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <rect x="3" y="3" width="18" height="18" rx="2"/>
                     <path d="M9 9l6 6M15 9l-6 6"/>
                   </svg>
-                  Anwenden
+                  <span data-i18n="apply">Anwenden</span>
                 </button>
-                <button type="button" id="reset-icon" class="btn-tool hidden" title="Original-Icon wiederherstellen">
+                <button type="button" id="reset-icon" class="btn-tool hidden" title="Original-Icon wiederherstellen" data-i18n-title="resetIcon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                     <path d="M3 3v5h5"/>
                   </svg>
-                  Zurücksetzen
+                  <span data-i18n="reset">Zurücksetzen</span>
                 </button>
-                <button type="button" id="rescan-icons" class="btn-tool" title="Icon-Cache leeren und neu scannen">
+                <button type="button" id="rescan-icons" class="btn-tool" title="Icon-Cache leeren und neu scannen" data-i18n-title="rescanIcons">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                     <path d="M3 3v5h5"/>
                     <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
                     <path d="M21 21v-5h-5"/>
                   </svg>
-                  Neu scannen
+                  <span data-i18n="rescan">Neu scannen</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-secondary" data-action="cancel">Abbrechen</button>
-          <button type="button" class="btn-primary" data-action="save">Speichern</button>
+          <button type="button" class="btn-secondary" data-action="cancel" data-i18n="cancel">Abbrechen</button>
+          <button type="button" class="btn-primary" data-action="save" data-i18n="save">Speichern</button>
         </div>
       </div>
     </div>
@@ -308,16 +308,16 @@
       <div class="modal-backdrop"></div>
       <div class="modal-content">
         <div class="modal-header">
-          <h2 id="group-modal-title">Neue Gruppe</h2>
+          <h2 id="group-modal-title" data-i18n="newGroup">Neue Gruppe</h2>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="group-name">Name</label>
-            <input type="text" id="group-name" placeholder="Gruppenname" required>
+            <label for="group-name" data-i18n="name">Name</label>
+            <input type="text" id="group-name" placeholder="Gruppenname" data-i18n-placeholder="placeholderGroupName" required>
           </div>
           <div class="form-group">
-            <label for="group-icon">Icon (Emoji)</label>
+            <label for="group-icon" data-i18n="iconEmoji">Icon (Emoji)</label>
             <input type="text" id="group-icon" placeholder="⭐" maxlength="2">
             <div class="emoji-picker-container">
               <div class="emoji-section">
@@ -359,42 +359,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="group-color">Farbe</label>
-            <div class="color-picker">
-              <input type="color" id="group-color" value="#7f5af0">
-              <div class="color-presets">
-                <!-- Lila/Violett -->
-                <button type="button" data-color="#7f5af0" style="background:#7f5af0"></button>
-                <button type="button" data-color="#5a3db5" style="background:#5a3db5"></button>
-                <!-- Grün -->
-                <button type="button" data-color="#2cb67d" style="background:#2cb67d"></button>
-                <button type="button" data-color="#1a8a5c" style="background:#1a8a5c"></button>
-                <!-- Orange -->
-                <button type="button" data-color="#ff8906" style="background:#ff8906"></button>
-                <button type="button" data-color="#cc6e05" style="background:#cc6e05"></button>
-                <!-- Pink/Magenta -->
-                <button type="button" data-color="#e53170" style="background:#e53170"></button>
-                <button type="button" data-color="#b02458" style="background:#b02458"></button>
-                <!-- Blau -->
-                <button type="button" data-color="#3da9fc" style="background:#3da9fc"></button>
-                <button type="button" data-color="#2563eb" style="background:#2563eb"></button>
-                <!-- Rot -->
-                <button type="button" data-color="#f25f4c" style="background:#f25f4c"></button>
-                <button type="button" data-color="#dc2626" style="background:#dc2626"></button>
-                <!-- Türkis -->
-                <button type="button" data-color="#06b6d4" style="background:#06b6d4"></button>
-                <button type="button" data-color="#0891b2" style="background:#0891b2"></button>
-                <!-- Gelb -->
-                <button type="button" data-color="#eab308" style="background:#eab308"></button>
-                <button type="button" data-color="#ca8a04" style="background:#ca8a04"></button>
-              </div>
-            </div>
+            <label for="group-color" data-i18n="color">Farbe</label>
+            <button class="color-swatch color-swatch-large" id="group-color" data-color="#7f5af0" style="background:#7f5af0"></button>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-danger" data-action="delete" id="delete-group-btn" style="margin-right:auto">Löschen</button>
-          <button type="button" class="btn-secondary" data-action="cancel">Abbrechen</button>
-          <button type="button" class="btn-primary" data-action="save">Speichern</button>
+          <button type="button" class="btn-danger" data-action="delete" id="delete-group-btn" style="margin-right:auto" data-i18n="delete">Löschen</button>
+          <button type="button" class="btn-secondary" data-action="cancel" data-i18n="cancel">Abbrechen</button>
+          <button type="button" class="btn-primary" data-action="save" data-i18n="save">Speichern</button>
         </div>
       </div>
     </div>
@@ -404,19 +376,19 @@
       <div class="modal-backdrop"></div>
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Seiteninformationen</h2>
+          <h2 data-i18n="pageInfo">Seiteninformationen</h2>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
           <div id="info-content" class="info-content">
             <div class="info-loading">
               <div class="spinner"></div>
-              <p>Lade Informationen...</p>
+              <p data-i18n="loadingInfo">Lade Informationen...</p>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-secondary" data-action="close">Schließen</button>
+          <button type="button" class="btn-secondary" data-action="close" data-i18n="close">Schließen</button>
         </div>
       </div>
     </div>
@@ -426,7 +398,7 @@
       <div class="modal-backdrop"></div>
       <div class="modal-content modal-large">
         <div class="modal-header">
-          <h2>Einstellungen</h2>
+          <h2 data-i18n="settings">Einstellungen</h2>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
@@ -434,35 +406,44 @@
             <nav class="settings-nav">
               <button class="settings-nav-item active" data-section="appearance">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                Erscheinungsbild
+                <span data-i18n="appearance">Erscheinungsbild</span>
               </button>
               <button class="settings-nav-item" data-section="grid">
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                Grid Layout
+                <span data-i18n="gridLayout">Grid Layout</span>
               </button>
               <button class="settings-nav-item" data-section="search">
                 <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Suche
+                <span data-i18n="search">Suche</span>
               </button>
               <button class="settings-nav-item" data-section="navigation">
                 <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-                Navigation
+                <span data-i18n="navigation">Navigation</span>
               </button>
               <button class="settings-nav-item" data-section="data">
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                Daten & Backup
+                <span data-i18n="dataBackup">Daten & Backup</span>
               </button>
               <div style="flex:1"></div>
+              <div class="settings-icon-preview" id="settings-icon-preview">
+                <div class="preview-bg-mirror" id="preview-bg-mirror"></div>
+                <div class="preview-icon-tile">
+                  <div class="preview-icon-img" id="preview-icon-img">
+                    <img src="https://www.google.com/s2/favicons?domain=wikipedia.org&sz=128" alt="Preview" draggable="false">
+                  </div>
+                  <span class="preview-icon-label">Wikipedia</span>
+                </div>
+              </div>
               <button class="settings-nav-item donate-nav-btn" id="donate-btn">
                 <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                Ich möchte Danke sagen
+                <span data-i18n="thankYou">Ich möchte Danke sagen</span>
               </button>
             </nav>
             
             <div class="settings-content">
               <!-- Appearance Section -->
               <section id="settings-appearance" class="settings-section active">
-                <h3>Akzentfarbe</h3>
+                <h3 data-i18n="accentColor">Akzentfarbe</h3>
                 <div class="color-palette" id="accent-color-palette">
                   <!-- Material Design Colors -->
                   <button class="color-option" data-color="#f44336" style="background:#f44336" title="Red"></button>
@@ -487,18 +468,18 @@
                   <button class="color-option" data-color="#78909c" style="background:#78909c" title="Grey Blue"></button>
                 </div>
 
-                <h3>Hintergrund</h3>
+                <h3 data-i18n="background">Hintergrund</h3>
                 <div class="setting-row">
-                  <label>Typ</label>
+                  <label data-i18n="bgType">Typ</label>
                   <select id="setting-bg-type">
-                    <option value="gradient">Farbverlauf</option>
-                    <option value="color">Einfarbig</option>
-                    <option value="image">Bild</option>
+                    <option value="gradient" data-i18n="gradient">Farbverlauf</option>
+                    <option value="color" data-i18n="solidColor">Einfarbig</option>
+                    <option value="image" data-i18n="image">Bild</option>
                   </select>
                 </div>
                 
                 <div id="bg-gradient-options">
-                  <p class="setting-label">Harmonische Verläufe</p>
+                  <p class="setting-label" data-i18n="harmoniousGradients">Harmonische Verläufe</p>
                   <div class="gradient-grid">
                     <!-- Dark Harmonious -->
                     <button class="gradient-option" data-gradient="linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)" style="background:linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)" title="Midnight"></button>
@@ -521,50 +502,45 @@
                     <button class="gradient-option" data-gradient="linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)" style="background:linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)" title="Lavender"></button>
                   </div>
                   
-                  <div class="setting-row" style="margin-top: 16px;">
-                    <label>Helligkeit anpassen</label>
-                    <input type="range" id="setting-gradient-brightness" min="50" max="150" value="100">
-                    <span id="gradient-brightness-value">100%</span>
-                  </div>
                   
                   <div class="custom-gradient-section">
-                    <p class="setting-label">Eigener Verlauf</p>
+                    <p class="setting-label" data-i18n="customGradientLabel">Eigener Verlauf</p>
                     <div class="custom-gradient-row">
                       <div class="color-input-group">
-                        <label>Farbe 1</label>
-                        <input type="color" id="setting-gradient-color1" value="#1a1a2e">
+                        <label data-i18n="color1">Farbe 1</label>
+                        <button class="color-swatch" id="setting-gradient-color1" data-color="#1a1a2e" style="background:#1a1a2e"></button>
                       </div>
                       <div class="color-input-group">
-                        <label>Farbe 2</label>
-                        <input type="color" id="setting-gradient-color2" value="#16213e">
+                        <label data-i18n="color2">Farbe 2</label>
+                        <button class="color-swatch" id="setting-gradient-color2" data-color="#16213e" style="background:#16213e"></button>
                       </div>
-                      <button id="apply-custom-gradient" class="btn-secondary">Anwenden</button>
+                      <button id="apply-custom-gradient" class="btn-secondary" data-i18n="apply">Anwenden</button>
                     </div>
                   </div>
                 </div>
                 
                 <div id="bg-color-options" class="hidden">
                   <div class="setting-row">
-                    <label>Farbe</label>
-                    <input type="color" id="setting-bg-color" value="#1a1a2e">
+                    <label data-i18n="color">Farbe</label>
+                    <button class="color-swatch" id="setting-bg-color" data-color="#1a1a2e" style="background:#1a1a2e"></button>
                   </div>
                 </div>
                 
                 <div id="bg-image-options" class="hidden">
                   <div class="bg-mode-tabs">
-                    <button class="bg-mode-tab active" data-mode="dark">🌙 Dunkel-Modus</button>
-                    <button class="bg-mode-tab" data-mode="light">☀️ Hell-Modus</button>
+                    <button class="bg-mode-tab active" data-mode="dark" data-i18n="darkMode">Dunkel-Modus</button>
+                    <button class="bg-mode-tab" data-mode="light" data-i18n="lightMode">Hell-Modus</button>
                   </div>
                   
                   <!-- Dark Mode Image -->
                   <div id="bg-dark-settings" class="bg-mode-settings">
                     <div class="setting-row">
-                      <label>Bild URL</label>
+                      <label data-i18n="imageUrl">Bild URL</label>
                       <input type="url" id="setting-bg-url-dark" placeholder="https://...">
                     </div>
                     <div class="setting-row">
-                      <label>Oder hochladen</label>
-                      <button id="upload-bg-btn-dark" class="btn-secondary">Bild wählen</button>
+                      <label data-i18n="orUpload">Oder hochladen</label>
+                      <button id="upload-bg-btn-dark" class="btn-secondary" data-i18n="chooseImage">Bild wählen</button>
                       <input type="file" id="bg-upload-dark" accept="image/*" hidden>
                     </div>
                     <div id="bg-preview-dark" class="bg-preview"></div>
@@ -573,154 +549,153 @@
                   <!-- Light Mode Image -->
                   <div id="bg-light-settings" class="bg-mode-settings hidden">
                     <div class="setting-row">
-                      <label>Bild URL</label>
+                      <label data-i18n="imageUrl">Bild URL</label>
                       <input type="url" id="setting-bg-url-light" placeholder="https://...">
                     </div>
                     <div class="setting-row">
-                      <label>Oder hochladen</label>
-                      <button id="upload-bg-btn-light" class="btn-secondary">Bild wählen</button>
+                      <label data-i18n="orUpload">Oder hochladen</label>
+                      <button id="upload-bg-btn-light" class="btn-secondary" data-i18n="chooseImage">Bild wählen</button>
                       <input type="file" id="bg-upload-light" accept="image/*" hidden>
                     </div>
                     <div class="setting-row">
                       <input type="checkbox" id="setting-use-dark-for-light">
-                      <label for="setting-use-dark-for-light">Dunkel-Bild auch für Hell-Modus verwenden</label>
+                      <label for="setting-use-dark-for-light" data-i18n="useDarkForLight">Dunkel-Bild auch für Hell-Modus verwenden</label>
                     </div>
                     <div id="bg-preview-light" class="bg-preview"></div>
                   </div>
                   
-                  <h4>Anpassungen</h4>
+                  <h4 data-i18n="adjustments">Anpassungen</h4>
                   <div class="setting-row">
-                    <label>Weichzeichner (Blur)</label>
+                    <label data-i18n="blurFilter">Weichzeichner</label>
                     <input type="range" id="setting-bg-blur" min="0" max="20" value="0">
                     <span id="blur-value">0px</span>
                   </div>
                   <div class="setting-row">
-                    <label>Overlay-Helligkeit</label>
-                    <input type="range" id="setting-bg-overlay" min="-100" max="100" value="0">
-                    <span id="overlay-value">0</span>
+                    <label data-i18n="adjustBrightness">Helligkeit</label>
+                    <input type="range" id="setting-gradient-brightness" min="50" max="150" value="100">
+                    <span id="gradient-brightness-value">100%</span>
                   </div>
-                  <p class="setting-hint">Negativ = dunkler, Positiv = heller</p>
                 </div>
 
-                <h3>Animationen</h3>
+                <h3 data-i18n="animations">Animationen</h3>
                 <div class="setting-row">
-                  <label>Seitenwechsel</label>
+                  <label data-i18n="pageTransition">Seitenwechsel</label>
                   <select id="setting-transition">
-                    <option value="slide">Slide</option>
-                    <option value="fade">Fade</option>
-                    <option value="none">Keine</option>
+                    <option value="slide" data-i18n="transSlide">Slide</option>
+                    <option value="fade" data-i18n="transFade">Fade</option>
+                    <option value="none" data-i18n="transNone">Keine</option>
                   </select>
                 </div>
               </section>
 
               <!-- Grid Section -->
               <section id="settings-grid" class="settings-section">
-                <h3>Raster</h3>
+                <h3 data-i18n="gridSection">Raster</h3>
                 <div class="setting-row">
-                  <label>Spalten</label>
+                  <label data-i18n="columns">Spalten</label>
                   <input type="number" id="setting-columns" min="2" max="12" value="6">
                 </div>
                 <div class="setting-row">
-                  <label>Zeilen</label>
+                  <label data-i18n="rows">Zeilen</label>
                   <input type="number" id="setting-rows" min="2" max="8" value="4">
                 </div>
                 
-                <h3>Icons</h3>
+                <h3 data-i18n="icons">Icons</h3>
                 <div class="setting-row">
-                  <label>Icon-Größe</label>
+                  <label data-i18n="iconSize">Icon-Größe</label>
                   <input type="range" id="setting-icon-size" min="48" max="128" value="72">
                   <span id="icon-size-value">72px</span>
                 </div>
                 <div class="setting-row">
-                  <label>Abstand</label>
+                  <label data-i18n="spacing">Abstand</label>
                   <input type="range" id="setting-gap" min="8" max="48" value="24">
                   <span id="gap-value">24px</span>
                 </div>
                 <div class="setting-row">
-                  <label>Container-Rundung</label>
+                  <label data-i18n="containerRadius">Container-Rundung</label>
                   <input type="range" id="setting-radius" min="0" max="50" value="16">
                   <span id="radius-value">16%</span>
-                  <small class="setting-hint">Glassmorphism-Rahmen</small>
+                  <small class="setting-hint" data-i18n="containerRadiusHint">Glassmorphism-Rahmen</small>
                 </div>
                 <div class="setting-row">
-                  <label>Bild-Rundung</label>
+                  <label data-i18n="imageRadius">Bild-Rundung</label>
                   <input type="range" id="setting-image-radius" min="0" max="50" value="0">
                   <span id="image-radius-value">0%</span>
-                  <small class="setting-hint">Favicon selbst (0% = eckig, 50% = rund)</small>
+                  <small class="setting-hint" data-i18n="imageRadiusHint">Favicon selbst (0% = eckig, 50% = rund)</small>
                 </div>
                 <div class="setting-row">
-                  <label>Schatten</label>
+                  <label data-i18n="shadow">Schatten</label>
                   <input type="checkbox" id="setting-shadow" checked>
                 </div>
                 
-                <h4>Icon-Hintergrund</h4>
+                <h4 data-i18n="iconBackground">Icon-Hintergrund</h4>
                 <div class="setting-row">
-                  <label>Transparenz</label>
+                  <label data-i18n="transparency">Transparenz</label>
                   <input type="range" id="setting-icon-opacity" min="0" max="100" value="60">
                   <span id="icon-opacity-value">60%</span>
                 </div>
                 <div class="setting-row">
-                  <label>Hintergrundfarbe (Dunkel)</label>
-                  <input type="color" id="setting-icon-bg-dark" value="#1a1a2e">
+                  <label data-i18n="bgColorDark">Hintergrundfarbe (Dunkel)</label>
+                  <button class="color-swatch" id="setting-icon-bg-dark" data-color="#1a1a2e" style="background:#1a1a2e"></button>
                 </div>
                 <div class="setting-row">
-                  <label>Hintergrundfarbe (Hell)</label>
-                  <input type="color" id="setting-icon-bg-light" value="#ffffff">
+                  <label data-i18n="bgColorLight">Hintergrundfarbe (Hell)</label>
+                  <button class="color-swatch" id="setting-icon-bg-light" data-color="#ffffff" style="background:#ffffff"></button>
                 </div>
                 
-                <h4>🔮 Glassmorphism-Effekt</h4>
-                <p class="setting-hint">Der Glas-Effekt ist am besten sichtbar mit einem Hintergrundbild!</p>
+                <h4 data-i18n="glassmorphism">Glassmorphism-Effekt</h4>
+                <p class="setting-hint" data-i18n="glassHint">Der Glas-Effekt ist am besten sichtbar mit einem Hintergrundbild!</p>
                 <div class="setting-row">
-                  <label>Glas-Blur</label>
+                  <label data-i18n="glassBlur">Glas-Blur</label>
                   <input type="range" id="setting-glass-blur" min="0" max="30" value="10">
                   <span id="glass-blur-value">10px</span>
                 </div>
                 <div class="setting-row">
-                  <label>Rahmen-Helligkeit</label>
+                  <label data-i18n="glassBorder">Rahmen-Helligkeit</label>
                   <input type="range" id="setting-glass-border" min="0" max="50" value="15">
                   <span id="glass-border-value">15%</span>
                 </div>
                 <div class="setting-row">
-                  <label>Schatten-Stärke</label>
+                  <label data-i18n="glassShadow">Schatten-Stärke</label>
                   <input type="range" id="setting-glass-shadow" min="0" max="50" value="20">
                   <span id="glass-shadow-value">20%</span>
                 </div>
 
-                <h3>Labels</h3>
+                <h3 data-i18n="labels">Labels</h3>
                 <div class="setting-row">
-                  <label>Labels anzeigen</label>
+                  <label data-i18n="showLabels">Labels anzeigen</label>
                   <input type="checkbox" id="setting-labels" checked>
                 </div>
                 <div class="setting-row">
-                  <label>Position</label>
+                  <label data-i18n="labelPosition">Position</label>
                   <select id="setting-label-pos">
-                    <option value="below">Unter dem Icon</option>
-                    <option value="above">Über dem Icon</option>
+                    <option value="below" data-i18n="below">Unter dem Icon</option>
+                    <option value="above" data-i18n="above">Über dem Icon</option>
                   </select>
                 </div>
                 <div class="setting-row">
-                  <label>Schriftgröße</label>
+                  <label data-i18n="fontSize">Schriftgröße</label>
                   <input type="range" id="setting-font-size" min="10" max="18" value="12">
                   <span id="font-size-value">12px</span>
                 </div>
                 <div class="setting-row">
-                  <label>Max. Zeichen</label>
+                  <label data-i18n="maxChars">Max. Zeichen</label>
                   <input type="number" id="setting-max-chars" min="10" max="50" value="20">
                 </div>
                 <div class="setting-row">
-                  <label>Farbe (Dunkel-Modus)</label>
-                  <input type="color" id="setting-label-color-dark" value="#ffffff">
+                  <label data-i18n="colorDarkMode">Farbe (Dunkel-Modus)</label>
+                  <button class="color-swatch" id="setting-label-color-dark" data-color="#ffffff" style="background:#ffffff"></button>
                 </div>
                 <div class="setting-row">
-                  <label>Farbe (Hell-Modus)</label>
-                  <input type="color" id="setting-label-color-light" value="#1a1a2e">
+                  <label data-i18n="colorLightMode">Farbe (Hell-Modus)</label>
+                  <button class="color-swatch" id="setting-label-color-light" data-color="#1a1a2e" style="background:#1a1a2e"></button>
                 </div>
                 
-                <h3>Schriftart</h3>
+                <h3 data-i18n="fontSection">Schriftart</h3>
                 <div class="setting-row">
-                  <label>Font Family</label>
+                  <label data-i18n="fontFamilyLabel">Font Family</label>
                   <select id="setting-font-family">
-                    <option value="system">System (Standard)</option>
+                    <option value="system" data-i18n="systemFont">System (Standard)</option>
                     <option value="sf-pro">SF Pro</option>
                     <option value="inter">Inter</option>
                     <option value="roboto">Roboto</option>
@@ -732,15 +707,15 @@
                     <option value="source-sans">Source Sans Pro</option>
                     <option value="ubuntu">Ubuntu</option>
                     <option value="fira-sans">Fira Sans</option>
-                    <option value="custom">Eigene Schriftart...</option>
+                    <option value="custom" data-i18n="customFontOption">Eigene Schriftart...</option>
                   </select>
                 </div>
                 <div class="setting-row" id="custom-font-row" style="display:none">
-                  <label>Eigene Font Family</label>
-                  <input type="text" id="setting-custom-font" placeholder="z.B. 'Comic Sans MS', cursive">
+                  <label data-i18n="customFontFamily">Eigene Font Family</label>
+                  <input type="text" id="setting-custom-font" placeholder="z.B. 'Comic Sans MS', cursive" data-i18n-placeholder="placeholderCustomFont">
                 </div>
                 <div class="setting-row">
-                  <label>Schriftstärke</label>
+                  <label data-i18n="fontWeight">Schriftstärke</label>
                   <select id="setting-font-weight">
                     <option value="300">Light (300)</option>
                     <option value="400">Normal (400)</option>
@@ -753,71 +728,55 @@
 
               <!-- Search Section -->
               <section id="settings-search" class="settings-section">
-                <h3>Suchmaschine</h3>
-                <div class="setting-row-full">
-                  <label>Such-URL (verwende %s als Platzhalter)</label>
-                  <input type="url" id="setting-search-engine" class="full-width" placeholder="https://www.google.com/search?q=%s">
-                </div>
-                
-                <p class="setting-label">Schnellauswahl</p>
-                <div class="search-presets">
-                  <button data-url="https://www.google.com/search?q=%s">Google</button>
-                  <button data-url="https://duckduckgo.com/?q=%s">DuckDuckGo</button>
-                  <button data-url="https://search.brave.com/search?q=%s">Brave</button>
-                  <button data-url="https://www.bing.com/search?q=%s">Bing</button>
-                  <button data-url="https://www.ecosia.org/search?q=%s">Ecosia</button>
-                  <button data-url="https://www.startpage.com/sp/search?query=%s">Startpage</button>
-                </div>
-
-                <h3>Verhalten</h3>
+                <h3 data-i18n="search">Suche</h3>
                 <div class="setting-row">
-                  <label>Instant-Suche</label>
+                  <label data-i18n="instantSearch">Instant-Suche</label>
                   <input type="checkbox" id="setting-instant-search" checked>
                 </div>
               </section>
 
               <!-- Navigation Section -->
               <section id="settings-navigation" class="settings-section">
-                <h3>Klick-Verhalten</h3>
+                <h3 data-i18n="clickBehavior">Klick-Verhalten</h3>
                 <div class="setting-row">
-                  <label>Standard-Aktion bei Klick</label>
+                  <label data-i18n="defaultClickAction">Standard-Aktion bei Klick</label>
                   <select id="setting-click-behavior">
-                    <option value="newTab">In neuem Tab öffnen</option>
-                    <option value="sameTab">Im aktuellen Tab öffnen</option>
+                    <option value="newTab" data-i18n="openInNewTab">In neuem Tab öffnen</option>
+                    <option value="sameTab" data-i18n="openInSameTab">Im aktuellen Tab öffnen</option>
                   </select>
                 </div>
-                <p class="setting-hint">Mit Ctrl/Cmd+Klick wird die jeweils andere Aktion ausgeführt.</p>
+                <p class="setting-hint" data-i18n="ctrlClickHint">Mit Ctrl/Cmd+Klick wird die jeweils andere Aktion ausgeführt.</p>
                 
-                <h3>Steuerung</h3>
+                <h3 data-i18n="controls">Steuerung</h3>
                 <div class="setting-row">
-                  <label>Tastatur-Navigation (Pfeiltasten)</label>
+                  <label data-i18n="keyboardNavArrows">Tastatur-Navigation (Pfeiltasten)</label>
                   <input type="checkbox" id="setting-keyboard" checked>
                 </div>
                 <div class="setting-row">
-                  <label>Mausrad-Navigation</label>
+                  <label data-i18n="mousewheelNav">Mausrad-Navigation</label>
                   <input type="checkbox" id="setting-mousewheel" checked>
                 </div>
                 <div class="setting-row">
-                  <label>Swipe/Trackpad</label>
+                  <label data-i18n="swipeNav">Swipe/Trackpad</label>
                   <input type="checkbox" id="setting-swipe" checked>
                 </div>
                 <div class="setting-row">
-                  <label>Navigations-Pfeile anzeigen</label>
+                  <label data-i18n="showArrows">Navigations-Pfeile anzeigen</label>
                   <input type="checkbox" id="setting-arrows" checked>
                 </div>
                 
-                <h3>Startverhalten</h3>
+                <h3 data-i18n="startBehavior">Startverhalten</h3>
                 <div class="setting-row">
-                  <label>Beim Öffnen zeige</label>
+                  <label data-i18n="onOpenShow">Beim Öffnen zeige</label>
                   <select id="setting-startup-group">
-                    <option value="last">Letzte Gruppe</option>
-                    <option value="default">Standard-Gruppe</option>
+                    <option value="last" data-i18n="lastGroupOption">Letzte Gruppe</option>
+                    <option value="default" data-i18n="defaultGroupOption">Standard-Gruppe</option>
                     <!-- Dynamisch befüllt -->
                   </select>
                 </div>
                 
-                <h3>Gruppenreihenfolge</h3>
-                <p class="setting-hint">Ziehe Gruppen um die Reihenfolge zu ändern</p>
+                <h3 data-i18n="groupOrder">Gruppenreihenfolge</h3>
+                <p class="setting-hint" data-i18n="groupOrderHint">Ziehe Gruppen um die Reihenfolge zu ändern</p>
                 <div id="group-order-list" class="group-order-list"></div>
               </section>
 
@@ -826,20 +785,20 @@
                 
                 <!-- Komplettes Backup -->
                 <div class="data-section-block">
-                  <h3>📦 Komplettes Backup</h3>
-                  <p class="setting-hint">Enthält alle Favoriten, Gruppen und Einstellungen</p>
+                  <h3 data-i18n="fullBackup">Komplettes Backup</h3>
+                  <p class="setting-hint" data-i18n="fullBackupDesc">Enthält alle Favoriten, Gruppen und Einstellungen</p>
                   <div class="data-row">
                     <button id="export-full-backup" class="btn-primary">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                       </svg>
-                      Backup erstellen (.json)
+                      <span data-i18n="createBackup">Backup erstellen (.json)</span>
                     </button>
                     <button id="import-full-backup" class="btn-secondary">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                       </svg>
-                      Backup wiederherstellen
+                      <span data-i18n="restoreBackup">Backup wiederherstellen</span>
                     </button>
                     <input type="file" id="import-backup-file" accept=".json" hidden>
                   </div>
@@ -847,72 +806,72 @@
 
                 <!-- Favoriten Export -->
                 <div class="data-section-block">
-                  <h3>📤 Favoriten exportieren</h3>
-                  <p class="setting-hint">Exportiere nur die Favoriten in verschiedenen Formaten</p>
+                  <h3 data-i18n="exportFavorites">Favoriten exportieren</h3>
+                  <p class="setting-hint" data-i18n="exportFavoritesDesc">Exportiere nur die Favoriten in verschiedenen Formaten</p>
                   <div class="export-format-grid">
                     <button data-format="html" class="export-format-btn">
                       <span class="format-icon">🌐</span>
                       <span class="format-name">HTML</span>
-                      <span class="format-desc">Browser-kompatibel</span>
+                      <span class="format-desc" data-i18n="browserCompatible">Browser-kompatibel</span>
                     </button>
                     <button data-format="json" class="export-format-btn">
                       <span class="format-icon">{ }</span>
                       <span class="format-name">JSON</span>
-                      <span class="format-desc">Strukturierte Daten</span>
+                      <span class="format-desc" data-i18n="structuredData">Strukturierte Daten</span>
                     </button>
                     <button data-format="csv" class="export-format-btn">
                       <span class="format-icon">📊</span>
                       <span class="format-name">CSV</span>
-                      <span class="format-desc">Excel/Tabellen</span>
+                      <span class="format-desc" data-i18n="excelSheets">Excel/Tabellen</span>
                     </button>
                     <button data-format="opml" class="export-format-btn">
                       <span class="format-icon">📰</span>
                       <span class="format-name">OPML</span>
-                      <span class="format-desc">Feed-Reader</span>
+                      <span class="format-desc" data-i18n="feedReader">Feed-Reader</span>
                     </button>
                   </div>
                 </div>
 
                 <!-- Favoriten Import -->
                 <div class="data-section-block">
-                  <h3>📥 Favoriten importieren</h3>
-                  <p class="setting-hint">Importiere Lesezeichen aus anderen Quellen</p>
+                  <h3 data-i18n="importFavorites">Favoriten importieren</h3>
+                  <p class="setting-hint" data-i18n="importFavoritesDesc">Importiere Lesezeichen aus anderen Quellen</p>
                   <div class="data-row">
-                    <button id="import-html-btn" class="btn-secondary">HTML-Lesezeichen</button>
-                    <button id="import-json-btn" class="btn-secondary">JSON-Datei</button>
+                    <button id="import-html-btn" class="btn-secondary" data-i18n="htmlBookmarks">HTML-Lesezeichen</button>
+                    <button id="import-json-btn" class="btn-secondary" data-i18n="jsonFile">JSON-Datei</button>
                     <input type="file" id="import-file" accept=".json,.html,.htm" hidden>
                   </div>
                 </div>
 
                 <!-- URL-Liste -->
                 <div class="data-section-block">
-                  <h3>📋 URL-Liste</h3>
-                  <p class="setting-hint">Einfache Liste von URLs - eine pro Zeile</p>
+                  <h3 data-i18n="urlList">URL-Liste</h3>
+                  <p class="setting-hint" data-i18n="urlListDesc">Einfache Liste von URLs - eine pro Zeile</p>
                   <textarea id="url-list-textarea" class="url-textarea" placeholder="https://example.com&#10;https://google.com&#10;https://github.com"></textarea>
                   <div class="data-row">
-                    <button id="import-url-list" class="btn-secondary">URLs importieren</button>
-                    <button id="export-url-list" class="btn-secondary">URLs exportieren</button>
-                    <button id="clear-url-list" class="btn-ghost">Leeren</button>
+                    <button id="import-url-list" class="btn-secondary" data-i18n="importUrls">URLs importieren</button>
+                    <button id="export-url-list" class="btn-secondary" data-i18n="exportUrls">URLs exportieren</button>
+                    <button id="clear-url-list" class="btn-ghost" data-i18n="clearBtn">Leeren</button>
                   </div>
                 </div>
 
                 <!-- Danger Zone -->
                 <div class="data-section-block danger-zone">
-                  <h3>⚠️ Gefahrenzone</h3>
+                  <h3 data-i18n="dangerZone">Gefahrenzone</h3>
                   <div class="danger-actions">
                     <div class="danger-item">
                       <div>
-                        <strong>Alle Favoriten löschen</strong>
-                        <p>Entfernt alle Favoriten, behält Gruppen und Einstellungen</p>
+                        <strong data-i18n="deleteAllFavorites">Alle Favoriten löschen</strong>
+                        <p data-i18n="deleteAllFavoritesDesc">Entfernt alle Favoriten, behält Gruppen und Einstellungen</p>
                       </div>
-                      <button id="clear-favorites-btn" class="btn-danger-outline">Favoriten löschen</button>
+                      <button id="clear-favorites-btn" class="btn-danger-outline" data-i18n="deleteFavoritesBtn">Favoriten löschen</button>
                     </div>
                     <div class="danger-item">
                       <div>
-                        <strong>Alles zurücksetzen</strong>
-                        <p>Setzt die Extension auf Werkseinstellungen zurück</p>
+                        <strong data-i18n="resetEverything">Alles zurücksetzen</strong>
+                        <p data-i18n="resetEverythingDesc">Setzt die Extension auf Werkseinstellungen zurück</p>
                       </div>
-                      <button id="reset-all-btn" class="btn-danger">Komplett zurücksetzen</button>
+                      <button id="reset-all-btn" class="btn-danger" data-i18n="fullReset">Komplett zurücksetzen</button>
                     </div>
                   </div>
                 </div>
@@ -923,7 +882,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-primary" data-action="close">Fertig</button>
+          <button type="button" class="btn-primary" data-action="close" data-i18n="done">Fertig</button>
         </div>
       </div>
     </div>
@@ -933,15 +892,15 @@
       <div class="modal-backdrop"></div>
       <div class="modal-content modal-small">
         <div class="modal-header">
-          <h2>Bestätigung</h2>
+          <h2 data-i18n="confirmation">Bestätigung</h2>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
-          <p id="confirm-message">Bist du sicher?</p>
+          <p id="confirm-message" data-i18n="areYouSure">Bist du sicher?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-secondary" data-action="cancel">Abbrechen</button>
-          <button type="button" class="btn-danger" data-action="confirm">Löschen</button>
+          <button type="button" class="btn-secondary" data-action="cancel" data-i18n="cancel">Abbrechen</button>
+          <button type="button" class="btn-danger" data-action="confirm" data-i18n="delete">Löschen</button>
         </div>
       </div>
     </div>
@@ -951,7 +910,7 @@
       <div class="modal-backdrop"></div>
       <div class="modal-content modal-fullscreen">
         <div class="modal-header">
-          <h2>📂 Gruppen-Manager</h2>
+          <h2 data-i18n="groupManager">Gruppen-Manager</h2>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
@@ -959,17 +918,17 @@
             <!-- Group Selection -->
             <div class="group-manager-header">
               <div class="group-selector">
-                <label>Linke Gruppe:</label>
+                <label data-i18n="leftGroup">Linke Gruppe:</label>
                 <select id="manager-group-left"></select>
               </div>
               <div class="group-manager-actions">
-                <button id="move-all-right" class="btn-secondary" title="Alle nach rechts">
+                <button id="move-all-right" class="btn-secondary" title="Alle nach rechts" data-i18n-title="moveAllRight">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="13 17 18 12 13 7"/>
                     <polyline points="6 17 11 12 6 7"/>
                   </svg>
                 </button>
-                <button id="move-all-left" class="btn-secondary" title="Alle nach links">
+                <button id="move-all-left" class="btn-secondary" title="Alle nach links" data-i18n-title="moveAllLeft">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="11 17 6 12 11 7"/>
                     <polyline points="18 17 13 12 18 7"/>
@@ -977,7 +936,7 @@
                 </button>
               </div>
               <div class="group-selector">
-                <label>Rechte Gruppe:</label>
+                <label data-i18n="rightGroup">Rechte Gruppe:</label>
                 <select id="manager-group-right"></select>
               </div>
             </div>
@@ -1004,23 +963,32 @@
             </div>
             
             <div class="group-manager-help">
-              <p>💡 <strong>Tipp:</strong> Ziehe Favoriten per Drag & Drop von einer Gruppe zur anderen. Halte <kbd>Shift</kbd> gedrückt, um mehrere auszuwählen.</p>
+              <p><strong>Tipp:</strong> <span data-i18n="groupManagerTip">Ziehe Favoriten per Drag & Drop von einer Gruppe zur anderen. Halte Shift gedrückt, um mehrere auszuwählen.</span></p>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-primary" data-action="close">Fertig</button>
+          <button type="button" class="btn-primary" data-action="close" data-i18n="done">Fertig</button>
         </div>
       </div>
     </div>
 
     <!-- Toast Notifications -->
     <div id="toast-container" class="toast-container"></div>
+
+    <!-- Material Design Farbpaletten-Popup -->
+    <div id="md-color-picker-overlay" class="md-color-picker-overlay hidden">
+      <div class="md-color-picker-backdrop" id="md-color-picker-backdrop"></div>
+      <div class="md-color-picker" id="md-color-picker">
+        <div class="md-color-grid" id="md-color-grid"></div>
+      </div>
+    </div>
     
     <!-- Version Badge -->
-    <div class="version-badge">v2.7.35</div>
+    <div class="version-badge">v3.4.0</div>
   </div>
 
+  <script src="../lib/i18n.js"></script>
   <script src="../lib/storage.js"></script>
   <script src="../lib/favicon.js"></script>
   

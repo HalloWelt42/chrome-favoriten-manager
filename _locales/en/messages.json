@@ -1,362 +1,284 @@
 {
-  "extName": {
-    "message": "FavGrid - Premium Speed Dial",
-    "description": "Extension name"
-  },
-  "extDescription": {
-    "message": "Elegant speed dial with glassmorphism design. Organize favorites as app icons – 100% local, no tracking.",
-    "description": "Extension description"
-  },
-  "addToFavGrid": {
-    "message": "Add to FavGrid",
-    "description": "Context menu item"
-  },
-  "favorites": {
-    "message": "Favorites",
-    "description": "Favorites group name"
-  },
-  "settings": {
-    "message": "Settings",
-    "description": "Settings title"
-  },
-  "appearance": {
-    "message": "Appearance",
-    "description": "Appearance settings section"
-  },
-  "gridLayout": {
-    "message": "Grid Layout",
-    "description": "Grid layout settings section"
-  },
-  "search": {
-    "message": "Search",
-    "description": "Search settings section"
-  },
-  "navigation": {
-    "message": "Navigation",
-    "description": "Navigation settings section"
-  },
-  "dataBackup": {
-    "message": "Data & Backup",
-    "description": "Data and backup settings section"
-  },
-  "theme": {
-    "message": "Theme",
-    "description": "Theme setting label"
-  },
-  "dark": {
-    "message": "Dark",
-    "description": "Dark theme option"
-  },
-  "light": {
-    "message": "Light",
-    "description": "Light theme option"
-  },
-  "system": {
-    "message": "System",
-    "description": "System theme option"
-  },
-  "background": {
-    "message": "Background",
-    "description": "Background setting label"
-  },
-  "gradient": {
-    "message": "Gradient",
-    "description": "Gradient background type"
-  },
-  "solidColor": {
-    "message": "Solid Color",
-    "description": "Solid color background type"
-  },
-  "image": {
-    "message": "Image",
-    "description": "Image background type"
-  },
-  "columns": {
-    "message": "Columns",
-    "description": "Grid columns setting"
-  },
-  "rows": {
-    "message": "Rows",
-    "description": "Grid rows setting"
-  },
-  "iconSize": {
-    "message": "Icon Size",
-    "description": "Icon size setting"
-  },
-  "spacing": {
-    "message": "Spacing",
-    "description": "Grid spacing setting"
-  },
-  "borderRadius": {
-    "message": "Border Radius",
-    "description": "Border radius setting"
-  },
-  "showShadow": {
-    "message": "Show Shadow",
-    "description": "Show shadow setting"
-  },
-  "showLabels": {
-    "message": "Show Labels",
-    "description": "Show labels setting"
-  },
-  "labelPosition": {
-    "message": "Label Position",
-    "description": "Label position setting"
-  },
-  "below": {
-    "message": "Below Icon",
-    "description": "Below icon position"
-  },
-  "above": {
-    "message": "Above Icon",
-    "description": "Above icon position"
-  },
-  "searchEngine": {
-    "message": "Search Engine",
-    "description": "Search engine setting"
-  },
-  "instantSearch": {
-    "message": "Instant Search",
-    "description": "Instant search setting"
-  },
-  "keyboardNav": {
-    "message": "Keyboard Navigation",
-    "description": "Keyboard navigation setting"
-  },
-  "mousewheelNav": {
-    "message": "Mousewheel Navigation",
-    "description": "Mousewheel navigation setting"
-  },
-  "swipeNav": {
-    "message": "Swipe/Trackpad",
-    "description": "Swipe navigation setting"
-  },
-  "showArrows": {
-    "message": "Show Navigation Arrows",
-    "description": "Show navigation arrows setting"
-  },
-  "browserSync": {
-    "message": "Sync with Browser Bookmarks",
-    "description": "Browser bookmark sync setting"
-  },
-  "syncNow": {
-    "message": "Sync Now",
-    "description": "Sync now button"
-  },
-  "export": {
-    "message": "Export",
-    "description": "Export section title"
-  },
-  "import": {
-    "message": "Import",
-    "description": "Import section title"
-  },
-  "autoBackup": {
-    "message": "Auto Backup",
-    "description": "Auto backup setting"
-  },
-  "resetAll": {
-    "message": "Reset All Data",
-    "description": "Reset all data button"
-  },
-  "addFavorite": {
-    "message": "Add Favorite",
-    "description": "Add favorite button/title"
-  },
-  "editFavorite": {
-    "message": "Edit Favorite",
-    "description": "Edit favorite title"
-  },
-  "deleteFavorite": {
-    "message": "Delete Favorite",
-    "description": "Delete favorite button"
-  },
-  "newGroup": {
-    "message": "New Group",
-    "description": "New group title"
-  },
-  "editGroup": {
-    "message": "Edit Group",
-    "description": "Edit group title"
-  },
-  "deleteGroup": {
-    "message": "Delete Group",
-    "description": "Delete group button"
-  },
-  "url": {
-    "message": "URL",
-    "description": "URL label"
-  },
-  "name": {
-    "message": "Name",
-    "description": "Name label"
-  },
-  "description": {
-    "message": "Description",
-    "description": "Description label"
-  },
-  "tags": {
-    "message": "Tags",
-    "description": "Tags label"
-  },
-  "group": {
-    "message": "Group",
-    "description": "Group label"
-  },
-  "icon": {
-    "message": "Icon",
-    "description": "Icon label"
-  },
-  "color": {
-    "message": "Color",
-    "description": "Color label"
-  },
-  "save": {
-    "message": "Save",
-    "description": "Save button"
-  },
-  "cancel": {
-    "message": "Cancel",
-    "description": "Cancel button"
-  },
-  "delete": {
-    "message": "Delete",
-    "description": "Delete button"
-  },
-  "close": {
-    "message": "Close",
-    "description": "Close button"
-  },
-  "open": {
-    "message": "Open",
-    "description": "Open action"
-  },
-  "openInBackground": {
-    "message": "Open in Background",
-    "description": "Open in background action"
-  },
-  "edit": {
-    "message": "Edit",
-    "description": "Edit action"
-  },
-  "pageInfo": {
-    "message": "Page Info",
-    "description": "Page info action"
-  },
-  "moveTo": {
-    "message": "Move to",
-    "description": "Move to action"
-  },
-  "duplicate": {
-    "message": "Duplicate",
-    "description": "Duplicate action"
-  },
-  "noFavorites": {
-    "message": "No Favorites",
-    "description": "Empty state title"
-  },
-  "noFavoritesDesc": {
-    "message": "Click + to add your first favorite.",
-    "description": "Empty state description"
-  },
-  "noResults": {
-    "message": "No Results",
-    "description": "No search results title"
-  },
-  "noResultsDesc": {
-    "message": "Try a different search term.",
-    "description": "No search results description"
-  },
-  "searchPlaceholder": {
-    "message": "Search or enter URL...",
-    "description": "Search input placeholder"
-  },
-  "favoriteAdded": {
-    "message": "Favorite added",
-    "description": "Toast message"
-  },
-  "favoriteUpdated": {
-    "message": "Favorite updated",
-    "description": "Toast message"
-  },
-  "favoriteDeleted": {
-    "message": "Favorite deleted",
-    "description": "Toast message"
-  },
-  "favoriteMoved": {
-    "message": "Favorite moved",
-    "description": "Toast message"
-  },
-  "favoriteDuplicated": {
-    "message": "Favorite duplicated",
-    "description": "Toast message"
-  },
-  "groupCreated": {
-    "message": "Group created",
-    "description": "Toast message"
-  },
-  "groupUpdated": {
-    "message": "Group updated",
-    "description": "Toast message"
-  },
-  "groupDeleted": {
-    "message": "Group deleted",
-    "description": "Toast message"
-  },
-  "exportSuccess": {
-    "message": "Export successful",
-    "description": "Toast message"
-  },
-  "importSuccess": {
-    "message": "Import successful",
-    "description": "Toast message"
-  },
-  "syncSuccess": {
-    "message": "Sync successful",
-    "description": "Toast message"
-  },
-  "errorInvalidUrl": {
-    "message": "Invalid URL",
-    "description": "Error message"
-  },
-  "errorNameRequired": {
-    "message": "Please enter a name",
-    "description": "Error message"
-  },
-  "errorUrlRequired": {
-    "message": "Please enter a URL",
-    "description": "Error message"
-  },
-  "confirmDelete": {
-    "message": "Are you sure you want to delete?",
-    "description": "Delete confirmation"
-  },
-  "confirmReset": {
-    "message": "Are you sure you want to delete all data? This action cannot be undone!",
-    "description": "Reset confirmation"
-  },
-  "source": {
-    "message": "Source",
-    "description": "Source label"
-  },
-  "manual": {
-    "message": "Manual",
-    "description": "Manual source"
-  },
-  "browserImport": {
-    "message": "Browser Import",
-    "description": "Browser import source"
-  },
-  "createdAt": {
-    "message": "Added",
-    "description": "Created at label"
-  },
-  "visits": {
-    "message": "Visits",
-    "description": "Visit count label"
-  },
-  "lastVisited": {
-    "message": "Last visited",
-    "description": "Last visited label"
-  }
+  "extName": { "message": "FavGrid - Premium Speed Dial" },
+  "extDescription": { "message": "Elegant speed dial with glassmorphism design. Organize favorites as app icons - 100% local, no tracking." },
+
+  "addToFavGrid": { "message": "Add to FavGrid" },
+  "favorites": { "message": "Favorites" },
+  "settings": { "message": "Settings" },
+  "appearance": { "message": "Appearance" },
+  "gridLayout": { "message": "Grid Layout" },
+  "search": { "message": "Search" },
+  "navigation": { "message": "Navigation" },
+  "dataBackup": { "message": "Data & Backup" },
+  "theme": { "message": "Theme" },
+  "dark": { "message": "Dark" },
+  "light": { "message": "Light" },
+  "system": { "message": "System" },
+  "background": { "message": "Background" },
+  "gradient": { "message": "Gradient" },
+  "solidColor": { "message": "Solid Color" },
+  "image": { "message": "Image" },
+  "columns": { "message": "Columns" },
+  "rows": { "message": "Rows" },
+  "iconSize": { "message": "Icon Size" },
+  "spacing": { "message": "Spacing" },
+  "borderRadius": { "message": "Border Radius" },
+  "showShadow": { "message": "Show Shadow" },
+  "showLabels": { "message": "Show Labels" },
+  "labelPosition": { "message": "Label Position" },
+  "below": { "message": "Below Icon" },
+  "above": { "message": "Above Icon" },
+  "searchEngine": { "message": "Search Engine" },
+  "instantSearch": { "message": "Instant Search" },
+  "keyboardNav": { "message": "Keyboard Navigation" },
+  "mousewheelNav": { "message": "Mousewheel Navigation" },
+  "swipeNav": { "message": "Swipe/Trackpad" },
+  "showArrows": { "message": "Show Navigation Arrows" },
+  "browserSync": { "message": "Sync with Browser Bookmarks" },
+  "syncNow": { "message": "Sync Now" },
+  "export": { "message": "Export" },
+  "import": { "message": "Import" },
+  "autoBackup": { "message": "Auto Backup" },
+  "resetAll": { "message": "Reset All Data" },
+  "addFavorite": { "message": "Add Favorite" },
+  "editFavorite": { "message": "Edit Favorite" },
+  "deleteFavorite": { "message": "Delete Favorite" },
+  "newGroup": { "message": "New Group" },
+  "editGroup": { "message": "Edit Group" },
+  "deleteGroup": { "message": "Delete Group" },
+  "url": { "message": "URL" },
+  "name": { "message": "Name" },
+  "description": { "message": "Description" },
+  "tags": { "message": "Tags" },
+  "group": { "message": "Group" },
+  "icon": { "message": "Icon" },
+  "color": { "message": "Color" },
+  "save": { "message": "Save" },
+  "cancel": { "message": "Cancel" },
+  "delete": { "message": "Delete" },
+  "close": { "message": "Close" },
+  "open": { "message": "Open" },
+  "openInBackground": { "message": "Open in Background" },
+  "edit": { "message": "Edit" },
+  "pageInfo": { "message": "Page Info" },
+  "moveTo": { "message": "Move to" },
+  "duplicate": { "message": "Duplicate" },
+  "noFavorites": { "message": "No Favorites" },
+  "noFavoritesDesc": { "message": "Click + to add your first favorite." },
+  "noResults": { "message": "No Results" },
+  "noResultsDesc": { "message": "Try a different search term." },
+  "searchPlaceholder": { "message": "Search or enter URL..." },
+  "favoriteAdded": { "message": "Favorite added" },
+  "favoriteUpdated": { "message": "Favorite updated" },
+  "favoriteDeleted": { "message": "Favorite deleted" },
+  "favoriteMoved": { "message": "Favorite moved" },
+  "favoriteDuplicated": { "message": "Favorite duplicated" },
+  "groupCreated": { "message": "Group created" },
+  "groupUpdated": { "message": "Group updated" },
+  "groupDeleted": { "message": "Group deleted" },
+  "exportSuccess": { "message": "Export successful" },
+  "importSuccess": { "message": "Import successful" },
+  "syncSuccess": { "message": "Sync successful" },
+  "errorInvalidUrl": { "message": "Invalid URL" },
+  "errorNameRequired": { "message": "Please enter a name" },
+  "errorUrlRequired": { "message": "Please enter a URL" },
+  "confirmDelete": { "message": "Are you sure you want to delete?" },
+  "confirmReset": { "message": "Are you sure you want to delete all data? This action cannot be undone!" },
+  "source": { "message": "Source" },
+  "manual": { "message": "Manual" },
+  "browserImport": { "message": "Browser Import" },
+  "createdAt": { "message": "Added" },
+  "visits": { "message": "Visits" },
+  "lastVisited": { "message": "Last visited" },
+
+  "webSearch": { "message": "Web Search" },
+  "searchFor": { "message": "Search for" },
+  "manageGroups": { "message": "Manage Groups" },
+  "toggleTheme": { "message": "Toggle Theme" },
+  "sortBtn": { "message": "Sort" },
+  "sortManual": { "message": "Manual" },
+  "sortNameAsc": { "message": "Name (A-Z)" },
+  "sortNameDesc": { "message": "Name (Z-A)" },
+  "sortDateDesc": { "message": "Newest First" },
+  "sortDateAsc": { "message": "Oldest First" },
+  "sortVisitsDesc": { "message": "Most Visited" },
+  "openInNewTab": { "message": "Open in New Tab" },
+  "openInSameTab": { "message": "Open in Current Tab" },
+  "copyUrl": { "message": "Copy URL" },
+  "refreshIcon": { "message": "Refresh Icon" },
+  "nameAlias": { "message": "Name (Alias)" },
+  "tagsSeparated": { "message": "Tags (comma-separated)" },
+  "fetchFavicon": { "message": "Load Favicon" },
+  "uploadCustom": { "message": "Custom Image" },
+  "whiteThreshold": { "message": "White Threshold" },
+  "thresholdHint": { "message": "Lower = more removed" },
+  "apply": { "message": "Apply" },
+  "reset": { "message": "Reset" },
+  "rescan": { "message": "Rescan" },
+  "iconEmoji": { "message": "Icon (Emoji)" },
+  "loadingInfo": { "message": "Loading information..." },
+  "accentColor": { "message": "Accent Color" },
+  "bgType": { "message": "Type" },
+  "harmoniousGradients": { "message": "Harmonious Gradients" },
+  "customGradientLabel": { "message": "Custom Gradient" },
+  "color1": { "message": "Color 1" },
+  "color2": { "message": "Color 2" },
+  "darkMode": { "message": "Dark Mode" },
+  "lightMode": { "message": "Light Mode" },
+  "imageUrl": { "message": "Image URL" },
+  "orUpload": { "message": "Or Upload" },
+  "chooseImage": { "message": "Choose Image" },
+  "useDarkForLight": { "message": "Use dark image for light mode too" },
+  "adjustments": { "message": "Adjustments" },
+  "adjustBrightness": { "message": "Brightness" },
+  "blurFilter": { "message": "Blur Filter" },
+  "animations": { "message": "Animations" },
+  "pageTransition": { "message": "Page Transition" },
+  "transSlide": { "message": "Slide" },
+  "transFade": { "message": "Fade" },
+  "transNone": { "message": "None" },
+  "gridSection": { "message": "Grid" },
+  "icons": { "message": "Icons" },
+  "containerRadius": { "message": "Container Radius" },
+  "containerRadiusHint": { "message": "Glassmorphism Frame" },
+  "imageRadius": { "message": "Image Radius" },
+  "imageRadiusHint": { "message": "Favicon itself (0% = square, 50% = round)" },
+  "shadow": { "message": "Shadow" },
+  "iconBackground": { "message": "Icon Background" },
+  "transparency": { "message": "Transparency" },
+  "bgColorDark": { "message": "Background Color (Dark)" },
+  "bgColorLight": { "message": "Background Color (Light)" },
+  "glassmorphism": { "message": "Glassmorphism Effect" },
+  "glassHint": { "message": "Glass effect is best visible with a background image!" },
+  "glassBlur": { "message": "Glass Blur" },
+  "glassBorder": { "message": "Border Brightness" },
+  "glassShadow": { "message": "Shadow Intensity" },
+  "labels": { "message": "Labels" },
+  "fontSize": { "message": "Font Size" },
+  "maxChars": { "message": "Max Characters" },
+  "colorDarkMode": { "message": "Color (Dark Mode)" },
+  "colorLightMode": { "message": "Color (Light Mode)" },
+  "fontSection": { "message": "Font" },
+  "fontFamilyLabel": { "message": "Font Family" },
+  "systemFont": { "message": "System (Default)" },
+  "customFontOption": { "message": "Custom Font..." },
+  "customFontFamily": { "message": "Custom Font Family" },
+  "fontWeight": { "message": "Font Weight" },
+  "searchUrlLabel": { "message": "Search URL (use %s as placeholder)" },
+  "quickSelect": { "message": "Quick Select" },
+  "behavior": { "message": "Behavior" },
+  "clickBehavior": { "message": "Click Behavior" },
+  "defaultClickAction": { "message": "Default Click Action" },
+  "ctrlClickHint": { "message": "Use Ctrl/Cmd+Click for the opposite action." },
+  "controls": { "message": "Controls" },
+  "keyboardNavArrows": { "message": "Keyboard Navigation (Arrow Keys)" },
+  "startBehavior": { "message": "Startup Behavior" },
+  "onOpenShow": { "message": "On Open Show" },
+  "lastGroupOption": { "message": "Last Group" },
+  "defaultGroupOption": { "message": "Default Group" },
+  "groupOrder": { "message": "Group Order" },
+  "groupOrderHint": { "message": "Drag groups to change order" },
+  "fullBackup": { "message": "Full Backup" },
+  "fullBackupDesc": { "message": "Contains all favorites, groups, and settings" },
+  "createBackup": { "message": "Create Backup (.json)" },
+  "restoreBackup": { "message": "Restore Backup" },
+  "exportFavorites": { "message": "Export Favorites" },
+  "exportFavoritesDesc": { "message": "Export only favorites in various formats" },
+  "browserCompatible": { "message": "Browser Compatible" },
+  "structuredData": { "message": "Structured Data" },
+  "excelSheets": { "message": "Excel/Spreadsheets" },
+  "feedReader": { "message": "Feed Reader" },
+  "importFavorites": { "message": "Import Favorites" },
+  "importFavoritesDesc": { "message": "Import bookmarks from other sources" },
+  "htmlBookmarks": { "message": "HTML Bookmarks" },
+  "jsonFile": { "message": "JSON File" },
+  "urlList": { "message": "URL List" },
+  "urlListDesc": { "message": "Simple list of URLs - one per line" },
+  "importUrls": { "message": "Import URLs" },
+  "exportUrls": { "message": "Export URLs" },
+  "clearBtn": { "message": "Clear" },
+  "dangerZone": { "message": "Danger Zone" },
+  "deleteAllFavorites": { "message": "Delete All Favorites" },
+  "deleteAllFavoritesDesc": { "message": "Removes all favorites, keeps groups and settings" },
+  "deleteFavoritesBtn": { "message": "Delete Favorites" },
+  "resetEverything": { "message": "Reset Everything" },
+  "resetEverythingDesc": { "message": "Resets the extension to factory settings" },
+  "fullReset": { "message": "Full Reset" },
+  "done": { "message": "Done" },
+  "confirmation": { "message": "Confirmation" },
+  "areYouSure": { "message": "Are you sure?" },
+  "groupManager": { "message": "Group Manager" },
+  "leftGroup": { "message": "Left Group:" },
+  "rightGroup": { "message": "Right Group:" },
+  "moveAllRight": { "message": "Move All Right" },
+  "moveAllLeft": { "message": "Move All Left" },
+  "groupManagerTip": { "message": "Drag favorites from one group to another. Hold Shift to select multiple." },
+  "addNewFavorite": { "message": "Add New Favorite" },
+  "add": { "message": "Add" },
+  "orderChanged": { "message": "Order changed" },
+  "openedInBg": { "message": "Opened in background" },
+  "deleted": { "message": "Deleted" },
+  "movedTo": { "message": "Moved to \"$1\"" },
+  "noUrlAvailable": { "message": "No URL available" },
+  "iconCacheCleared": { "message": "Icon cache cleared, rescanning..." },
+  "enterUrlFirst": { "message": "Please enter URL first" },
+  "scanning": { "message": "Scanning..." },
+  "sourcesFound": { "message": "$1 sources found" },
+  "noIconSources": { "message": "No icon sources available" },
+  "noIconAvailable": { "message": "No icon available" },
+  "processing": { "message": "Processing..." },
+  "imageLoadFailed": { "message": "Image could not be loaded" },
+  "imageProcessFailed": { "message": "Image processing failed" },
+  "whiteRemoved": { "message": "White removed" },
+  "imageError": { "message": "Image processing error" },
+  "noOriginal": { "message": "No original available" },
+  "originalRestored": { "message": "Original restored" },
+  "urlExistsAlready": { "message": "Exact same URL already exists" },
+  "similarUrlExists": { "message": "Similar URL exists" },
+  "xFavoritesMoved": { "message": "$1 favorite(s) moved" },
+  "unknown": { "message": "Unknown" },
+  "selectDifferentGroups": { "message": "Select two different groups" },
+  "noFavoritesToMove": { "message": "No favorites to move" },
+  "sorting": { "message": "Sort" },
+  "openedInNewTab": { "message": "Opened in new tab" },
+  "urlCopied": { "message": "URL copied" },
+  "loadingFavicon": { "message": "Loading favicon..." },
+  "customGradientApplied": { "message": "Custom gradient applied" },
+  "backupCreated": { "message": "Backup created" },
+  "backupRestored": { "message": "Backup restored" },
+  "errorPrefix": { "message": "Error" },
+  "exportFormatSuccess": { "message": "Export as $1 successful" },
+  "xFavoritesImported": { "message": "$1 favorites imported" },
+  "xUrlsExported": { "message": "$1 URLs written to list" },
+  "noUrlsEntered": { "message": "No URLs entered" },
+  "addCurrentPage": { "message": "Add Current Page" },
+  "loading": { "message": "Loading..." },
+  "addToGroup": { "message": "Add to Group:" },
+  "openSpeedDial": { "message": "Open Speed Dial" },
+  "thankYou": { "message": "I want to say Thank You" },
+  "cannotAddPage": { "message": "This page cannot be added" },
+  "alreadyInFavorites": { "message": "This page is already in your favorites!" },
+  "errorLoading": { "message": "Error loading" },
+  "addedNotification": { "message": "\"$1\" has been added!" },
+  "donateTitle": { "message": "Made with love in Sachsen-Anhalt" },
+  "donateDesc": { "message": "Open Source from Sachsen-Anhalt. No tracking, no ads, no compromises." },
+  "kofiButton": { "message": "Ko-fi - Buy a Coffee" },
+  "orCrypto": { "message": "Or with Cryptocurrency:" },
+  "copyAddress": { "message": "Copy Address" },
+  "copied": { "message": "Copied!" },
+  "donateFooter": { "message": "Thank you for your support!" },
+  "donatePageTitle": { "message": "FavGrid - Support" },
+  "placeholderGroupName": { "message": "Group Name" },
+  "placeholderDescription": { "message": "Short description..." },
+  "placeholderUrlExample": { "message": "https://example.com" },
+  "placeholderMyWebsite": { "message": "My Website" },
+  "placeholderTags": { "message": "work, important, tools" },
+  "placeholderCustomFont": { "message": "e.g. 'Comic Sans MS', cursive" },
+  "removeWhiteBg": { "message": "Make white background transparent" },
+  "resetIcon": { "message": "Restore original icon" },
+  "rescanIcons": { "message": "Clear icon cache and rescan" },
+  "favoritesEmoji": { "message": "Favorites" },
+  "inGroup": { "message": "in" },
+  "processingThreshold": { "message": "Processing (threshold: $1)..." },
+  "whiteRemovedThreshold": { "message": "White removed (>=$1)" }
 }

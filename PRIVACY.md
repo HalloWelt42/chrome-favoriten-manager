@@ -1,10 +1,10 @@
-# FavGrid – Datenschutzerklärung / Privacy Policy
+# FavGrid - Datenschutzerklärung / Privacy Policy
 
-*Letzte Aktualisierung / Last updated: 2025-02-14*
+*Letzte Aktualisierung / Last updated: 2026-04-13*
 
 ---
 
-## 🇩🇪 Deutsch
+## Deutsch
 
 ### Überblick
 
@@ -16,15 +16,15 @@ Alle Daten werden ausschließlich in der lokalen Chrome Storage API deines Brows
 
 - **Lesezeichen-Daten**: URLs, Titel, benutzerdefinierte Aliase und Beschreibungen
 - **Favicon-Bilder**: Zwischengespeichert von den jeweiligen Webseiten als Data-URLs
-- **Einstellungen**: Theme, Layout, Farben, Schriftarten und sonstige Anpassungen
+- **Einstellungen**: Design, Layout, Farben, Schriftarten und sonstige Anpassungen
 - **Gruppen-Organisation**: Namen, Icons, Farben und Sortierung deiner Gruppen
 
 ### Externe Netzwerkanfragen
 
-FavGrid führt folgende Netzwerkanfragen durch – **ausschließlich auf Nutzeraktion**:
+FavGrid führt folgende Netzwerkanfragen durch -- **ausschließlich auf Nutzeraktion**:
 
 - **Favicon-Abruf**: Direkt von den jeweiligen Webseiten, um Icons für deine Lesezeichen zu laden
-- **Favicon-Dienste**: Google Favicons (`google.com/s2/favicons`), DuckDuckGo Icons (`icons.duckduckgo.com`), Icon Horse (`icon.horse`) – als Fallback, wenn kein direktes Icon gefunden wird
+- **Favicon-Dienste**: Google Favicons (`google.com/s2/favicons`), DuckDuckGo Icons (`icons.duckduckgo.com`), Icon Horse (`icon.horse`) -- als Fallback, wenn kein direktes Icon gefunden wird
 
 Es werden **keine Daten an Server des Entwicklers** gesendet.
 
@@ -32,7 +32,7 @@ Es werden **keine Daten an Server des Entwicklers** gesendet.
 
 - Daten verbleiben **ausschließlich auf deinem Gerät**
 - Daten werden gelöscht bei: Deinstallation der Erweiterung, Löschen der Browserdaten oder manueller Zurücksetzung in den Einstellungen
-- Export (JSON/HTML/CSV/OPML) erstellt lokale Dateien auf deinem Gerät
+- Export (JSON/HTML/CSV/OPML/Markdown/URL-Liste) erstellt lokale Dateien auf deinem Gerät
 
 ### Berechtigungen
 
@@ -41,8 +41,10 @@ Es werden **keine Daten an Server des Entwicklers** gesendet.
 | `storage` | Lokale Speicherung von Lesezeichen und Einstellungen |
 | `activeTab` | Aktuelle Seite als Lesezeichen hinzufügen |
 | `tabs` | Tab-Titel für neue Lesezeichen auslesen |
-| `contextMenus` | Rechtsklick-Menü „Zu FavGrid hinzufügen" |
+| `contextMenus` | Rechtsklick-Menü "Zu FavGrid hinzufügen" |
 | `notifications` | Bestätigungen beim Hinzufügen von Lesezeichen |
+| `alarms` | Zeitgesteuerte Hintergrundaufgaben (Auto-Backup) |
+| `search` | Suchmaschinen-Integration für die Sofortsuche |
 | `host_permissions` | Favicon-Bilder direkt von Webseiten laden |
 
 ### Drittanbieter-Dienste
@@ -51,7 +53,7 @@ FavGrid verwendet **keine** Analyse-, Werbe- oder Tracking-Dienste. Die einzigen
 
 ### Deine Rechte
 
-- **Volle Kontrolle**: Export aller Daten jederzeit als JSON, HTML, CSV oder OPML
+- **Volle Kontrolle**: Export aller Daten jederzeit als JSON, HTML, CSV, OPML, Markdown oder URL-Liste
 - **Löschung**: Alle Daten über die Einstellungen zurücksetzen oder Erweiterung deinstallieren
 - **Transparenz**: Der vollständige Quellcode ist auf [GitHub](https://github.com/HalloWelt42/chrome-favoriten-manager) einsehbar
 
@@ -61,7 +63,7 @@ Bei Fragen zum Datenschutz: [GitHub Issues](https://github.com/HalloWelt42/chrom
 
 ---
 
-## 🇬🇧 English
+## English
 
 ### Overview
 
@@ -78,10 +80,10 @@ All data is stored exclusively in your browser's local Chrome Storage API:
 
 ### External network requests
 
-FavGrid makes the following network requests – **only on user action**:
+FavGrid makes the following network requests -- **only on user action**:
 
 - **Favicon fetching**: Directly from the respective websites to load icons for your bookmarks
-- **Favicon services**: Google Favicons (`google.com/s2/favicons`), DuckDuckGo Icons (`icons.duckduckgo.com`), Icon Horse (`icon.horse`) – as fallback when no direct icon is found
+- **Favicon services**: Google Favicons (`google.com/s2/favicons`), DuckDuckGo Icons (`icons.duckduckgo.com`), Icon Horse (`icon.horse`) -- as fallback when no direct icon is found
 
 **No data is sent to the developer's servers.**
 
@@ -89,7 +91,7 @@ FavGrid makes the following network requests – **only on user action**:
 
 - Data remains **exclusively on your device**
 - Data is deleted when: uninstalling the extension, clearing browser data, or manual reset in settings
-- Export (JSON/HTML/CSV/OPML) creates local files on your device
+- Export (JSON/HTML/CSV/OPML/Markdown/URL list) creates local files on your device
 
 ### Permissions
 
@@ -100,6 +102,8 @@ FavGrid makes the following network requests – **only on user action**:
 | `tabs` | Read tab title for new bookmarks |
 | `contextMenus` | Right-click "Add to FavGrid" menu |
 | `notifications` | Confirmation when adding bookmarks |
+| `alarms` | Timed background tasks (auto backup) |
+| `search` | Search engine integration for instant search |
 | `host_permissions` | Load favicon images directly from websites |
 
 ### Third-party services
@@ -108,7 +112,7 @@ FavGrid uses **no** analytics, advertising, or tracking services. The only exter
 
 ### Your rights
 
-- **Full control**: Export all data anytime as JSON, HTML, CSV, or OPML
+- **Full control**: Export all data anytime as JSON, HTML, CSV, OPML, Markdown, or URL list
 - **Deletion**: Reset all data via settings or uninstall the extension
 - **Transparency**: Full source code available on [GitHub](https://github.com/HalloWelt42/chrome-favoriten-manager)
 

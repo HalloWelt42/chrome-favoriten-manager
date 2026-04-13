@@ -35,22 +35,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         urlDisplay.textContent = currentUrl.substring(0, 30) + '...';
       }
     } else {
-      urlDisplay.textContent = 'Diese Seite kann nicht hinzugefügt werden';
+      urlDisplay.textContent = t('cannotAddPage');
       addButton.disabled = true;
       addButton.style.opacity = '0.5';
       addButton.style.cursor = 'not-allowed';
     }
     
-    // Stats und Gruppen laden
-    let data = await chrome.storage.local.get(['favorites', 'groups']);
+    // Stats, Gruppen und letzte Auswahl laden
+    let data = await chrome.storage.local.get(['favorites', 'groups', 'lastSelectedGroupId']);
     let favorites = data.favorites || [];
     let groups = data.groups || [];
+    let lastSelectedGroupId = data.lastSelectedGroupId || null;
     
     // Default-Gruppe initialisieren falls keine existiert
     if (groups.length === 0) {
       const defaultGroup = {
         id: 'default',
-        name: 'Favoriten',
+        name: chrome.i18n.getMessage('favorites') || 'Favoriten',
         icon: '⭐',
         color: '#7f5af0',
         position: 0,
@@ -71,20 +72,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Gruppen-Dropdown befüllen
     const groupSelect = document.getElementById('target-group');
     const defaultGroup = groups.find(g => g.isDefault) || groups[0];
-    
+    // Letzte Gruppe vorauswählen, sonst Default
+    const preselectedId = lastSelectedGroupId && groups.some(g => g.id === lastSelectedGroupId)
+      ? lastSelectedGroupId
+      : defaultGroup?.id;
+
     groupSelect.innerHTML = '';
     groups.sort((a, b) => a.position - b.position).forEach(group => {
       const option = document.createElement('option');
       option.value = group.id;
       option.textContent = `${group.icon} ${group.name}`;
-      if (group.id === defaultGroup?.id) option.selected = true;
+      if (group.id === preselectedId) option.selected = true;
       groupSelect.appendChild(option);
     });
     
     // Aktuelle Seite hinzufügen
     addButton.addEventListener('click', async () => {
       if (!currentUrl || !currentUrl.startsWith('http')) {
-        showToast('Diese Seite kann nicht hinzugefügt werden', true);
+        showToast(t('cannotAddPage'), true);
         return;
       }
       
@@ -96,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Prüfen ob bereits vorhanden
         const exists = currentFavorites.some(f => f.url === currentUrl);
         if (exists) {
-          showToast('Diese Seite ist bereits in deinen Favoriten!', true);
+          showToast(t('alreadyInFavorites'), true);
           return;
         }
         
@@ -122,10 +127,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         
         currentFavorites.push(newFavorite);
-        await chrome.storage.local.set({ favorites: currentFavorites });
+        await chrome.storage.local.set({
+          favorites: currentFavorites,
+          lastSelectedGroupId: groupId
+        });
         
         console.log('Added favorite:', newFavorite);
-        showToast('Favorit hinzugefügt! ✓');
+        showToast(t('favoriteAdded') + ' ✓');
         
         // Stats aktualisieren
         document.getElementById('total-favorites').textContent = currentFavorites.length;
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
       } catch (err) {
         console.error('Error adding favorite:', err);
-        showToast('Fehler: ' + err.message, true);
+        showToast(t('errorPrefix') + ': ' + err.message, true);
       }
     });
     
@@ -157,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
   } catch (err) {
     console.error('Popup initialization error:', err);
-    document.getElementById('current-url').textContent = 'Fehler beim Laden';
+    document.getElementById('current-url').textContent = t('errorLoading');
   }
 });
 

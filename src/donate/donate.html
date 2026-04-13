@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FavGrid – Unterstützen</title>
+  <title data-i18n="donatePageTitle">FavGrid – Unterstützen</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -252,19 +252,18 @@
   <div class="donate-page">
     <!-- Header -->
     <div class="donate-header">
-      <span class="icon">☕</span>
-      <h1>Made with ❤️ in Sachsen-Anhalt</h1>
-      <p>Open Source aus Sachsen-Anhalt.<br>Kein Tracking, keine Werbung, keine Kompromisse.</p>
+      <h1 data-i18n="donateTitle">Gemacht mit Herz in Sachsen-Anhalt</h1>
+      <p data-i18n="donateDesc">Open Source aus Sachsen-Anhalt. Kein Tracking, keine Werbung, keine Kompromisse.</p>
     </div>
     
     <!-- Ko-fi Primary -->
     <a id="kofi-btn" href="" target="_blank" rel="noopener" class="kofi-btn">
       <span class="kofi-icon">☕</span>
-      <span>Ko-fi – Kaffee spendieren</span>
+      <span data-i18n="kofiButton">Ko-fi – Kaffee spendieren</span>
     </a>
     
     <!-- Crypto -->
-    <p class="crypto-label">Oder per Kryptowährung:</p>
+    <p class="crypto-label" data-i18n="orCrypto">Oder per Kryptowährung:</p>
     
     <div class="crypto-tabs">
       <button class="crypto-tab active" data-crypto="btc">
@@ -288,7 +287,7 @@
         <div class="crypto-details">
           <p class="crypto-name">Bitcoin (BTC)</p>
           <p class="crypto-address" id="btc-address"></p>
-          <button class="copy-btn" data-coin="btc">📋 <span class="copy-text">Adresse kopieren</span></button>
+          <button class="copy-btn" data-coin="btc">📋 <span class="copy-text" data-i18n="copyAddress">Adresse kopieren</span></button>
         </div>
       </div>
     </div>
@@ -300,7 +299,7 @@
         <div class="crypto-details">
           <p class="crypto-name">Dogecoin (DOGE)</p>
           <p class="crypto-address" id="doge-address"></p>
-          <button class="copy-btn" data-coin="doge">📋 <span class="copy-text">Adresse kopieren</span></button>
+          <button class="copy-btn" data-coin="doge">📋 <span class="copy-text" data-i18n="copyAddress">Adresse kopieren</span></button>
         </div>
       </div>
     </div>
@@ -312,17 +311,18 @@
         <div class="crypto-details">
           <p class="crypto-name">Ethereum (ETH)</p>
           <p class="crypto-address" id="eth-address"></p>
-          <button class="copy-btn" data-coin="eth">📋 <span class="copy-text">Adresse kopieren</span></button>
+          <button class="copy-btn" data-coin="eth">📋 <span class="copy-text" data-i18n="copyAddress">Adresse kopieren</span></button>
         </div>
       </div>
     </div>
     
     <!-- Footer -->
     <div class="donate-footer">
-      Danke für deine Unterstützung! ❤️
+      <span data-i18n="donateFooter">Danke für deine Unterstützung!</span>
     </div>
   </div>
   
+  <script src="../lib/i18n.js"></script>
   <script src="donate-config.js"></script>
   <script src="donate.js"></script>
 </body>

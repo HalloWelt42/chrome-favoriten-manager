@@ -1,5 +1,5 @@
 /**
- * FavGrid Service Worker v3.0.2
+ * FavGrid Service Worker v3.1.1
  * Standalone – kein importScripts, keine DOM-Abhängigkeiten
  */
 
@@ -16,7 +16,7 @@ function generateId() {
 
 const DEFAULT_GROUP = {
   id: 'default',
-  name: 'Favoriten',
+  name: chrome.i18n.getMessage('favorites') || 'Favoriten',
   icon: '⭐',
   color: '#7f5af0',
   position: 0,
@@ -38,7 +38,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   // Context Menu erstellen
   chrome.contextMenus.create({
     id: 'add-to-favgrid',
-    title: 'Zu FavGrid hinzufügen',
+    title: chrome.i18n.getMessage('addToFavGrid') || 'Zu FavGrid hinzufügen',
     contexts: ['page', 'link']
   });
 });
@@ -95,7 +95,7 @@ async function addFavoriteFromContextMenu(url, title) {
       type: 'basic',
       iconUrl: 'assets/icons/icon-48.png',
       title: 'FavGrid',
-      message: 'Diese Seite ist bereits in deinen Favoriten!'
+      message: chrome.i18n.getMessage('alreadyInFavorites') || 'This page is already in your favorites!'
     });
     return;
   }
@@ -124,7 +124,7 @@ async function addFavoriteFromContextMenu(url, title) {
     type: 'basic',
     iconUrl: 'assets/icons/icon-48.png',
     title: 'FavGrid',
-    message: `"${newFavorite.alias}" wurde hinzugefügt!`
+    message: (chrome.i18n.getMessage("addedNotification", [newFavorite.alias]) || `"${newFavorite.alias}" has been added!`)
   });
 }
 

@@ -89,11 +89,17 @@ const Favicon = {
   async parseHtmlForIcons(url) {
     const sources = [];
     const origin = new URL(url).origin;
-    
+
+    // Interne URLs überspringen
+    if (url.startsWith('chrome://') || url.startsWith('chrome-extension://') ||
+        url.startsWith('about:') || url.startsWith('edge://')) {
+      return sources;
+    }
+
     // HTML fetchen
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
-    
+
     const response = await fetch(url, {
       method: 'GET',
       credentials: 'omit',
@@ -303,10 +309,12 @@ const Favicon = {
    */
   getExternalServices(hostname) {
     return [
-      { url: `https://icons.duckduckgo.com/ip3/${hostname}.ico`, name: 'DuckDuckGo', type: 'service' },
       { url: `https://www.google.com/s2/favicons?domain=${hostname}&sz=128`, name: 'Google 128', type: 'service' },
       { url: `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`, name: 'Google 64', type: 'service' },
+      { url: `https://icons.duckduckgo.com/ip3/${hostname}.ico`, name: 'DuckDuckGo', type: 'service' },
       { url: `https://icon.horse/icon/${hostname}`, name: 'Icon Horse', type: 'service' },
+      { url: `https://favicone.com/${hostname}?s=128`, name: 'Favicone 128', type: 'service' },
+      { url: `https://api.faviconkit.com/${hostname}/128`, name: 'FaviconKit', type: 'service' },
     ];
   },
 
@@ -393,23 +401,28 @@ const Favicon = {
    */
   async fetchAndConvert(imageUrl) {
     try {
+      // Interne Browser-URLs überspringen (kein Zugriff möglich)
+      if (imageUrl.startsWith('chrome://') || imageUrl.startsWith('chrome-extension://') ||
+          imageUrl.startsWith('about:') || imageUrl.startsWith('edge://')) {
+        return null;
+      }
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000);
-      
+
       const response = await fetch(imageUrl, {
         method: 'GET',
-        mode: 'cors',
         cache: 'force-cache',
         credentials: 'omit',
         signal: controller.signal
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       if (response.status === 401 || response.status === 403) {
         return null;
       }
-      
+
       if (!response.ok) return null;
       
       const contentType = response.headers.get('content-type');

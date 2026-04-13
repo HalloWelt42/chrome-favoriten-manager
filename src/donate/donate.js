@@ -15,7 +15,11 @@ function init() {
     
     if (addrEl) addrEl.textContent = data.address;
     if (qrEl && data.qrFile) {
-      qrEl.innerHTML = '<img src="' + data.qrFile + '" alt="' + data.label + ' QR Code">';
+      const img = document.createElement('img');
+      img.src = data.qrFile;
+      img.alt = data.label + ' QR Code';
+      qrEl.textContent = '';
+      qrEl.appendChild(img);
     }
   });
   
@@ -37,7 +41,7 @@ function init() {
       navigator.clipboard.writeText(address).then(() => {
         const textEl = btn.querySelector('.copy-text');
         const original = textEl.textContent;
-        textEl.textContent = 'Kopiert!';
+        textEl.textContent = (typeof t === 'function') ? t('copied') : 'Kopiert!';
         setTimeout(() => textEl.textContent = original, 2000);
       });
     });

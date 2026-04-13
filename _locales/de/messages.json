@@ -1,362 +1,284 @@
 {
-  "extName": {
-    "message": "FavGrid - Premium Speed Dial",
-    "description": "Extension name"
-  },
-  "extDescription": {
-    "message": "Eleganter Speed Dial mit Glassmorphism-Design. Favoriten als App-Icons organisieren – 100% lokal, kein Tracking.",
-    "description": "Extension description"
-  },
-  "addToFavGrid": {
-    "message": "Zu FavGrid hinzufügen",
-    "description": "Context menu item"
-  },
-  "favorites": {
-    "message": "Favoriten",
-    "description": "Favorites group name"
-  },
-  "settings": {
-    "message": "Einstellungen",
-    "description": "Settings title"
-  },
-  "appearance": {
-    "message": "Erscheinungsbild",
-    "description": "Appearance settings section"
-  },
-  "gridLayout": {
-    "message": "Grid Layout",
-    "description": "Grid layout settings section"
-  },
-  "search": {
-    "message": "Suche",
-    "description": "Search settings section"
-  },
-  "navigation": {
-    "message": "Navigation",
-    "description": "Navigation settings section"
-  },
-  "dataBackup": {
-    "message": "Daten & Backup",
-    "description": "Data and backup settings section"
-  },
-  "theme": {
-    "message": "Theme",
-    "description": "Theme setting label"
-  },
-  "dark": {
-    "message": "Dunkel",
-    "description": "Dark theme option"
-  },
-  "light": {
-    "message": "Hell",
-    "description": "Light theme option"
-  },
-  "system": {
-    "message": "System",
-    "description": "System theme option"
-  },
-  "background": {
-    "message": "Hintergrund",
-    "description": "Background setting label"
-  },
-  "gradient": {
-    "message": "Gradient",
-    "description": "Gradient background type"
-  },
-  "solidColor": {
-    "message": "Einfarbig",
-    "description": "Solid color background type"
-  },
-  "image": {
-    "message": "Bild",
-    "description": "Image background type"
-  },
-  "columns": {
-    "message": "Spalten",
-    "description": "Grid columns setting"
-  },
-  "rows": {
-    "message": "Zeilen",
-    "description": "Grid rows setting"
-  },
-  "iconSize": {
-    "message": "Icon-Größe",
-    "description": "Icon size setting"
-  },
-  "spacing": {
-    "message": "Abstand",
-    "description": "Grid spacing setting"
-  },
-  "borderRadius": {
-    "message": "Rundung",
-    "description": "Border radius setting"
-  },
-  "showShadow": {
-    "message": "Schatten anzeigen",
-    "description": "Show shadow setting"
-  },
-  "showLabels": {
-    "message": "Labels anzeigen",
-    "description": "Show labels setting"
-  },
-  "labelPosition": {
-    "message": "Label Position",
-    "description": "Label position setting"
-  },
-  "below": {
-    "message": "Unter dem Icon",
-    "description": "Below icon position"
-  },
-  "above": {
-    "message": "Über dem Icon",
-    "description": "Above icon position"
-  },
-  "searchEngine": {
-    "message": "Suchmaschine",
-    "description": "Search engine setting"
-  },
-  "instantSearch": {
-    "message": "Instant-Suche",
-    "description": "Instant search setting"
-  },
-  "keyboardNav": {
-    "message": "Tastatur-Navigation",
-    "description": "Keyboard navigation setting"
-  },
-  "mousewheelNav": {
-    "message": "Mausrad-Navigation",
-    "description": "Mousewheel navigation setting"
-  },
-  "swipeNav": {
-    "message": "Swipe/Trackpad",
-    "description": "Swipe navigation setting"
-  },
-  "showArrows": {
-    "message": "Navigations-Pfeile anzeigen",
-    "description": "Show navigation arrows setting"
-  },
-  "browserSync": {
-    "message": "Mit Browser-Lesezeichen synchronisieren",
-    "description": "Browser bookmark sync setting"
-  },
-  "syncNow": {
-    "message": "Jetzt synchronisieren",
-    "description": "Sync now button"
-  },
-  "export": {
-    "message": "Export",
-    "description": "Export section title"
-  },
-  "import": {
-    "message": "Import",
-    "description": "Import section title"
-  },
-  "autoBackup": {
-    "message": "Auto-Backup",
-    "description": "Auto backup setting"
-  },
-  "resetAll": {
-    "message": "Alle Daten zurücksetzen",
-    "description": "Reset all data button"
-  },
-  "addFavorite": {
-    "message": "Favorit hinzufügen",
-    "description": "Add favorite button/title"
-  },
-  "editFavorite": {
-    "message": "Favorit bearbeiten",
-    "description": "Edit favorite title"
-  },
-  "deleteFavorite": {
-    "message": "Favorit löschen",
-    "description": "Delete favorite button"
-  },
-  "newGroup": {
-    "message": "Neue Gruppe",
-    "description": "New group title"
-  },
-  "editGroup": {
-    "message": "Gruppe bearbeiten",
-    "description": "Edit group title"
-  },
-  "deleteGroup": {
-    "message": "Gruppe löschen",
-    "description": "Delete group button"
-  },
-  "url": {
-    "message": "URL",
-    "description": "URL label"
-  },
-  "name": {
-    "message": "Name",
-    "description": "Name label"
-  },
-  "description": {
-    "message": "Beschreibung",
-    "description": "Description label"
-  },
-  "tags": {
-    "message": "Tags",
-    "description": "Tags label"
-  },
-  "group": {
-    "message": "Gruppe",
-    "description": "Group label"
-  },
-  "icon": {
-    "message": "Icon",
-    "description": "Icon label"
-  },
-  "color": {
-    "message": "Farbe",
-    "description": "Color label"
-  },
-  "save": {
-    "message": "Speichern",
-    "description": "Save button"
-  },
-  "cancel": {
-    "message": "Abbrechen",
-    "description": "Cancel button"
-  },
-  "delete": {
-    "message": "Löschen",
-    "description": "Delete button"
-  },
-  "close": {
-    "message": "Schließen",
-    "description": "Close button"
-  },
-  "open": {
-    "message": "Öffnen",
-    "description": "Open action"
-  },
-  "openInBackground": {
-    "message": "Im Hintergrund öffnen",
-    "description": "Open in background action"
-  },
-  "edit": {
-    "message": "Bearbeiten",
-    "description": "Edit action"
-  },
-  "pageInfo": {
-    "message": "Seiteninformationen",
-    "description": "Page info action"
-  },
-  "moveTo": {
-    "message": "Verschieben nach",
-    "description": "Move to action"
-  },
-  "duplicate": {
-    "message": "Duplizieren",
-    "description": "Duplicate action"
-  },
-  "noFavorites": {
-    "message": "Keine Favoriten",
-    "description": "Empty state title"
-  },
-  "noFavoritesDesc": {
-    "message": "Klicke auf + um deinen ersten Favoriten hinzuzufügen.",
-    "description": "Empty state description"
-  },
-  "noResults": {
-    "message": "Keine Ergebnisse",
-    "description": "No search results title"
-  },
-  "noResultsDesc": {
-    "message": "Versuche einen anderen Suchbegriff.",
-    "description": "No search results description"
-  },
-  "searchPlaceholder": {
-    "message": "Suchen oder URL eingeben...",
-    "description": "Search input placeholder"
-  },
-  "favoriteAdded": {
-    "message": "Favorit hinzugefügt",
-    "description": "Toast message"
-  },
-  "favoriteUpdated": {
-    "message": "Favorit aktualisiert",
-    "description": "Toast message"
-  },
-  "favoriteDeleted": {
-    "message": "Favorit gelöscht",
-    "description": "Toast message"
-  },
-  "favoriteMoved": {
-    "message": "Favorit verschoben",
-    "description": "Toast message"
-  },
-  "favoriteDuplicated": {
-    "message": "Favorit dupliziert",
-    "description": "Toast message"
-  },
-  "groupCreated": {
-    "message": "Gruppe erstellt",
-    "description": "Toast message"
-  },
-  "groupUpdated": {
-    "message": "Gruppe aktualisiert",
-    "description": "Toast message"
-  },
-  "groupDeleted": {
-    "message": "Gruppe gelöscht",
-    "description": "Toast message"
-  },
-  "exportSuccess": {
-    "message": "Export erfolgreich",
-    "description": "Toast message"
-  },
-  "importSuccess": {
-    "message": "Import erfolgreich",
-    "description": "Toast message"
-  },
-  "syncSuccess": {
-    "message": "Synchronisierung erfolgreich",
-    "description": "Toast message"
-  },
-  "errorInvalidUrl": {
-    "message": "Ungültige URL",
-    "description": "Error message"
-  },
-  "errorNameRequired": {
-    "message": "Bitte gib einen Namen ein",
-    "description": "Error message"
-  },
-  "errorUrlRequired": {
-    "message": "Bitte gib eine URL ein",
-    "description": "Error message"
-  },
-  "confirmDelete": {
-    "message": "Wirklich löschen?",
-    "description": "Delete confirmation"
-  },
-  "confirmReset": {
-    "message": "Alle Daten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!",
-    "description": "Reset confirmation"
-  },
-  "source": {
-    "message": "Quelle",
-    "description": "Source label"
-  },
-  "manual": {
-    "message": "Manuell",
-    "description": "Manual source"
-  },
-  "browserImport": {
-    "message": "Browser-Import",
-    "description": "Browser import source"
-  },
-  "createdAt": {
-    "message": "Hinzugefügt",
-    "description": "Created at label"
-  },
-  "visits": {
-    "message": "Besuche",
-    "description": "Visit count label"
-  },
-  "lastVisited": {
-    "message": "Zuletzt besucht",
-    "description": "Last visited label"
-  }
+  "extName": { "message": "FavGrid - Premium Speed Dial" },
+  "extDescription": { "message": "Eleganter Speed Dial mit Glassmorphism-Design. Favoriten als App-Icons organisieren - 100% lokal, kein Tracking." },
+
+  "addToFavGrid": { "message": "Zu FavGrid hinzufügen" },
+  "favorites": { "message": "Favoriten" },
+  "settings": { "message": "Einstellungen" },
+  "appearance": { "message": "Erscheinungsbild" },
+  "gridLayout": { "message": "Raster-Layout" },
+  "search": { "message": "Suche" },
+  "navigation": { "message": "Navigation" },
+  "dataBackup": { "message": "Daten & Backup" },
+  "theme": { "message": "Design" },
+  "dark": { "message": "Dunkel" },
+  "light": { "message": "Hell" },
+  "system": { "message": "System" },
+  "background": { "message": "Hintergrund" },
+  "gradient": { "message": "Farbverlauf" },
+  "solidColor": { "message": "Einfarbig" },
+  "image": { "message": "Bild" },
+  "columns": { "message": "Spalten" },
+  "rows": { "message": "Zeilen" },
+  "iconSize": { "message": "Icon-Größe" },
+  "spacing": { "message": "Abstand" },
+  "borderRadius": { "message": "Rundung" },
+  "showShadow": { "message": "Schatten anzeigen" },
+  "showLabels": { "message": "Beschriftungen anzeigen" },
+  "labelPosition": { "message": "Beschriftungsposition" },
+  "below": { "message": "Unter dem Icon" },
+  "above": { "message": "Über dem Icon" },
+  "searchEngine": { "message": "Suchmaschine" },
+  "instantSearch": { "message": "Sofortsuche" },
+  "keyboardNav": { "message": "Tastatur-Navigation" },
+  "mousewheelNav": { "message": "Mausrad-Navigation" },
+  "swipeNav": { "message": "Swipe/Trackpad" },
+  "showArrows": { "message": "Navigations-Pfeile anzeigen" },
+  "browserSync": { "message": "Mit Browser-Lesezeichen synchronisieren" },
+  "syncNow": { "message": "Jetzt synchronisieren" },
+  "export": { "message": "Export" },
+  "import": { "message": "Import" },
+  "autoBackup": { "message": "Auto-Backup" },
+  "resetAll": { "message": "Alle Daten zurücksetzen" },
+  "addFavorite": { "message": "Favorit hinzufügen" },
+  "editFavorite": { "message": "Favorit bearbeiten" },
+  "deleteFavorite": { "message": "Favorit löschen" },
+  "newGroup": { "message": "Neue Gruppe" },
+  "editGroup": { "message": "Gruppe bearbeiten" },
+  "deleteGroup": { "message": "Gruppe löschen" },
+  "url": { "message": "URL" },
+  "name": { "message": "Name" },
+  "description": { "message": "Beschreibung" },
+  "tags": { "message": "Tags" },
+  "group": { "message": "Gruppe" },
+  "icon": { "message": "Icon" },
+  "color": { "message": "Farbe" },
+  "save": { "message": "Speichern" },
+  "cancel": { "message": "Abbrechen" },
+  "delete": { "message": "Löschen" },
+  "close": { "message": "Schließen" },
+  "open": { "message": "Öffnen" },
+  "openInBackground": { "message": "Im Hintergrund öffnen" },
+  "edit": { "message": "Bearbeiten" },
+  "pageInfo": { "message": "Seiteninformationen" },
+  "moveTo": { "message": "Verschieben nach" },
+  "duplicate": { "message": "Duplizieren" },
+  "noFavorites": { "message": "Keine Favoriten" },
+  "noFavoritesDesc": { "message": "Klicke auf + um deinen ersten Favoriten hinzuzufügen." },
+  "noResults": { "message": "Keine Ergebnisse" },
+  "noResultsDesc": { "message": "Versuche einen anderen Suchbegriff." },
+  "searchPlaceholder": { "message": "Suchen oder URL eingeben..." },
+  "favoriteAdded": { "message": "Favorit hinzugefügt" },
+  "favoriteUpdated": { "message": "Favorit aktualisiert" },
+  "favoriteDeleted": { "message": "Favorit gelöscht" },
+  "favoriteMoved": { "message": "Favorit verschoben" },
+  "favoriteDuplicated": { "message": "Favorit dupliziert" },
+  "groupCreated": { "message": "Gruppe erstellt" },
+  "groupUpdated": { "message": "Gruppe aktualisiert" },
+  "groupDeleted": { "message": "Gruppe gelöscht" },
+  "exportSuccess": { "message": "Export erfolgreich" },
+  "importSuccess": { "message": "Import erfolgreich" },
+  "syncSuccess": { "message": "Synchronisierung erfolgreich" },
+  "errorInvalidUrl": { "message": "Ungültige URL" },
+  "errorNameRequired": { "message": "Bitte gib einen Namen ein" },
+  "errorUrlRequired": { "message": "Bitte gib eine URL ein" },
+  "confirmDelete": { "message": "Wirklich löschen?" },
+  "confirmReset": { "message": "Alle Daten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden!" },
+  "source": { "message": "Quelle" },
+  "manual": { "message": "Manuell" },
+  "browserImport": { "message": "Browser-Import" },
+  "createdAt": { "message": "Hinzugefügt" },
+  "visits": { "message": "Besuche" },
+  "lastVisited": { "message": "Zuletzt besucht" },
+
+  "webSearch": { "message": "Web-Suche" },
+  "searchFor": { "message": "Suchen nach" },
+  "manageGroups": { "message": "Gruppen verwalten" },
+  "toggleTheme": { "message": "Design wechseln" },
+  "sortBtn": { "message": "Sortieren" },
+  "sortManual": { "message": "Manuell" },
+  "sortNameAsc": { "message": "Name (A-Z)" },
+  "sortNameDesc": { "message": "Name (Z-A)" },
+  "sortDateDesc": { "message": "Neueste zuerst" },
+  "sortDateAsc": { "message": "Älteste zuerst" },
+  "sortVisitsDesc": { "message": "Meistbesucht" },
+  "openInNewTab": { "message": "In neuem Tab öffnen" },
+  "openInSameTab": { "message": "Im aktuellen Tab öffnen" },
+  "copyUrl": { "message": "URL kopieren" },
+  "refreshIcon": { "message": "Icon aktualisieren" },
+  "nameAlias": { "message": "Name (Alias)" },
+  "tagsSeparated": { "message": "Tags (kommagetrennt)" },
+  "fetchFavicon": { "message": "Favicon laden" },
+  "uploadCustom": { "message": "Eigenes Bild" },
+  "whiteThreshold": { "message": "Weiß-Schwelle" },
+  "thresholdHint": { "message": "Niedriger = mehr wird entfernt" },
+  "apply": { "message": "Anwenden" },
+  "reset": { "message": "Zurücksetzen" },
+  "rescan": { "message": "Neu scannen" },
+  "iconEmoji": { "message": "Icon (Emoji)" },
+  "loadingInfo": { "message": "Lade Informationen..." },
+  "accentColor": { "message": "Akzentfarbe" },
+  "bgType": { "message": "Typ" },
+  "harmoniousGradients": { "message": "Harmonische Verläufe" },
+  "customGradientLabel": { "message": "Eigener Verlauf" },
+  "color1": { "message": "Farbe 1" },
+  "color2": { "message": "Farbe 2" },
+  "darkMode": { "message": "Dunkel-Modus" },
+  "lightMode": { "message": "Hell-Modus" },
+  "imageUrl": { "message": "Bild-URL" },
+  "orUpload": { "message": "Oder hochladen" },
+  "chooseImage": { "message": "Bild wählen" },
+  "useDarkForLight": { "message": "Dunkel-Bild auch für Hell-Modus verwenden" },
+  "adjustments": { "message": "Anpassungen" },
+  "adjustBrightness": { "message": "Helligkeit" },
+  "blurFilter": { "message": "Weichzeichner" },
+  "animations": { "message": "Animationen" },
+  "pageTransition": { "message": "Seitenwechsel" },
+  "transSlide": { "message": "Gleiten" },
+  "transFade": { "message": "Überblenden" },
+  "transNone": { "message": "Keine" },
+  "gridSection": { "message": "Raster" },
+  "icons": { "message": "Icons" },
+  "containerRadius": { "message": "Container-Rundung" },
+  "containerRadiusHint": { "message": "Glassmorphism-Rahmen" },
+  "imageRadius": { "message": "Bild-Rundung" },
+  "imageRadiusHint": { "message": "Favicon selbst (0% = eckig, 50% = rund)" },
+  "shadow": { "message": "Schatten" },
+  "iconBackground": { "message": "Icon-Hintergrund" },
+  "transparency": { "message": "Transparenz" },
+  "bgColorDark": { "message": "Hintergrundfarbe (Dunkel)" },
+  "bgColorLight": { "message": "Hintergrundfarbe (Hell)" },
+  "glassmorphism": { "message": "Glassmorphism-Effekt" },
+  "glassHint": { "message": "Der Glas-Effekt ist am besten sichtbar mit einem Hintergrundbild!" },
+  "glassBlur": { "message": "Glas-Weichzeichner" },
+  "glassBorder": { "message": "Rahmen-Helligkeit" },
+  "glassShadow": { "message": "Schatten-Stärke" },
+  "labels": { "message": "Beschriftungen" },
+  "fontSize": { "message": "Schriftgröße" },
+  "maxChars": { "message": "Max. Zeichen" },
+  "colorDarkMode": { "message": "Farbe (Dunkel-Modus)" },
+  "colorLightMode": { "message": "Farbe (Hell-Modus)" },
+  "fontSection": { "message": "Schriftart" },
+  "fontFamilyLabel": { "message": "Schriftfamilie" },
+  "systemFont": { "message": "System (Standard)" },
+  "customFontOption": { "message": "Eigene Schriftart..." },
+  "customFontFamily": { "message": "Eigene Schriftfamilie" },
+  "fontWeight": { "message": "Schriftstärke" },
+  "searchUrlLabel": { "message": "Such-URL (verwende %s als Platzhalter)" },
+  "quickSelect": { "message": "Schnellauswahl" },
+  "behavior": { "message": "Verhalten" },
+  "clickBehavior": { "message": "Klick-Verhalten" },
+  "defaultClickAction": { "message": "Standard-Aktion bei Klick" },
+  "ctrlClickHint": { "message": "Mit Strg/Cmd+Klick wird die jeweils andere Aktion ausgeführt." },
+  "controls": { "message": "Steuerung" },
+  "keyboardNavArrows": { "message": "Tastatur-Navigation (Pfeiltasten)" },
+  "startBehavior": { "message": "Startverhalten" },
+  "onOpenShow": { "message": "Beim Öffnen zeige" },
+  "lastGroupOption": { "message": "Letzte Gruppe" },
+  "defaultGroupOption": { "message": "Standard-Gruppe" },
+  "groupOrder": { "message": "Gruppenreihenfolge" },
+  "groupOrderHint": { "message": "Ziehe Gruppen um die Reihenfolge zu ändern" },
+  "fullBackup": { "message": "Komplettes Backup" },
+  "fullBackupDesc": { "message": "Enthält alle Favoriten, Gruppen und Einstellungen" },
+  "createBackup": { "message": "Backup erstellen (.json)" },
+  "restoreBackup": { "message": "Backup wiederherstellen" },
+  "exportFavorites": { "message": "Favoriten exportieren" },
+  "exportFavoritesDesc": { "message": "Exportiere nur die Favoriten in verschiedenen Formaten" },
+  "browserCompatible": { "message": "Browser-kompatibel" },
+  "structuredData": { "message": "Strukturierte Daten" },
+  "excelSheets": { "message": "Excel/Tabellen" },
+  "feedReader": { "message": "Feed-Reader" },
+  "importFavorites": { "message": "Favoriten importieren" },
+  "importFavoritesDesc": { "message": "Importiere Lesezeichen aus anderen Quellen" },
+  "htmlBookmarks": { "message": "HTML-Lesezeichen" },
+  "jsonFile": { "message": "JSON-Datei" },
+  "urlList": { "message": "URL-Liste" },
+  "urlListDesc": { "message": "Einfache Liste von URLs - eine pro Zeile" },
+  "importUrls": { "message": "URLs importieren" },
+  "exportUrls": { "message": "URLs exportieren" },
+  "clearBtn": { "message": "Leeren" },
+  "dangerZone": { "message": "Gefahrenzone" },
+  "deleteAllFavorites": { "message": "Alle Favoriten löschen" },
+  "deleteAllFavoritesDesc": { "message": "Entfernt alle Favoriten, behält Gruppen und Einstellungen" },
+  "deleteFavoritesBtn": { "message": "Favoriten löschen" },
+  "resetEverything": { "message": "Alles zurücksetzen" },
+  "resetEverythingDesc": { "message": "Setzt die Erweiterung auf Werkseinstellungen zurück" },
+  "fullReset": { "message": "Komplett zurücksetzen" },
+  "done": { "message": "Fertig" },
+  "confirmation": { "message": "Bestätigung" },
+  "areYouSure": { "message": "Bist du sicher?" },
+  "groupManager": { "message": "Gruppen-Manager" },
+  "leftGroup": { "message": "Linke Gruppe:" },
+  "rightGroup": { "message": "Rechte Gruppe:" },
+  "moveAllRight": { "message": "Alle nach rechts" },
+  "moveAllLeft": { "message": "Alle nach links" },
+  "groupManagerTip": { "message": "Ziehe Favoriten per Drag & Drop von einer Gruppe zur anderen. Halte Shift gedrückt, um mehrere auszuwählen." },
+  "addNewFavorite": { "message": "Neuen Favorit hinzufügen" },
+  "add": { "message": "Hinzufügen" },
+  "orderChanged": { "message": "Reihenfolge geändert" },
+  "openedInBg": { "message": "Im Hintergrund geöffnet" },
+  "deleted": { "message": "Gelöscht" },
+  "movedTo": { "message": "Verschoben zu \"$1\"" },
+  "noUrlAvailable": { "message": "Keine URL vorhanden" },
+  "iconCacheCleared": { "message": "Icon-Cache geleert, neu scannen..." },
+  "enterUrlFirst": { "message": "Bitte erst URL eingeben" },
+  "scanning": { "message": "Scanne..." },
+  "sourcesFound": { "message": "$1 Quellen gefunden" },
+  "noIconSources": { "message": "Keine Icon-Quellen verfügbar" },
+  "noIconAvailable": { "message": "Kein Icon vorhanden" },
+  "processing": { "message": "Verarbeite..." },
+  "imageLoadFailed": { "message": "Bild konnte nicht geladen werden" },
+  "imageProcessFailed": { "message": "Bildverarbeitung fehlgeschlagen" },
+  "whiteRemoved": { "message": "Weiß entfernt" },
+  "imageError": { "message": "Fehler bei der Bildverarbeitung" },
+  "noOriginal": { "message": "Kein Original vorhanden" },
+  "originalRestored": { "message": "Original wiederhergestellt" },
+  "urlExistsAlready": { "message": "Exakt gleiche URL existiert bereits" },
+  "similarUrlExists": { "message": "Ähnliche URL existiert" },
+  "xFavoritesMoved": { "message": "$1 Favorit(en) verschoben" },
+  "unknown": { "message": "Unbekannt" },
+  "selectDifferentGroups": { "message": "Wähle zwei verschiedene Gruppen" },
+  "noFavoritesToMove": { "message": "Keine Favoriten zum Verschieben" },
+  "sorting": { "message": "Sortierung" },
+  "openedInNewTab": { "message": "In neuem Tab geöffnet" },
+  "urlCopied": { "message": "URL kopiert" },
+  "loadingFavicon": { "message": "Lade Favicon..." },
+  "customGradientApplied": { "message": "Eigener Verlauf angewendet" },
+  "backupCreated": { "message": "Backup erstellt" },
+  "backupRestored": { "message": "Backup wiederhergestellt" },
+  "errorPrefix": { "message": "Fehler" },
+  "exportFormatSuccess": { "message": "Export als $1 erfolgreich" },
+  "xFavoritesImported": { "message": "$1 Favoriten importiert" },
+  "xUrlsExported": { "message": "$1 URLs in Liste geschrieben" },
+  "noUrlsEntered": { "message": "Keine URLs eingegeben" },
+  "addCurrentPage": { "message": "Aktuelle Seite hinzufügen" },
+  "loading": { "message": "Lädt..." },
+  "addToGroup": { "message": "Zur Gruppe hinzufügen:" },
+  "openSpeedDial": { "message": "Speed Dial öffnen" },
+  "thankYou": { "message": "Ich möchte Danke sagen" },
+  "cannotAddPage": { "message": "Diese Seite kann nicht hinzugefügt werden" },
+  "alreadyInFavorites": { "message": "Diese Seite ist bereits in deinen Favoriten!" },
+  "errorLoading": { "message": "Fehler beim Laden" },
+  "addedNotification": { "message": "\"$1\" wurde hinzugefügt!" },
+  "donateTitle": { "message": "Gemacht mit Herz in Sachsen-Anhalt" },
+  "donateDesc": { "message": "Open Source aus Sachsen-Anhalt. Kein Tracking, keine Werbung, keine Kompromisse." },
+  "kofiButton": { "message": "Ko-fi - Kaffee spendieren" },
+  "orCrypto": { "message": "Oder per Kryptowährung:" },
+  "copyAddress": { "message": "Adresse kopieren" },
+  "copied": { "message": "Kopiert!" },
+  "donateFooter": { "message": "Danke für deine Unterstützung!" },
+  "donatePageTitle": { "message": "FavGrid - Unterstützen" },
+  "placeholderGroupName": { "message": "Gruppenname" },
+  "placeholderDescription": { "message": "Kurze Beschreibung..." },
+  "placeholderUrlExample": { "message": "https://example.com" },
+  "placeholderMyWebsite": { "message": "Meine Website" },
+  "placeholderTags": { "message": "arbeit, wichtig, werkzeuge" },
+  "placeholderCustomFont": { "message": "z.B. 'Comic Sans MS', cursive" },
+  "removeWhiteBg": { "message": "Weißen Hintergrund transparent machen" },
+  "resetIcon": { "message": "Original-Icon wiederherstellen" },
+  "rescanIcons": { "message": "Icon-Cache leeren und neu scannen" },
+  "favoritesEmoji": { "message": "Favoriten" },
+  "inGroup": { "message": "in" },
+  "processingThreshold": { "message": "Verarbeite (Schwelle: $1)..." },
+  "whiteRemovedThreshold": { "message": "Weiß entfernt (>=$1)" }
 }
