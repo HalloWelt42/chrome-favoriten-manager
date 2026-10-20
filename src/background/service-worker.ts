@@ -1,6 +1,7 @@
 /**
- * Service Worker: Kontextmenü, Tastenkürzel, tägliche Wartung. Er übernimmt außerdem
- * gleich nach Installation oder Update die Altdaten, damit kein Tab darauf warten muss.
+ * Service Worker: Kontextmenü, Tastenkürzel, tägliche Wartung und die Abrufe fremder Seiten
+ * für die Icon-Suche (siehe icons/net.ts). Er übernimmt außerdem gleich nach Installation
+ * oder Update die Altdaten, damit kein Tab darauf warten muss.
  */
 import { addFavoriteIfNew } from '../app/commands';
 import { seedDevStorage } from '../app/devSeed';
@@ -10,6 +11,7 @@ import { defaultGroup } from '../domain/library';
 import { isWebUrl } from '../domain/urls';
 import { favoriteName } from '../domain/views';
 import { t } from '../i18n';
+import { serveRemoteFetches } from '../icons/net';
 
 const MENU_ID = 'add-to-favgrid';
 const MAINTENANCE_ALARM = 'maintenance';
@@ -27,6 +29,8 @@ async function setup(): Promise<void> {
     console.warn('[FavGrid] Laden beim Start fehlgeschlagen', error);
   }
 }
+
+serveRemoteFetches();
 
 chrome.runtime.onInstalled.addListener(() => void setup());
 chrome.runtime.onStartup.addListener(() => void setup());

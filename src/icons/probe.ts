@@ -2,7 +2,7 @@
  * Lädt einen Kandidaten und prüft, ob wirklich ein brauchbares Bild ankommt.
  * Fehlerseiten, HTML statt Bild, Platzhalter und winzige Bilder fallen durch.
  */
-import { fetchWithTimeout } from './net';
+import { fetchRemote } from './net';
 import type { IconCandidate, ProbedIcon } from './types';
 
 const IMAGE_TIMEOUT_MS = 5000;
@@ -45,12 +45,12 @@ export async function measure(blob: Blob, vector: boolean): Promise<{ width: num
 }
 
 export async function probeCandidate(candidate: IconCandidate, signal: AbortSignal): Promise<ProbedIcon | null> {
-  const result = await fetchWithTimeout(candidate.url, IMAGE_TIMEOUT_MS, signal);
-  if (!result || !result.response.ok) return null;
-  const contentType = (result.response.headers.get('content-type') ?? '').toLowerCase();
+  const result = await fetchRemote({ url: candidate.url, timeoutMs: IMAGE_TIMEOUT_MS, maxBytes: MAX_BYTES }, signal);
+  if (!result || !result.ok || result.exceeded) return null;
+  const contentType = result.contentType;
   if (contentType.includes('html') || contentType.includes('json') || contentType.startsWith('text/plain')) return null;
-  let blob = await result.response.blob();
-  if (blob.size < MIN_BYTES || blob.size > MAX_BYTES) return null;
+  let blob = new Blob([result.body], { type: contentType });
+  if (blob.size < MIN_BYTES) return null;
   let vector = isSvgBlob(blob, result.finalUrl);
   if (!vector && !contentType.startsWith('image/') && (await looksLikeSvg(blob))) vector = true;
   if (vector && !blob.type.includes('svg')) blob = new Blob([blob], { type: 'image/svg+xml' });

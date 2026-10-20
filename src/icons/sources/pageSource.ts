@@ -3,12 +3,13 @@
  * und msapplication-TileImage. Relative Pfade werden gegen die tatsächlich geladene Adresse
  * aufgelöst, damit Dienste unter Unterpfaden oder Ports ihr eigenes Icon bekommen.
  */
-import { fetchWithTimeout, readTextLimited, resolveAgainst } from '../net';
+import { decodeText, fetchRemote, resolveAgainst } from '../net';
 import type { DiscoveryContext, IconCandidate, IconSource } from '../types';
 
 const PAGE_TIMEOUT_MS = 6000;
 const MANIFEST_TIMEOUT_MS = 4000;
 const MAX_HTML_BYTES = 512 * 1024;
+const MAX_MANIFEST_BYTES = 256 * 1024;
 
 export function parseSizes(sizes: string | null | undefined): number | 'any' {
   if (!sizes) return 0;
@@ -82,17 +83,15 @@ export const pageSource: IconSource = {
   priority: 10,
   available: (ctx) => ctx.canFetchSites && /^https?:/i.test(ctx.pageUrl),
   async discover(ctx: DiscoveryContext): Promise<IconCandidate[]> {
-    const page = await fetchWithTimeout(ctx.pageUrl, PAGE_TIMEOUT_MS, ctx.signal);
-    if (!page || !page.response.ok) return [];
-    const contentType = page.response.headers.get('content-type') ?? '';
-    if (contentType && !contentType.includes('html')) return [];
-    const html = await readTextLimited(page.response, MAX_HTML_BYTES);
-    const { candidates, manifestUrl } = iconsFromHtml(html, page.finalUrl);
+    const page = await fetchRemote({ url: ctx.pageUrl, timeoutMs: PAGE_TIMEOUT_MS, maxBytes: MAX_HTML_BYTES, stopAfterHead: true }, ctx.signal);
+    if (!page || !page.ok) return [];
+    if (page.contentType && !page.contentType.includes('html')) return [];
+    const { candidates, manifestUrl } = iconsFromHtml(decodeText(page.body), page.finalUrl);
     if (manifestUrl) {
-      const manifest = await fetchWithTimeout(manifestUrl, MANIFEST_TIMEOUT_MS, ctx.signal);
-      if (manifest?.response.ok) {
+      const manifest = await fetchRemote({ url: manifestUrl, timeoutMs: MANIFEST_TIMEOUT_MS, maxBytes: MAX_MANIFEST_BYTES }, ctx.signal);
+      if (manifest?.ok && !manifest.exceeded) {
         try {
-          candidates.push(...iconsFromManifest(await manifest.response.json(), manifest.finalUrl));
+          candidates.push(...iconsFromManifest(JSON.parse(decodeText(manifest.body)), manifest.finalUrl));
         } catch {
           // Kaputtes Manifest: die übrigen Kandidaten reichen.
         }
