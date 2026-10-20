@@ -52,3 +52,8 @@ yarn-error.log*
 # Misc
 .env
 .env.local
+# Build und Werkzeuge
+node_modules/
+.test-daten/
+.claude/
+/store/

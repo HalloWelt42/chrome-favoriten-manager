@@ -1,0 +1,28 @@
+{
+  "name": "favgrid",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vite build --mode production",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "e2e": "node tools/e2e/run.mjs",
+    "pack": "node tools/pack.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/barlow": "^5.3.0",
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@types/chrome": "^0.3.5",
+    "classic-level": "^3.0.0",
+    "fake-indexeddb": "^6.2.6",
+    "happy-dom": "^21.0.3",
+    "playwright-core": "^1.64.1",
+    "svelte": "^5.57.2",
+    "svelte-check": "^4.7.7",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.4",
+    "vitest": "^5.0.5"
+  }
+}

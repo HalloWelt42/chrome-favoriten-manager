@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Erzwingt bei jedem Commit eine neue Version: ist version.json schon gestaged,
+# gibt es nur eine neue Build-ID, sonst wird die Patch-Stufe hochgezählt.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+if git diff --cached --name-only | grep -qx 'version.json'; then
+  tools/version.sh id >/dev/null
+else
+  tools/version.sh patch >/dev/null
+fi
+git add version.json

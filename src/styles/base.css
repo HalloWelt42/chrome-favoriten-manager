@@ -1,0 +1,177 @@
+/*
+ * Grundstil aller Seiten. Farben und Maße nur als Variablen; Akzentfarbe und
+ * Schriftstufe setzt die Anwendung zur Laufzeit.
+ */
+@import '@fontsource/barlow/300.css';
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow/700.css';
+@import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+@import '@fortawesome/fontawesome-free/css/solid.min.css';
+@import '@fortawesome/fontawesome-free/css/regular.min.css';
+
+:root {
+  --accent: #7f5af0;
+  --accent-contrast: #ffffff;
+  --font-ui: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-base: 17px;
+  --fs-small: calc(var(--fs-base) - 2px);
+  --fs-large: calc(var(--fs-base) + 3px);
+  --fs-title: calc(var(--fs-base) + 7px);
+
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+  --t-fast: 140ms ease;
+  --t-med: 240ms ease;
+
+  /* Dunkel (Vorgabe) */
+  --bg-page: #0e0f14;
+  --surface: rgba(22, 23, 30, 0.72);
+  --surface-solid: #181a22;
+  --surface-raised: rgba(38, 40, 52, 0.85);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --text: #f2f3f7;
+  --text-muted: #b4b7c4;
+  --text-faint: #8a8d9b;
+  --danger: #ef5350;
+  --warning: #ffb300;
+  --success: #43a047;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --glass: blur(18px) saturate(140%);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg-page: #eef0f5;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-solid: #ffffff;
+  --surface-raised: rgba(255, 255, 255, 0.95);
+  --surface-hover: rgba(0, 0, 0, 0.06);
+  --line: rgba(0, 0, 0, 0.1);
+  --line-strong: rgba(0, 0, 0, 0.22);
+  --text: #1b1d26;
+  --text-muted: #4c5060;
+  --text-faint: #6c7080;
+  --shadow: 0 18px 50px rgba(20, 22, 40, 0.18);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--fs-base);
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Eingabefelder: einheitlich für alle Seiten */
+.input {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface-solid) 70%, var(--bg-page));
+  color: var(--text);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+textarea.input {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.4;
+}
+
+select.input {
+  cursor: pointer;
+}
+
+.hint {
+  color: var(--text-faint);
+  font-size: var(--fs-small);
+}
+
+/* Abschnitte in der Einstellungsleiste */
+.settings-heading {
+  margin: 18px 0 4px;
+  color: var(--text-faint);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.settings-heading:first-child {
+  margin-top: 6px;
+}
+
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 0;
+}
