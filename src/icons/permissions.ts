@@ -19,6 +19,14 @@ export async function requestSiteAccess(): Promise<boolean> {
   }
 }
 
+export async function revokeSiteAccess(): Promise<void> {
+  try {
+    await chrome.permissions.remove({ origins: SITE_ORIGINS });
+  } catch {
+    // Bei fest erteiltem Zugriff (Testbuild) nicht entziehbar.
+  }
+}
+
 export function onSiteAccessChange(listener: (granted: boolean) => void): () => void {
   const handler = (): void => {
     void hasSiteAccess().then(listener);

@@ -11,6 +11,7 @@
   import DialogHost from './components/DialogHost.svelte';
   import FavoriteGrid from './components/FavoriteGrid.svelte';
   import GroupBar from './components/GroupBar.svelte';
+  import PageArrows from './components/PageArrows.svelte';
   import PageNav from './components/PageNav.svelte';
   import SearchBox from './components/SearchBox.svelte';
   import SettingsPanel from './settings/SettingsPanel.svelte';
@@ -83,6 +84,7 @@
     {#if !app.siteAccess && app.settings.icons.autoDetect}<AccessHint />{/if}
     <main class="stage" aria-label={t('gridLabel')}>
       <FavoriteGrid />
+      <PageArrows />
     </main>
     <PageNav />
     <BottomBar />
@@ -122,6 +124,7 @@
   }
 
   .stage {
+    position: relative;
     flex: 1;
     min-height: 0;
     display: flex;

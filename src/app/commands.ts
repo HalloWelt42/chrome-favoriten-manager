@@ -58,6 +58,15 @@ export async function setFavoriteIcon(id: string, icon: IconChoice): Promise<voi
   await repository.mutate((draft) => lib.setFavoriteIcon(draft, id, icon, now()));
 }
 
+/** Nach neu erteiltem Webseitenzugriff: automatische Icons ohne Fund sofort wieder suchen lassen. */
+export async function retryMissingAutoIcons(): Promise<void> {
+  await repository.mutate((draft) => {
+    for (const fav of draft.favorites) {
+      if (fav.icon.mode === 'auto' && !fav.icon.ref) fav.icon.checkedAt = null;
+    }
+  }, { quiet: true });
+}
+
 export async function trashFavorites(ids: string[]): Promise<TrashEntry[]> {
   return (await repository.mutate((draft) => lib.trashFavorites(draft, ids, now()))).result;
 }

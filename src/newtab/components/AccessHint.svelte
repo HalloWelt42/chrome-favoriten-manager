@@ -9,12 +9,8 @@
   const dismissed = $derived(app.settings.icons.hintDismissed);
 
   async function allow(): Promise<void> {
-    const granted = await requestSiteAccess();
-    app.siteAccess = granted;
-    if (granted) {
-      toasts.show(t('toastSiteAccessGranted'));
-      app.autoIcons.enqueue(app.pageSlice.items, true);
-    }
+    // Das Nachsuchen stößt der Berechtigungs-Empfänger im Seitenzustand an.
+    if (await requestSiteAccess()) toasts.show(t('toastSiteAccessGranted'));
   }
 </script>
 

@@ -49,7 +49,7 @@
       active={app.settings.view.sort !== 'manual'}
       onclick={openSortMenu}
     />
-    <IconButton icon={app.theme === 'dark' ? 'fa-regular fa-sun' : 'fa-regular fa-moon'} title={t('themeToggle')} onclick={toggleTheme} />
+    <IconButton icon={app.theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'} title={t('themeToggle')} onclick={toggleTheme} />
     <IconButton icon="fa-solid fa-right-left" title={t('managerTitle')} onclick={() => (app.dialog = { kind: 'manager', tab: 'move' })} />
     <IconButton icon="fa-regular fa-trash-can" title={t('trashTitle')} badge={app.trashCount} onclick={() => (app.dialog = { kind: 'trash' })} />
   </div>

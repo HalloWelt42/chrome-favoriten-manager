@@ -1,7 +1,7 @@
 <script lang="ts">
   import { RETRY_AFTER_MS } from '../../app/autoIcons';
   import { formatNumber, t } from '../../i18n';
-  import { requestSiteAccess } from '../../icons/permissions';
+  import { requestSiteAccess, revokeSiteAccess } from '../../icons/permissions';
   import Button from '../../ui/Button.svelte';
   import Toggle from '../../ui/Toggle.svelte';
   import { toasts } from '../../ui/toasts.svelte';
@@ -24,13 +24,11 @@
   });
 
   async function allow(): Promise<void> {
-    app.siteAccess = await requestSiteAccess();
-    if (app.siteAccess) toasts.show(t('toastSiteAccessGranted'));
+    if (await requestSiteAccess()) toasts.show(t('toastSiteAccessGranted'));
   }
 
   async function revoke(): Promise<void> {
-    await chrome.permissions.remove({ origins: ['http://*/*', 'https://*/*'] });
-    app.siteAccess = false;
+    await revokeSiteAccess();
   }
 
   function searchAll(onlyMissing: boolean): void {

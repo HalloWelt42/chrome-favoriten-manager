@@ -68,7 +68,11 @@ export class NewtabState {
     });
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => (this.systemDark = e.matches));
     this.siteAccess = await hasSiteAccess();
-    onSiteAccessChange((granted) => (this.siteAccess = granted));
+    onSiteAccessChange((granted) => {
+      const newlyGranted = granted && !this.siteAccess;
+      this.siteAccess = granted;
+      if (newlyGranted) void commands.retryMissingAutoIcons();
+    });
     this.autoIcons.onProgress((n) => (this.autoIconPending = n));
     this.selectGroup(this.startGroupId(), false);
   }

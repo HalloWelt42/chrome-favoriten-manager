@@ -8,7 +8,7 @@
   import { normalizeInputUrl } from '../../domain/urls';
   import { t, type MessageKey } from '../../i18n';
   import { removeWhite } from '../../icons/imageOps';
-  import { requestSiteAccess } from '../../icons/permissions';
+  import { hasSiteAccess, requestSiteAccess } from '../../icons/permissions';
   import { iconScore } from '../../icons/probe';
   import { discoverIcons } from '../../icons/resolver';
   import type { ProbedIcon } from '../../icons/types';
@@ -91,7 +91,7 @@
     }
     if (!app.siteAccess) {
       // Nur aus dem Klick heraus erlaubt; beim automatischen Start überspringen.
-      if (!autoScan || scanned) app.siteAccess = await requestSiteAccess();
+      if (!autoScan || scanned) await requestSiteAccess();
     }
     scanAbort?.abort();
     scanAbort = new AbortController();
@@ -99,7 +99,7 @@
     try {
       candidates = await discoverIcons({
         pageUrl,
-        canFetchSites: app.siteAccess,
+        canFetchSites: await hasSiteAccess(),
         allowServices: app.settings.icons.useExternalServices,
         signal: scanAbort.signal
       });

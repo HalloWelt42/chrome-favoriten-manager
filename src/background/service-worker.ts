@@ -3,6 +3,7 @@
  * gleich nach Installation oder Update die Altdaten, damit kein Tab darauf warten muss.
  */
 import { addFavoriteIfNew } from '../app/commands';
+import { seedDevStorage } from '../app/devSeed';
 import { assetStore, repository } from '../app/services';
 import { collectGarbage } from '../data/maintenance';
 import { defaultGroup } from '../domain/library';
@@ -20,6 +21,7 @@ async function setup(): Promise<void> {
   await chrome.alarms.clear(MAINTENANCE_ALARM);
   await chrome.alarms.create(MAINTENANCE_ALARM, { delayInMinutes: 5, periodInMinutes: MAINTENANCE_PERIOD_MIN });
   try {
+    await seedDevStorage();
     await repository.load();
   } catch (error) {
     console.warn('[FavGrid] Laden beim Start fehlgeschlagen', error);

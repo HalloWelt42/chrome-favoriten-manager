@@ -78,9 +78,26 @@ async function convertSettings(raw: unknown, assets: AssetStore): Promise<Record
   };
 }
 
+/**
+ * Die alte Fassung hat ihren Buchstaben-Platzhalter (farbiges Quadrat mit Anfangszeichen,
+ * bei IP-Adressen eine "1") oft als eigenes Icon gespeichert. Solche Bilder sind kein Icon.
+ */
+export function isLegacyPlaceholder(dataUrl: string): boolean {
+  if (!dataUrl.startsWith('data:image/svg+xml')) return false;
+  const comma = dataUrl.indexOf(',');
+  const payload = dataUrl.slice(comma + 1);
+  let svg: string;
+  try {
+    svg = dataUrl.slice(0, comma).includes(';base64') ? atob(payload) : decodeURIComponent(payload);
+  } catch {
+    return false;
+  }
+  return /<rect width="100" height="100" rx="20" fill="#[0-9a-f]{6}"\s*\/>/i.test(svg) && /<text x="50" y="65"[^>]*font-size="50"/i.test(svg);
+}
+
 async function convertIcon(fav: Record<string, unknown>, assets: AssetStore): Promise<IconChoice> {
   const custom = str(fav.customIcon);
-  if (custom.startsWith('data:')) {
+  if (custom.startsWith('data:') && !isLegacyPlaceholder(custom)) {
     const ref = await assets.putDataUrl(custom);
     if (ref) {
       const original = str(fav.faviconOriginal);

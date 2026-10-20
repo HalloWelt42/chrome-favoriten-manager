@@ -4,9 +4,13 @@ export interface ManifestOptions {
   version: string;
   versionName: string;
   dev: boolean;
+  /** Nur für automatische Tests: Webseitenzugriff fest statt optional. */
+  grantSiteAccess?: boolean;
 }
 
-export function createManifest({ version, versionName, dev }: ManifestOptions): chrome.runtime.ManifestV3 {
+const SITE_ORIGINS = ['http://*/*', 'https://*/*'];
+
+export function createManifest({ version, versionName, dev, grantSiteAccess = false }: ManifestOptions): chrome.runtime.ManifestV3 {
   return {
     manifest_version: 3,
     name: dev ? '__MSG_extNameDev__' : '__MSG_extName__',
@@ -28,7 +32,7 @@ export function createManifest({ version, versionName, dev }: ManifestOptions): 
     chrome_url_overrides: { newtab: 'newtab/index.html' },
     background: { service_worker: 'service-worker.js', type: 'module' },
     permissions: ['storage', 'unlimitedStorage', 'activeTab', 'contextMenus', 'notifications', 'alarms', 'search', 'favicon'],
-    optional_host_permissions: ['http://*/*', 'https://*/*'],
+    ...(grantSiteAccess ? { host_permissions: SITE_ORIGINS } : { optional_host_permissions: SITE_ORIGINS }),
     commands: {
       'add-current-page': { description: '__MSG_commandAddCurrentPage__' }
     },

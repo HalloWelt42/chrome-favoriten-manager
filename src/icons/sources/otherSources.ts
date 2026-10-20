@@ -42,7 +42,7 @@ export const browserSource: IconSource = {
 export const serviceSource: IconSource = {
   id: 'service',
   priority: 40,
-  available: (ctx) => ctx.allowServices && /^https?:/i.test(ctx.pageUrl) && !isPrivateHost(ctx.pageUrl),
+  available: (ctx) => ctx.canFetchSites && ctx.allowServices && /^https?:/i.test(ctx.pageUrl) && !isPrivateHost(ctx.pageUrl),
   async discover(ctx: DiscoveryContext): Promise<IconCandidate[]> {
     const host = new URL(ctx.pageUrl).host;
     const encoded = encodeURIComponent(host);

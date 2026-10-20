@@ -1,17 +1,14 @@
 <script lang="ts">
   /**
    * Seitenwahl: Punkte bei wenigen Seiten, nummerierte Knöpfe mit Lücken bei vielen.
-   * Die Pfeile links und rechts sitzen am Rand der Seite.
    */
   import { t } from '../../i18n';
-  import IconButton from '../../ui/IconButton.svelte';
   import { app } from '../state.svelte';
 
   const MAX_DOTS = 12;
 
   const page = $derived(app.pageSlice.page);
   const count = $derived(app.pageSlice.pageCount);
-  const arrows = $derived(app.settings.navigation.showArrows && count > 1);
 
   /** Seitenliste mit null als Lücke: 1 2 ... 6 [7] 8 ... 40 */
   const compact = $derived.by<(number | null)[]>(() => {
@@ -25,15 +22,6 @@
     return out;
   });
 </script>
-
-{#if arrows}
-  <div class="arrow left" class:hidden={page === 0}>
-    <IconButton icon="fa-solid fa-chevron-left" size="l" title={t('prevPage')} onclick={() => app.prevPage()} />
-  </div>
-  <div class="arrow right" class:hidden={page >= count - 1}>
-    <IconButton icon="fa-solid fa-chevron-right" size="l" title={t('nextPage')} onclick={() => app.nextPage()} />
-  </div>
-{/if}
 
 <div class="pages" aria-label={t('pagesLabel')}>
   {#if count > 1 && count <= MAX_DOTS}
@@ -108,28 +96,4 @@
     opacity: 0.7;
   }
 
-  .arrow {
-    position: fixed;
-    top: 50%;
-    z-index: 5;
-    transform: translateY(-50%);
-    transition: opacity var(--t-fast);
-  }
-
-  .arrow.left {
-    left: 20px;
-  }
-
-  .arrow.right {
-    right: 20px;
-  }
-
-  :global(.app.with-panel) .arrow.right {
-    right: calc(min(480px, 45vw) + 12px);
-  }
-
-  .hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
 </style>

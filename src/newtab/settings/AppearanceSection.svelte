@@ -63,8 +63,8 @@
     label={t('settingTheme')}
     value={s.theme}
     options={[
-      { value: 'dark' as ThemeMode, label: t('themeDark'), icon: 'fa-regular fa-moon' },
-      { value: 'light' as ThemeMode, label: t('themeLight'), icon: 'fa-regular fa-sun' },
+      { value: 'dark' as ThemeMode, label: t('themeDark'), icon: 'fa-solid fa-moon' },
+      { value: 'light' as ThemeMode, label: t('themeLight'), icon: 'fa-solid fa-sun' },
       { value: 'system' as ThemeMode, label: t('themeSystem'), icon: 'fa-solid fa-circle-half-stroke', title: t('themeSystemTitle') }
     ]}
     onchange={(v) => app.patchSettings({ theme: v })}

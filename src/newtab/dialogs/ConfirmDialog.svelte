@@ -15,13 +15,16 @@
   let { title, message, confirmLabel, danger, onConfirm }: Props = $props();
   let busy = $state(false);
 
+  const own = app.dialog;
+
   async function confirm(): Promise<void> {
     busy = true;
     try {
       await onConfirm();
     } finally {
       busy = false;
-      app.closeDialog();
+      // Hat die Aktion ein anderes Fenster geöffnet, bleibt dieses offen.
+      if (app.dialog === own) app.closeDialog();
     }
   }
 </script>

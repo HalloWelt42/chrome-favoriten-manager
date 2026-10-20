@@ -69,7 +69,6 @@
     font-size: calc(var(--fav-icon-size, 48px) * 0.36);
     letter-spacing: 0.02em;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    container-type: size;
   }
 
   .loading {

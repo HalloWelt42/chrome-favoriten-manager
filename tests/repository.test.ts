@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { IndexedDbAssetStore } from '../src/data/assets';
 import { memoryStore } from '../src/data/keyValue';
+import { isLegacyPlaceholder } from '../src/data/legacy';
 import { LIBRARY_KEY, LibraryRepository, type SnapshotService } from '../src/data/repository';
 import { createSnapshot, listSnapshots, readSnapshot, selectExpired, type SnapshotInfo } from '../src/data/snapshots';
 import { addFavorite, restoreFromTrash, trashFavorites, trashGroup } from '../src/domain/library';
@@ -54,7 +55,7 @@ describe('Übernahme der echten Altdaten', () => {
       expect(fav.alias).toBe(old.alias);
       expect(fav.groupId).toBe(old.groupId);
       expect(fav.visitCount).toBe(old.visitCount);
-      if (old.customIcon?.startsWith('data:')) expect(fav.icon.mode).toBe('custom');
+      if (old.customIcon?.startsWith('data:') && !isLegacyPlaceholder(old.customIcon)) expect(fav.icon.mode).toBe('custom');
       else expect(fav.icon.mode).toBe('auto');
     }
     // Reihenfolge innerhalb jeder Gruppe bleibt erhalten.
@@ -68,7 +69,9 @@ describe('Übernahme der echten Altdaten', () => {
     // Eigene Icons liegen im Bildspeicher und sind lesbar.
     const assets = new IndexedDbAssetStore();
     const custom = lib.favorites.filter((f) => f.icon.mode === 'custom');
-    expect(custom.length).toBe(legacy.favorites.filter((f: { customIcon: string | null }) => f.customIcon?.startsWith('data:')).length);
+    const placeholders = legacy.favorites.filter((f: { customIcon: string | null }) => f.customIcon && isLegacyPlaceholder(f.customIcon)).length;
+    expect(placeholders).toBe(13);
+    expect(custom.length).toBe(legacy.favorites.filter((f: { customIcon: string | null }) => f.customIcon?.startsWith('data:')).length - placeholders);
     for (const f of custom) expect(await assets.get(f.icon.ref!)).not.toBeNull();
 
     // Einstellungen: Hintergrundbilder, Schrift, Raster.

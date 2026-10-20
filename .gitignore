@@ -54,6 +54,7 @@ yarn-error.log*
 .env.local
 # Build und Werkzeuge
 node_modules/
+dist-dev/
 .test-daten/
 .claude/
 /store/
