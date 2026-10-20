@@ -18,6 +18,27 @@
   let lastWheel = 0;
   let touchStart: { x: number; y: number } | null = null;
   let viewport: HTMLDivElement | undefined = $state();
+  let grid: HTMLDivElement | undefined = $state();
+  /** Verkleinerung, damit das eingestellte Raster in kleine Fenster passt (nie Vergrößerung). */
+  let scale = $state(1);
+
+  function fit(): void {
+    if (!viewport || !grid) return;
+    const width = grid.offsetWidth;
+    const height = grid.offsetHeight;
+    if (!width || !height) return;
+    scale = Math.min(1, viewport.clientWidth / width, viewport.clientHeight / height);
+  }
+
+  $effect(() => {
+    const el = viewport;
+    const inner = grid;
+    if (!el || !inner) return;
+    const observer = new ResizeObserver(fit);
+    observer.observe(el);
+    observer.observe(inner);
+    return () => observer.disconnect();
+  });
 
   // Mausrad braucht einen nicht-passiven Empfänger, sonst rollt die Seite mit.
   $effect(() => {
@@ -94,7 +115,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="viewport" bind:this={viewport} {ontouchstart} {ontouchend}>
   {#key `${app.currentGroup?.id}:${slice.page}:${app.searching}`}
-    <div class="grid" in:pageIn>
+    <div class="grid" bind:this={grid} style:transform={scale < 1 ? `scale(${scale})` : null} in:pageIn>
       {#if showAdd}
         <button type="button" class="add" title={t('addFavoriteTitle')} onclick={() => (app.dialog = { kind: 'favorite', favoriteId: null, groupId: app.currentGroup!.id })}>
           <span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>
@@ -119,6 +140,8 @@
 <style>
   .viewport {
     position: relative;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -129,6 +152,8 @@
   }
 
   .grid {
+    flex: none;
+    transform-origin: center center;
     display: grid;
     grid-template-columns: repeat(var(--cols), var(--icon-size));
     gap: var(--grid-gap);

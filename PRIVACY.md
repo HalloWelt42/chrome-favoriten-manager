@@ -1,6 +1,6 @@
 # FavGrid - Datenschutzerklärung / Privacy Policy
 
-*Letzte Aktualisierung / Last updated: 2026-04-13*
+*Letzte Aktualisierung / Last updated: 2026-10-20*
 
 ---
 
@@ -12,19 +12,20 @@ FavGrid ist eine Browser-Erweiterung, die **ausschließlich lokal** auf deinem G
 
 ### Welche Daten werden gespeichert?
 
-Alle Daten werden ausschließlich in der lokalen Chrome Storage API deines Browsers gespeichert:
+Alle Daten werden ausschließlich lokal im Browser gespeichert (Storage API und IndexedDB der Erweiterung):
 
 - **Lesezeichen-Daten**: URLs, Titel, benutzerdefinierte Aliase und Beschreibungen
-- **Favicon-Bilder**: Zwischengespeichert von den jeweiligen Webseiten als Data-URLs
+- **Bilder**: Icons und Hintergrundbilder
+- **Papierkorb und Sicherungsstände**: gelöschte Einträge und automatische Kopien der Sammlung
 - **Einstellungen**: Design, Layout, Farben, Schriftarten und sonstige Anpassungen
 - **Gruppen-Organisation**: Namen, Icons, Farben und Sortierung deiner Gruppen
 
 ### Externe Netzwerkanfragen
 
-FavGrid führt folgende Netzwerkanfragen durch -- **ausschließlich auf Nutzeraktion**:
+Netzwerkanfragen gibt es nur, wenn du FavGrid den optionalen Zugriff auf Webseiten erlaubt hast:
 
-- **Favicon-Abruf**: Direkt von den jeweiligen Webseiten, um Icons für deine Lesezeichen zu laden
-- **Favicon-Dienste**: Google Favicons (`google.com/s2/favicons`), DuckDuckGo Icons (`icons.duckduckgo.com`), Icon Horse (`icon.horse`) -- als Fallback, wenn kein direktes Icon gefunden wird
+- **Icon- und Titelabruf**: Direkt von den Seiten deiner Favoriten
+- **Icon-Dienste** (abschaltbar): Google Favicons (`google.com/s2/favicons`) und DuckDuckGo Icons (`icons.duckduckgo.com`) - nur für öffentliche Adressen, nie für Adressen im eigenen Netz
 
 Es werden **keine Daten an Server des Entwicklers** gesendet.
 
@@ -40,12 +41,13 @@ Es werden **keine Daten an Server des Entwicklers** gesendet.
 |---|---|
 | `storage` | Lokale Speicherung von Lesezeichen und Einstellungen |
 | `activeTab` | Aktuelle Seite als Lesezeichen hinzufügen |
-| `tabs` | Tab-Titel für neue Lesezeichen auslesen |
+| `unlimitedStorage` | Bilder und Sicherungsstände ohne Speicherlimit |
 | `contextMenus` | Rechtsklick-Menü "Zu FavGrid hinzufügen" |
 | `notifications` | Bestätigungen beim Hinzufügen von Lesezeichen |
-| `alarms` | Zeitgesteuerte Hintergrundaufgaben (Auto-Backup) |
-| `search` | Suchmaschinen-Integration für die Sofortsuche |
-| `host_permissions` | Favicon-Bilder direkt von Webseiten laden |
+| `alarms` | Tägliches Aufräumen alter Sicherungsstände |
+| `search` | Websuche über die Suchmaschine des Browsers |
+| `favicon` | Favicons aus dem Speicher des Browsers |
+| Webseitenzugriff (optional) | Nur nach Zustimmung: Icons und Titel direkt von Webseiten laden |
 
 ### Drittanbieter-Dienste
 
@@ -71,19 +73,20 @@ FavGrid is a browser extension that operates **entirely locally** on your device
 
 ### What data is stored?
 
-All data is stored exclusively in your browser's local Chrome Storage API:
+All data is stored exclusively locally in the browser (the extension's Storage API and IndexedDB):
 
 - **Bookmark data**: URLs, titles, custom aliases, and descriptions
-- **Favicon images**: Cached from the respective websites as data URLs
+- **Images**: Icons and background images
+- **Trash and snapshots**: deleted entries and automatic copies of the collection
 - **Settings**: Theme, layout, colors, fonts, and other customizations
 - **Group organization**: Names, icons, colors, and sort order of your groups
 
 ### External network requests
 
-FavGrid makes the following network requests -- **only on user action**:
+Network requests only happen after you allowed the optional access to web pages:
 
-- **Favicon fetching**: Directly from the respective websites to load icons for your bookmarks
-- **Favicon services**: Google Favicons (`google.com/s2/favicons`), DuckDuckGo Icons (`icons.duckduckgo.com`), Icon Horse (`icon.horse`) -- as fallback when no direct icon is found
+- **Icon and title fetching**: Directly from the pages of your favorites
+- **Icon services** (can be switched off): Google Favicons (`google.com/s2/favicons`) and DuckDuckGo Icons (`icons.duckduckgo.com`) - only for public addresses, never for addresses in your own network
 
 **No data is sent to the developer's servers.**
 
@@ -99,12 +102,13 @@ FavGrid makes the following network requests -- **only on user action**:
 |---|---|
 | `storage` | Local storage of bookmarks and settings |
 | `activeTab` | Add current page as bookmark |
-| `tabs` | Read tab title for new bookmarks |
+| `unlimitedStorage` | Images and snapshots without storage limit |
 | `contextMenus` | Right-click "Add to FavGrid" menu |
 | `notifications` | Confirmation when adding bookmarks |
-| `alarms` | Timed background tasks (auto backup) |
-| `search` | Search engine integration for instant search |
-| `host_permissions` | Load favicon images directly from websites |
+| `alarms` | Daily cleanup of old snapshots |
+| `search` | Web search through the browser's search engine |
+| `favicon` | Favicons from the browser's cache |
+| Access to web pages (optional) | Only after consent: load icons and titles directly from web pages |
 
 ### Third-party services
 

@@ -8,11 +8,14 @@ export interface ManifestOptions {
   grantSiteAccess?: boolean;
 }
 
+import { DEV_EXTENSION_KEY } from './devKey';
+
 const SITE_ORIGINS = ['http://*/*', 'https://*/*'];
 
 export function createManifest({ version, versionName, dev, grantSiteAccess = false }: ManifestOptions): chrome.runtime.ManifestV3 {
   return {
     manifest_version: 3,
+    ...(dev ? { key: DEV_EXTENSION_KEY } : {}),
     name: dev ? '__MSG_extNameDev__' : '__MSG_extName__',
     version,
     version_name: versionName,
