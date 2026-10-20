@@ -29,6 +29,8 @@
     return entries.filter((e) => entryText(e).toLowerCase().includes(q));
   });
   const visible = $derived(filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE));
+  /** Nur gewählte Einträge, die der Filter gerade zeigt, werden bearbeitet. */
+  const selectedShown = $derived(filtered.filter((e) => selected.has(e.id)).map((e) => e.id));
   const groupNames = $derived(new Map(app.groups.map((g) => [g.id, `${g.icon} ${g.name}`])));
 
   $effect(() => {
@@ -66,7 +68,8 @@
   }
 
   async function purge(): Promise<void> {
-    const target = confirmPurge === 'all' ? 'all' : [...selected];
+    const shown = new Set(filtered.map((e) => e.id));
+    const target = confirmPurge === 'all' ? 'all' : [...selected].filter((id) => shown.has(id));
     confirmPurge = null;
     const removed = await app.run(() => commands.purgeTrash(target));
     if (removed !== undefined) {
@@ -125,7 +128,7 @@
   {#if confirmPurge}
     <div class="confirm" role="alert">
       <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-      <span>{confirmPurge === 'all' ? t('purgeAllConfirm', entries.length) : t('purgeSelectedConfirm', selected.size)}</span>
+      <span>{confirmPurge === 'all' ? t('purgeAllConfirm', entries.length) : t('purgeSelectedConfirm', selectedShown.length)}</span>
       <Button variant="ghost" onclick={() => (confirmPurge = null)}>{t('cancel')}</Button>
       <Button variant="danger" onclick={purge}>{t('purgeConfirmButton')}</Button>
     </div>
@@ -134,9 +137,9 @@
   {#snippet footer()}
     {#if entries.length > 0}
       <Button variant="danger" icon="fa-solid fa-fire" title={t('purgeAllTitle')} onclick={() => (confirmPurge = 'all')}>{t('purgeAll')}</Button>
-      <Button variant="danger" icon="fa-solid fa-xmark" disabled={selected.size === 0} title={t('purgeSelectedTitle')} onclick={() => (confirmPurge = 'selected')}>{t('purgeSelected')}</Button>
+      <Button variant="danger" icon="fa-solid fa-xmark" disabled={selectedShown.length === 0} title={t('purgeSelectedTitle')} onclick={() => (confirmPurge = 'selected')}>{t('purgeSelected')}</Button>
       <span class="spacer"></span>
-      <Button variant="primary" icon="fa-solid fa-rotate-left" disabled={selected.size === 0} onclick={() => restore([...selected])}>{t('restoreSelected', selected.size)}</Button>
+      <Button variant="primary" icon="fa-solid fa-rotate-left" disabled={selectedShown.length === 0} onclick={() => restore(selectedShown)}>{t('restoreSelected', selectedShown.length)}</Button>
     {:else}
       <Button variant="primary" onclick={() => app.closeDialog()}>{t('close')}</Button>
     {/if}

@@ -14,16 +14,16 @@
 <div class="emoji-picker">
   <div class="quick">
     {#each QUICK_EMOJIS as emoji (emoji)}
-      <button class:selected={emoji === value} onclick={() => onpick(emoji)} aria-label={emoji}>{emoji}</button>
+      <button type="button" class:selected={emoji === value} onclick={() => onpick(emoji)} aria-label={emoji}>{emoji}</button>
     {/each}
-    <button class="more" class:open={expanded} title={t('emojiMoreTitle')} onclick={() => (expanded = !expanded)}>
+    <button type="button" class="more" class:open={expanded} title={t('emojiMoreTitle')} onclick={() => (expanded = !expanded)}>
       <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
     </button>
   </div>
   {#if expanded}
     <div class="all">
       {#each EMOJIS as emoji (emoji)}
-        <button class:selected={emoji === value} onclick={() => onpick(emoji)} aria-label={emoji}>{emoji}</button>
+        <button type="button" class:selected={emoji === value} onclick={() => onpick(emoji)} aria-label={emoji}>{emoji}</button>
       {/each}
     </div>
   {/if}

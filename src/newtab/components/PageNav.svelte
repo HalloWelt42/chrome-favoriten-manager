@@ -26,14 +26,14 @@
 <div class="pages" aria-label={t('pagesLabel')}>
   {#if count > 1 && count <= MAX_DOTS}
     {#each { length: count } as _, index (index)}
-      <button class="dot" class:active={index === page} title={t('pageN', index + 1)} aria-label={t('pageN', index + 1)} onclick={() => app.goToPage(index)}></button>
+      <button type="button" class="dot" class:active={index === page} title={t('pageN', index + 1)} aria-label={t('pageN', index + 1)} onclick={() => app.goToPage(index)}></button>
     {/each}
   {:else if count > MAX_DOTS}
     {#each compact as entry, index (index)}
       {#if entry === null}
         <span class="gap">...</span>
       {:else}
-        <button class="num" class:active={entry === page} title={t('pageN', entry + 1)} onclick={() => app.goToPage(entry)}>{entry + 1}</button>
+        <button type="button" class="num" class:active={entry === page} title={t('pageN', entry + 1)} onclick={() => app.goToPage(entry)}>{entry + 1}</button>
       {/if}
     {/each}
   {/if}

@@ -42,7 +42,7 @@ export async function resolveAutoIcon(url: string, options: AutoIconOptions, sig
 export class AutoIconQueue {
   private readonly waiting = new Map<string, Favorite>();
   private readonly running = new Set<string>();
-  private readonly results = new Map<string, AutoIcon>();
+  private readonly results = new Map<string, { url: string; icon: AutoIcon }>();
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly abort = new AbortController();
   private progressListener: ((pending: number) => void) | null = null;
@@ -90,7 +90,7 @@ export class AutoIconQueue {
     if (this.abort.signal.aborted) return;
     try {
       const icon = await resolveAutoIcon(fav.url, this.options(), this.abort.signal);
-      this.results.set(fav.id, icon);
+      this.results.set(fav.id, { url: fav.url, icon });
       this.scheduleFlush();
     } catch {
       // Einzelne Fehlschläge stören die übrigen nicht.
@@ -110,7 +110,7 @@ export class AutoIconQueue {
     const batch = new Map(this.results);
     this.results.clear();
     await repository.mutate((draft) => {
-      for (const [id, icon] of batch) applyAutoIcon(draft, id, icon);
+      for (const [id, { url, icon }] of batch) applyAutoIcon(draft, id, url, icon);
     }, { quiet: true });
   }
 }

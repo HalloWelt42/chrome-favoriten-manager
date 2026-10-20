@@ -34,13 +34,13 @@
   <header>
     <i class="fa-solid fa-gear" aria-hidden="true"></i>
     <h2>{t('settings')}</h2>
-    <button class="close" title={t('close')} aria-label={t('close')} onclick={close}>
+    <button type="button" class="close" title={t('close')} aria-label={t('close')} onclick={close}>
       <i class="fa-solid fa-xmark" aria-hidden="true"></i>
     </button>
   </header>
   <nav class="tabs">
     {#each SECTIONS as s (s.id)}
-      <button class:active={section === s.id} onclick={() => (section = s.id)}>
+      <button type="button" class:active={section === s.id} onclick={() => (section = s.id)}>
         <i class={s.icon} aria-hidden="true"></i>
         <span>{t(s.label)}</span>
       </button>

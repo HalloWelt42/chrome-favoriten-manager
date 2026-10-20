@@ -134,7 +134,8 @@ export function parseUrlList(text: string): BookmarkItem[] {
   return text
     .split(/\r?\n/)
     .map((line) => line.trim())
-    .filter(Boolean)
+    // Adressen enthalten keine Leerzeichen; so fallen Notizen und Überschriften heraus.
+    .filter((line) => line !== '' && !/\s/.test(line))
     .map((line) => normalizeInputUrl(line))
     .filter((url): url is string => url !== null && /^https?:/i.test(url))
     .map((url) => ({ url, title: '', folder: [] }));
@@ -178,14 +179,23 @@ export function planMerge(lib: Library, items: BookmarkItem[], targetGroupId: st
 }
 
 /** Führt einen Plan auf einer Arbeitskopie aus. */
-export function applyMerge(lib: Library, plan: MergePlan, newGroupIcon: string, newGroupColor: string, now: number): void {
+export function applyMerge(lib: Library, plan: MergePlan, newGroupIcon: string, newGroupColor: string, now: number): number {
+  // Der Plan stammt aus einem älteren Stand; beim Schreiben noch einmal auf Doppelte prüfen.
+  const known = new Set(lib.favorites.map((f) => duplicateKey(f.url)));
+  let added = 0;
   for (const target of plan.targets) {
-    const groupId = target.groupId
+    const items = target.items.filter((item) => !known.has(duplicateKey(item.url)));
+    if (items.length === 0) continue;
+    const existingGroup = target.groupId && lib.groups.some((g) => g.id === target.groupId) ? target.groupId : null;
+    const groupId = existingGroup
       ?? (target.createName ? addGroup(lib, { name: target.createName, icon: newGroupIcon, color: newGroupColor }, now).id : defaultGroup(lib).id);
-    for (const item of target.items) {
+    for (const item of items) {
+      known.add(duplicateKey(item.url));
       addFavorite(lib, { url: item.url, alias: item.title, groupId, source: 'import' }, now);
+      added += 1;
     }
   }
+  return added;
 }
 
 /** Bereitet eine Vollsicherung zum Ersetzen vor: Bilder in den Bildspeicher, Altdaten umwandeln. */

@@ -3,6 +3,7 @@
    * Doppelte Adressen finden. Vorausgewählt ist jeweils alles außer dem wertvollsten Eintrag
    * (eigenes Icon, Beschreibung, Besuche). Entfernen heißt: in den Papierkorb.
    */
+  import { untrack } from 'svelte';
   import { favoriteName, findDuplicates } from '../../domain/views';
   import { formatNumber, t } from '../../i18n';
   import Button from '../../ui/Button.svelte';
@@ -13,7 +14,8 @@
   const PAGE_SIZE = 25;
 
   let page = $state(0);
-  const sets = $derived(app.library ? findDuplicates(app.library) : []);
+  // Feste Momentaufnahme: Live-Änderungen dürfen die Rangfolge nicht unbemerkt verschieben.
+  let sets = $state(untrack(() => (app.library ? findDuplicates(app.library) : [])));
   const visible = $derived(sets.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE));
   const groupNames = $derived(new Map(app.groups.map((g) => [g.id, `${g.icon} ${g.name}`])));
   const extraCount = $derived(sets.reduce((n, s) => n + s.favorites.length - 1, 0));
@@ -36,6 +38,7 @@
     busy = true;
     await app.trashFavorites(marked);
     kept = new Set();
+    sets = app.library ? findDuplicates(app.library) : [];
     busy = false;
   }
 </script>

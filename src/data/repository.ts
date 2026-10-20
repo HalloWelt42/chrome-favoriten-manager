@@ -12,7 +12,7 @@ import type { Library } from '../domain/types';
 import type { AssetStore } from './assets';
 import type { KeyValueStore } from './keyValue';
 import { convertLegacy, hasLegacyData, LEGACY_KEYS, type LegacyData } from './legacy';
-import { normalizeLibrary } from './normalize';
+import { isObj, normalizeLibrary } from './normalize';
 import {
   AUTO_SNAPSHOT_INTERVAL_MS,
   createSnapshot,
@@ -89,7 +89,14 @@ export class LibraryRepository {
   /** Nur unter der Sperre aufrufen (Web Locks sind nicht wiedereintrittsfähig). */
   private async loadLocked(): Promise<Library> {
     const stored = await this.options.kv.get([LIBRARY_KEY]);
-    if (stored[LIBRARY_KEY] !== undefined) return this.normalize(stored[LIBRARY_KEY]);
+    const raw = stored[LIBRARY_KEY];
+    if (raw !== undefined) {
+      // Beschädigter Inhalt wird vor dem reparierten Überschreiben roh gesichert.
+      if (!isObj(raw) || !Array.isArray(raw.favorites) || !Array.isArray(raw.groups)) {
+        await this.options.snapshots.create('damaged', { kind: 'legacy', data: raw });
+      }
+      return this.normalize(raw);
+    }
     const legacy = (await this.options.kv.get(LEGACY_KEYS)) as LegacyData;
     let library: Library;
     if (hasLegacyData(legacy)) {
@@ -128,6 +135,11 @@ export class LibraryRepository {
       { snapshot: reason }
     );
     return library;
+  }
+
+  /** Führt fn unter derselben Sperre aus wie alle Änderungen (z. B. das Aufräumen). */
+  exclusive<T>(fn: (library: Library) => Promise<T>): Promise<T> {
+    return this.lock(async () => fn(await this.loadLocked()));
   }
 
   /** Legt sofort einen Sicherungsstand des aktuellen Zustands an. */

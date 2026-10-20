@@ -59,7 +59,10 @@
     }
     saving = true;
     try {
-      const icon = await persistIconDraft(draft);
+      // Neue Adresse mit automatischem Icon: das alte Icon gehört zur alten Seite.
+      const urlChanged = !!existing && duplicateKey(existing.url) !== duplicateKey(normalizedUrl);
+      const effectiveDraft: IconDraft = urlChanged && draft.kind === 'keep' && existing?.icon.mode === 'auto' ? { kind: 'auto' } : draft;
+      const icon = await persistIconDraft(effectiveDraft);
       const fields = {
         url: normalizedUrl,
         alias: alias.trim(),
@@ -75,7 +78,7 @@
         toasts.show(t('toastFavoriteAdded'));
         if (!icon) app.autoIcons.enqueue([created], true);
       }
-      if (existing && draft.kind === 'auto') {
+      if (existing && effectiveDraft.kind === 'auto') {
         const updated = app.library?.favorites.find((f) => f.id === existing.id);
         if (updated) app.autoIcons.enqueue([{ ...updated, icon: { mode: 'auto', ref: null, origin: null, checkedAt: null } }], true);
       }

@@ -60,12 +60,16 @@ export class NewtabState {
   trashCount = $derived(this.library?.trash.length ?? 0);
 
   async init(): Promise<void> {
-    this.library = await repository.load();
     repository.subscribe((next) => {
       // Noch nicht gespeicherte Regler-Werte nicht von älteren Ständen überschreiben lassen.
       if (Object.keys(this.pendingSettings).length > 0) applySettingsPatch(next.settings, this.pendingSettings);
       this.library = next;
     });
+    this.library = await repository.load();
+    // Gesammelte Einstellungen nicht verlieren, wenn der Tab verschwindet.
+    const flush = (): void => void this.commitSettings();
+    addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flush());
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => (this.systemDark = e.matches));
     this.siteAccess = await hasSiteAccess();
     onSiteAccessChange((granted) => {
@@ -121,8 +125,18 @@ export class NewtabState {
     if (this.settingsTimer) clearTimeout(this.settingsTimer);
     this.settingsTimer = null;
     const patch = this.pendingSettings;
+    if (Object.keys(patch).length === 0) return;
     this.pendingSettings = {};
-    if (Object.keys(patch).length > 0) await this.run(() => commands.updateSettings(patch));
+    try {
+      await commands.updateSettings(patch);
+    } catch (error) {
+      // Nicht gespeicherte Werte zurückmischen, neuere Eingaben haben Vorrang.
+      const newer = this.pendingSettings;
+      this.pendingSettings = patch;
+      applySettingsPatch(this.pendingSettings as Partial<Settings>, newer);
+      console.warn('[FavGrid]', error);
+      toasts.error(t('errorGeneric'));
+    }
   }
 
   // -- Datenaktionen mit Rückmeldung -------------------------------------------
@@ -169,7 +183,7 @@ export class NewtabState {
     const inNewTab = newTabByDefault !== modifier;
     void commands.recordVisit(fav.id);
     if (inNewTab) void chrome.tabs.create({ url: fav.url, active: !event.shiftKey });
-    else window.location.href = fav.url;
+    else void this.commitSettings().finally(() => (window.location.href = fav.url));
   }
 
   openInBackground(fav: Favorite): void {

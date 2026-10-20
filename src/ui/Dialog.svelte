@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * Fenster über der Seite. Schließt mit Escape, Klick daneben oder dem Kreuz.
+   * Fenster über der Seite. Schließt mit Escape (unabhängig vom Fokus), Klick daneben oder dem Kreuz.
    * Der Kopf bleibt stehen, nur der Inhalt rollt.
    */
   import type { Snippet } from 'svelte';
@@ -35,13 +35,15 @@
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="backdrop" role="presentation" onmousedown={(e) => e.target === e.currentTarget && onclose()} {onkeydown}>
+<svelte:window {onkeydown} />
+
+<div class="backdrop" role="presentation" onmousedown={(e) => e.target === e.currentTarget && onclose()}>
   <div class="dialog {width}" role="dialog" aria-modal="true" aria-label={title} bind:this={panel}>
     <header>
       {#if icon}<i class={icon} aria-hidden="true"></i>{/if}
       <h2>{title}</h2>
       {#if headerExtra}<div class="extra">{@render headerExtra()}</div>{/if}
-      <button class="close" title={t('close')} aria-label={t('close')} onclick={onclose}>
+      <button type="button" class="close" title={t('close')} aria-label={t('close')} onclick={onclose}>
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </header>

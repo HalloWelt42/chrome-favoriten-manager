@@ -36,7 +36,7 @@
     <div class="details">
       <p class="name">{coin.label}</p>
       <p class="address">{coin.address}</p>
-      <button class="copy" onclick={copy}>
+      <button type="button" class="copy" onclick={copy}>
         <i class={copied ? 'fa-solid fa-check' : 'fa-regular fa-copy'} aria-hidden="true"></i>
         {copied ? t('copied') : t('copyAddress')}
       </button>

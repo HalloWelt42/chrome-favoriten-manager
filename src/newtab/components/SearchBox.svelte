@@ -81,7 +81,7 @@
     {onkeydown}
   />
   {#if app.searchText}
-    <button class="clear" title={t('searchClear')} aria-label={t('searchClear')} onclick={() => { app.searchText = ''; input?.focus(); }}>
+    <button type="button" class="clear" title={t('searchClear')} aria-label={t('searchClear')} onclick={() => { app.searchText = ''; input?.focus(); }}>
       <i class="fa-solid fa-xmark" aria-hidden="true"></i>
     </button>
   {/if}
@@ -90,7 +90,7 @@
     <ul class="dropdown" role="listbox">
       {#each options as option, index (index)}
         <li role="option" aria-selected={index === selected}>
-          <button class:selected={index === selected} onmouseenter={() => (selected = index)} onmousedown={(e) => { e.preventDefault(); option.run(e); }}>
+          <button type="button" class:selected={index === selected} onmouseenter={() => (selected = index)} onmousedown={(e) => { e.preventDefault(); option.run(e); }}>
             {#if option.kind === 'favorite'}
               {@const hit = hits[index - (options[0]?.kind === 'url' ? 1 : 0)]!}
               <span class="thumb"><FavIcon iconRef={hit.favorite.icon.ref} name={favoriteName(hit.favorite)} seed={hit.favorite.url} /></span>

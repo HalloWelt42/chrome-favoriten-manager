@@ -42,7 +42,7 @@
   $effect(() => {
     if (!app.settings.icons.autoDetect) return;
     app.autoIcons.enqueue(slice.items);
-    const start = slice.page * app.perPage;
+    const start = (slice.page + 1) * app.perPage - (app.searching ? 0 : 1);
     app.autoIcons.enqueue(app.visibleList.slice(start, start + app.perPage));
   });
 
@@ -96,7 +96,7 @@
   {#key `${app.currentGroup?.id}:${slice.page}:${app.searching}`}
     <div class="grid" in:pageIn>
       {#if showAdd}
-        <button class="add" title={t('addFavoriteTitle')} onclick={() => (app.dialog = { kind: 'favorite', favoriteId: null, groupId: app.currentGroup!.id })}>
+        <button type="button" class="add" title={t('addFavoriteTitle')} onclick={() => (app.dialog = { kind: 'favorite', favoriteId: null, groupId: app.currentGroup!.id })}>
           <span class="icon"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>
           {#if app.settings.labels.show}<span class="label">{t('add')}</span>{/if}
         </button>

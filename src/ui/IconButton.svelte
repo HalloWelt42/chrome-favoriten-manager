@@ -12,7 +12,7 @@
   let { icon, title, active = false, badge = 0, size = 'm', disabled = false, onclick }: Props = $props();
 </script>
 
-<button class="icon-btn {size}" class:active {title} aria-label={title} {disabled} {onclick}>
+<button type="button" class="icon-btn {size}" class:active {title} aria-label={title} {disabled} {onclick}>
   <i class={icon} aria-hidden="true"></i>
   {#if badge > 0}<span class="badge">{badge > 999 ? '999+' : badge}</span>{/if}
 </button>

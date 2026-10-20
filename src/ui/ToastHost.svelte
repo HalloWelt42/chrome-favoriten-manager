@@ -17,7 +17,7 @@
       <span class="text">{toast.text}</span>
       {#if toast.action}
         {@const action = toast.action}
-        <button
+        <button type="button"
           class="action"
           onclick={() => {
             toasts.dismiss(toast.id);
@@ -25,7 +25,7 @@
           }}>{action.label}</button
         >
       {/if}
-      <button class="close" title={t('close')} aria-label={t('close')} onclick={() => toasts.dismiss(toast.id)}>
+      <button type="button" class="close" title={t('close')} aria-label={t('close')} onclick={() => toasts.dismiss(toast.id)}>
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </div>

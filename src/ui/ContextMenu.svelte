@@ -5,17 +5,27 @@
   let position = $state({ left: 0, top: 0 });
   let openSub = $state<number | null>(null);
   let subLeft = $state(true);
+  /** Untermenü nach oben öffnen und höchstens so hoch wie der Platz darüber bzw. darunter. */
+  let subUp = $state(false);
+  let subMax = $state(400);
+
+  function placeSub(entry: HTMLElement): void {
+    const rect = entry.getBoundingClientRect();
+    const below = innerHeight - rect.top - 8;
+    const above = rect.bottom - 8;
+    subUp = below < 320 && above > below;
+    subMax = Math.max(160, subUp ? above : below);
+  }
 
   $effect(() => {
     const current = menu.current;
     openSub = null;
     if (!current || !element) return;
     const rect = element.getBoundingClientRect();
-    position = {
-      left: Math.max(8, Math.min(current.x, innerWidth - rect.width - 8)),
-      top: Math.max(8, Math.min(current.y, innerHeight - rect.height - 8))
-    };
-    subLeft = position.left + rect.width * 2 + 16 > innerWidth;
+    // Nur aus Eingaben rechnen, nie den eigenen Ausgabewert lesen (sonst Endlosschleife).
+    const left = Math.max(8, Math.min(current.x, innerWidth - rect.width - 8));
+    position = { left, top: Math.max(8, Math.min(current.y, innerHeight - rect.height - 8)) };
+    subLeft = left + rect.width * 2 + 16 > innerWidth;
   });
 
   $effect(() => {
@@ -53,16 +63,16 @@
   <div class="menu" role="menu" bind:this={element} style:left="{position.left}px" style:top="{position.top}px">
     {#each menu.current.items as item, index (index)}
       {#if item.separatorBefore}<div class="sep" role="separator"></div>{/if}
-      <div class="entry" role="none" onmouseenter={() => item.submenu && (openSub = index)}>
-        <button role="menuitem" class:danger={item.danger} title={item.title} onclick={() => activate(item, index)}>
+      <div class="entry" role="none" onmouseenter={(e) => { if (item.submenu) { placeSub(e.currentTarget); openSub = index; } }}>
+        <button type="button" role="menuitem" class:danger={item.danger} title={item.title} onclick={(e) => { if (item.submenu) placeSub(e.currentTarget.parentElement!); activate(item, index); }}>
           <i class={item.icon} aria-hidden="true"></i>
           <span>{item.label}</span>
           {#if item.submenu}<i class="fa-solid fa-chevron-right arrow" aria-hidden="true"></i>{/if}
         </button>
         {#if item.submenu && openSub === index}
-          <div class="menu sub" class:left={subLeft} role="menu">
+          <div class="menu sub" class:left={subLeft} class:up={subUp} style:max-height="{subMax}px" role="menu">
             {#each item.submenu as sub, s (s)}
-              <button role="menuitem" onclick={() => activate(sub, s)}>
+              <button type="button" role="menuitem" onclick={() => activate(sub, s)}>
                 <i class={sub.icon} aria-hidden="true"></i>
                 <span>{sub.label}</span>
               </button>
@@ -90,8 +100,12 @@
     position: absolute;
     top: -6px;
     left: calc(100% + 4px);
-    max-height: 60vh;
     overflow: auto;
+  }
+
+  .sub.up {
+    top: auto;
+    bottom: -6px;
   }
 
   .sub.left {

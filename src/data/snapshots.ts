@@ -10,6 +10,7 @@ import { idbDelete, idbGet, idbGetAll, idbPut, STORES } from './idb';
 export type SnapshotReason =
   | 'auto'          // regelmäßig bei Änderungen
   | 'migration'     // Rohdaten der Vorgängerfassung vor der Übernahme
+  | 'damaged'       // beschädigter Speicherinhalt, bevor er repariert überschrieben wird
   | 'before-import'
   | 'before-restore'
   | 'before-purge'  // vor endgültigem Löschen aus dem Papierkorb
@@ -120,7 +121,7 @@ export async function lastSnapshotTime(reason: SnapshotReason): Promise<number> 
 }
 
 /**
- * Bestimmt, welche Stände wegfallen. Der Migrationsstand bleibt immer.
+ * Bestimmt, welche Stände wegfallen. Übernahme- und Handstände bleiben immer.
  * Automatische: die neuesten N, dazu der jeweils neueste eines Tages für D Tage.
  * Ereignisstände (vor Import usw.): D Tage, mindestens aber die neuesten M.
  */
@@ -139,11 +140,13 @@ export function selectExpired(list: SnapshotInfo[], now = Date.now()): string[] 
       keep.add(s.id);
     }
   }
-  const events = sorted.filter((s) => s.reason !== 'auto' && s.reason !== 'migration');
+  const permanent = (s: SnapshotInfo): boolean => s.reason === 'migration' || s.reason === 'manual' || s.reason === 'damaged';
+  const events = sorted.filter((s) => s.reason !== 'auto' && !permanent(s));
   events.forEach((s, i) => {
     if (i < RETENTION.eventMin || now - s.createdAt <= RETENTION.eventDays * day) keep.add(s.id);
   });
-  sorted.filter((s) => s.reason === 'migration').forEach((s) => keep.add(s.id));
+  // Übernahme und von Hand angelegte Stände bleiben immer.
+  sorted.filter(permanent).forEach((s) => keep.add(s.id));
   return sorted.filter((s) => !keep.has(s.id)).map((s) => s.id);
 }
 

@@ -17,23 +17,26 @@ export const ICON_SOURCES: readonly IconSource[] = [pageSource, wellKnownSource,
  * Der Browser liefert für unbekannte Seiten ein Standard-Weltkugel-Bild. Dessen Fingerabdruck
  * wird einmal ermittelt, damit es nie als echtes Icon gilt.
  */
-let browserPlaceholderHash: Promise<string | null> | null = null;
+let browserPlaceholderHash: string | null = null;
 
-function placeholderHash(signal: AbortSignal): Promise<string | null> {
-  if (!browserPlaceholderHash) {
-    browserPlaceholderHash = (async () => {
-      const candidate: IconCandidate = { url: browserFaviconUrl('https://favgrid.invalid/', 64), origin: 'browser', label: '', declaredSize: 0 };
-      const probed = await probeCandidate(candidate, signal);
-      return probed ? sha256Hex(await probed.blob.arrayBuffer()) : null;
-    })();
+/** Nur ein Erfolg wird gemerkt; schlägt die Ermittlung fehl, wird es beim nächsten Mal neu versucht. */
+async function placeholderHash(signal: AbortSignal): Promise<string | null> {
+  if (browserPlaceholderHash) return browserPlaceholderHash;
+  try {
+    const candidate: IconCandidate = { url: browserFaviconUrl('https://favgrid.invalid/', 64), origin: 'browser', label: '', declaredSize: 0 };
+    const probed = await probeCandidate(candidate, signal);
+    if (probed) browserPlaceholderHash = await sha256Hex(await probed.blob.arrayBuffer());
+  } catch {
+    // Ohne Fingerabdruck kein Browser-Icon (siehe isPlaceholder).
   }
   return browserPlaceholderHash;
 }
 
+/** Ohne bekannten Fingerabdruck wird ein Browser-Icon vorsichtshalber verworfen. */
 async function isPlaceholder(icon: ProbedIcon, signal: AbortSignal): Promise<boolean> {
   if (icon.candidate.origin !== 'browser') return false;
   const placeholder = await placeholderHash(signal);
-  return placeholder !== null && placeholder === (await sha256Hex(await icon.blob.arrayBuffer()));
+  return placeholder === null || placeholder === (await sha256Hex(await icon.blob.arrayBuffer()));
 }
 
 async function probeAll(candidates: IconCandidate[], ctx: DiscoveryContext): Promise<ProbedIcon[]> {

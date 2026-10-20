@@ -88,10 +88,10 @@
       <FavIcon iconRef={favorite.icon.ref} {name} seed={favorite.url} rounded={app.settings.grid.imageRadius} />
     </span>
     <span class="actions">
-      <button class="action edit" title={t('menuEdit')} aria-label={t('menuEdit')} onclick={(e) => stop(e, () => editFavorite(favorite))}>
+      <button type="button" class="action edit" title={t('menuEdit')} aria-label={t('menuEdit')} onclick={(e) => stop(e, () => editFavorite(favorite))}>
         <i class="fa-solid fa-pen" aria-hidden="true"></i>
       </button>
-      <button class="action trash" title={t('tileTrashTitle')} aria-label={t('menuTrash')} onclick={(e) => stop(e, () => void app.trashFavorites([favorite.id]))}>
+      <button type="button" class="action trash" title={t('tileTrashTitle')} aria-label={t('menuTrash')} onclick={(e) => stop(e, () => void app.trashFavorites([favorite.id]))}>
         <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
       </button>
     </span>

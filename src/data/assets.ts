@@ -60,16 +60,13 @@ export class IndexedDbAssetStore implements AssetStore {
   async putBlob(blob: Blob): Promise<AssetRef> {
     const buffer = await blob.arrayBuffer();
     const ref = await sha256Hex(buffer);
-    if (!(await this.has(ref))) {
-      const record: AssetRecord = {
-        ref,
-        blob: new Blob([buffer], { type: blob.type }),
-        type: blob.type,
-        size: buffer.byteLength,
-        createdAt: Date.now()
-      };
-      await idbPut(STORES.assets, record);
-    }
+    const existing = await idbGet<AssetRecord>(STORES.assets, ref);
+    // Auch vorhandene Bilder bekommen einen frischen Zeitstempel: so schützt die Schonfrist
+    // beim Aufräumen auch ein erneut gewähltes, zwischenzeitlich unbenutztes Bild.
+    const record: AssetRecord = existing
+      ? { ...existing, createdAt: Date.now() }
+      : { ref, blob: new Blob([buffer], { type: blob.type }), type: blob.type, size: buffer.byteLength, createdAt: Date.now() };
+    await idbPut(STORES.assets, record);
     return ref;
   }
 

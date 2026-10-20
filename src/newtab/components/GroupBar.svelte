@@ -75,7 +75,7 @@
   {/if}
   <div class="strip" bind:this={strip} onscroll={updateArrows} role="tablist">
     {#each app.groups as group (group.id)}
-      <button
+      <button type="button"
         role="tab"
         aria-selected={group.id === app.currentGroup?.id}
         class="tab"

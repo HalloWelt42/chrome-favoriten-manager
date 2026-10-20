@@ -103,7 +103,7 @@
 {#if bg.type === 'gradient'}
   <div class="gradients">
     {#each GRADIENT_PRESETS as gradient (gradient)}
-      <button class="gradient" class:active={bg.gradient === gradient} style:background={gradient} aria-label={gradient} onclick={() => app.patchSettings({ background: { gradient } })}></button>
+      <button type="button" class="gradient" class:active={bg.gradient === gradient} style:background={gradient} aria-label={gradient} onclick={() => app.patchSettings({ background: { gradient } })}></button>
     {/each}
   </div>
   <Field label={t('bgCustomGradient1')} stacked>

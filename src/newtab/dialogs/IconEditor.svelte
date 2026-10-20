@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, untrack } from 'svelte';
   /**
    * Icon-Auswahl im Favoriten-Dialog. Zeigt das aktuelle Icon, alle gefundenen Kandidaten
    * nebeneinander und Werkzeuge. Nichts wird gespeichert, bevor der Dialog gespeichert wird;
@@ -66,8 +67,8 @@
     return () => urls.forEach((u) => URL.revokeObjectURL(u));
   });
 
-  $effect(() => {
-    if (autoScan) void scan();
+  onMount(() => {
+    if (untrack(() => autoScan)) void scan();
     return () => scanAbort?.abort();
   });
 
@@ -201,7 +202,7 @@
   {#if candidates.length > 0}
     <div class="gallery" role="listbox" aria-label={t('iconCandidates')}>
       {#each candidates as icon, index (icon.candidate.url)}
-        <button
+        <button type="button"
           class="candidate"
           role="option"
           aria-selected={draft.kind === 'blob' && draft.blob === icon.blob}

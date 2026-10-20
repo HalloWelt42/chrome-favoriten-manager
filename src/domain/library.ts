@@ -144,7 +144,7 @@ export function moveFavorites(lib: Library, ids: string[], groupId: string, now:
   findGroup(lib, groupId);
   const favs = ids.map((id) => findFavorite(lib, id));
   const sourceGroups = new Set(favs.map((f) => f.groupId));
-  favs.sort((a, b) => (a.groupId === b.groupId ? a.position - b.position : 0));
+  favs.sort((a, b) => a.groupId.localeCompare(b.groupId) || a.position - b.position);
   insertIntoGroup(lib, favs, groupId, index);
   for (const f of favs) f.updatedAt = now;
   for (const g of sourceGroups) if (g !== groupId) renumberGroup(lib, g);
@@ -179,11 +179,16 @@ export function setFavoriteIcon(lib: Library, id: string, icon: IconChoice, now:
   fav.updatedAt = now;
 }
 
-/** Trägt ein automatisch gefundenes Icon ein, aber nur, wenn der Nutzer kein eigenes gewählt hat. */
-export function applyAutoIcon(lib: Library, id: string, icon: Extract<IconChoice, { mode: 'auto' }>): boolean {
+/**
+ * Trägt ein automatisch gefundenes Icon ein, aber nur, wenn der Nutzer kein eigenes gewählt
+ * hat und die Adresse noch dieselbe ist wie bei der Suche. Ohne Fund bleibt ein vorhandenes
+ * Icon erhalten; nur der Zeitpunkt der Prüfung wird vermerkt.
+ */
+export function applyAutoIcon(lib: Library, id: string, searchedUrl: string, icon: Extract<IconChoice, { mode: 'auto' }>): boolean {
   const fav = lib.favorites.find((f) => f.id === id);
-  if (!fav || fav.icon.mode !== 'auto') return false;
-  fav.icon = icon;
+  if (!fav || fav.icon.mode !== 'auto' || fav.url !== searchedUrl) return false;
+  if (!icon.ref && fav.icon.ref) fav.icon = { ...fav.icon, checkedAt: icon.checkedAt };
+  else fav.icon = icon;
   return true;
 }
 
@@ -194,7 +199,8 @@ export function applyAutoIcon(lib: Library, id: string, icon: Extract<IconChoice
 /** Legt Favoriten in den Papierkorb. Liefert die Einträge (für Rückgängig). */
 export function trashFavorites(lib: Library, ids: string[], now: number): TrashEntry[] {
   const idSet = new Set(ids);
-  const favs = lib.favorites.filter((f) => idSet.has(f.id));
+  // Nach Position, damit gemeinsames Wiederherstellen die Reihenfolge erhält.
+  const favs = lib.favorites.filter((f) => idSet.has(f.id)).sort((a, b) => a.position - b.position);
   const groups = new Set(favs.map((f) => f.groupId));
   lib.favorites = lib.favorites.filter((f) => !idSet.has(f.id));
   const entries: TrashEntry[] = favs.map((favorite) => ({
@@ -232,7 +238,8 @@ export function restoreFromTrash(lib: Library, entryIds: string[], now: number):
   lib.trash = lib.trash.filter((e) => !wanted.has(e.id));
   let restored = 0;
   // Gruppen zuerst, damit Favoriten aus gleichzeitig wiederhergestellten Gruppen ihr Ziel finden.
-  const ordered = [...entries].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'group' ? -1 : 1));
+  const rank = (e: TrashEntry): number => (e.kind === 'group' ? -1 : e.favorite.position);
+  const ordered = [...entries].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'group' ? -1 : 1) || a.deletedAt - b.deletedAt || rank(a) - rank(b));
   for (const entry of ordered) {
     if (entry.kind === 'group') {
       const group = { ...entry.group, updatedAt: now };

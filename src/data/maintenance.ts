@@ -18,11 +18,12 @@ interface AssetMeta {
 
 export async function collectGarbage(repository: LibraryRepository, assets: AssetStore, now = Date.now()): Promise<number> {
   await pruneSnapshots(now);
-  const library = await repository.load();
-  const used = new Set<AssetRef>(libraryRefs(library));
-  for (const snapshot of await listSnapshots()) snapshot.assetRefs.forEach((ref) => used.add(ref));
-  const all = await idbGetAll<AssetMeta>(STORES.assets);
-  const unused = all.filter((a) => !used.has(a.ref) && now - a.createdAt > GRACE_MS).map((a) => a.ref);
-  await assets.remove(unused);
-  return unused.length;
+  return repository.exclusive(async (library) => {
+    const used = new Set<AssetRef>(libraryRefs(library));
+    for (const snapshot of await listSnapshots()) snapshot.assetRefs.forEach((ref) => used.add(ref));
+    const all = await idbGetAll<AssetMeta>(STORES.assets);
+    const unused = all.filter((a) => !used.has(a.ref) && now - a.createdAt > GRACE_MS).map((a) => a.ref);
+    await assets.remove(unused);
+    return unused.length;
+  });
 }

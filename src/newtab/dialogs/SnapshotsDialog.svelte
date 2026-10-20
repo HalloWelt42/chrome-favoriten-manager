@@ -17,6 +17,7 @@
   const REASONS: Record<SnapshotReason, MessageKey> = {
     auto: 'snapshotAuto',
     migration: 'snapshotMigration',
+    damaged: 'snapshotDamaged',
     'before-import': 'snapshotBeforeImport',
     'before-restore': 'snapshotBeforeRestore',
     'before-purge': 'snapshotBeforePurge',

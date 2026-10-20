@@ -19,7 +19,7 @@
 <div class="picker" role="group" aria-label={label}>
   <div class="quick">
     {#each QUICK_COLORS as color (color)}
-      <button
+      <button type="button"
         class="swatch"
         class:selected={color === value}
         style:background={color}
@@ -28,7 +28,7 @@
         onclick={() => onpick(color)}
       ></button>
     {/each}
-    <button class="more" class:open={expanded} title={t('colorMoreTitle')} onclick={() => (expanded = !expanded)}>
+    <button type="button" class="more" class:open={expanded} title={t('colorMoreTitle')} onclick={() => (expanded = !expanded)}>
       <span class="current" style:background={value}></span>
       <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
     </button>
@@ -38,7 +38,7 @@
       {#each MATERIAL_PALETTE as row, r (r)}
         <div class="row">
           {#each row as color (color)}
-            <button
+            <button type="button"
               class="cell"
               class:selected={color === value}
               style:background={color}
@@ -51,7 +51,7 @@
       {/each}
       <div class="row">
         {#each ['#ffffff', '#f5f5f5', '#e0e0e0', '#9e9e9e', '#616161', '#424242', '#212121', '#121212', '#000000'] as color (color)}
-          <button class="cell" class:selected={color === value} style:background={color} title={color} aria-label={color} onclick={() => onpick(color)}></button>
+          <button type="button" class="cell" class:selected={color === value} style:background={color} title={color} aria-label={color} onclick={() => onpick(color)}></button>
         {/each}
       </div>
     </div>

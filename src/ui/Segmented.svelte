@@ -19,7 +19,7 @@
 
 <div class="segmented" role="radiogroup" aria-label={label}>
   {#each options as option (option.value)}
-    <button
+    <button type="button"
       role="radio"
       aria-checked={option.value === value}
       class:active={option.value === value}

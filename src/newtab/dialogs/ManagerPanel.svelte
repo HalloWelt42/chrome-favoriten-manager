@@ -85,7 +85,7 @@
     </select>
     <div class="tools">
       <input class="input" type="search" placeholder={t('filterPlaceholder')} bind:value={filter} />
-      <button class="all" title={t('selectAllTitle')} onclick={selectAll}>
+      <button type="button" class="all" title={t('selectAllTitle')} onclick={selectAll}>
         <i class="fa-regular fa-square-check" aria-hidden="true"></i>
         <span>{selected.size > 0 ? t('selectedCount', selected.size) : t('selectAll')}</span>
       </button>
@@ -94,7 +94,7 @@
   <ul class="items">
     {#each visible as fav (fav.id)}
       <li>
-        <button class="item" class:selected={selected.has(fav.id)} draggable="true" title={fav.url} onclick={(e) => click(e, fav)} ondragstart={(e) => dragStart(e, fav)}>
+        <button type="button" class="item" class:selected={selected.has(fav.id)} draggable="true" title={fav.url} onclick={(e) => click(e, fav)} ondragstart={(e) => dragStart(e, fav)}>
           <span class="thumb"><FavIcon iconRef={fav.icon.ref} name={favoriteName(fav)} seed={fav.url} /></span>
           <span class="main">
             <span class="name">{favoriteName(fav)}</span>
